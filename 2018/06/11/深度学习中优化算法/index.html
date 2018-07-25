@@ -1,0 +1,984 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="sgd,Adagrad,动量法,RMSProp,Adadelta,Adam," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="本文介绍深度学习中一些常用的优化算法。">
+<meta name="keywords" content="sgd,Adagrad,动量法,RMSProp,Adadelta,Adam">
+<meta property="og:type" content="article">
+<meta property="og:title" content="深度学习中的优化算法">
+<meta property="og:url" content="flyrie.top/2018/06/11/深度学习中优化算法/index.html">
+<meta property="og:site_name" content="乡间小路">
+<meta property="og:description" content="本文介绍深度学习中一些常用的优化算法。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="/images/深度学习中的优化算法_1.svg">
+<meta property="og:image" content="/images/深度学习中的优化算法_2.svg">
+<meta property="og:updated_time" content="2018-06-18T04:13:06.678Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="深度学习中的优化算法">
+<meta name="twitter:description" content="本文介绍深度学习中一些常用的优化算法。">
+<meta name="twitter:image" content="/images/深度学习中的优化算法_1.svg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"always","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="flyrie.top/2018/06/11/深度学习中优化算法/"/>
+
+
+
+
+
+  <title>深度学习中的优化算法 | 乡间小路</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?95d8d402b20d99d1e2e6f2de7b397428";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">乡间小路</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="flyrie.top/2018/06/11/深度学习中优化算法/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="乡间小路">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="乡间小路">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">深度学习中的优化算法</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-06-11T01:45:15+08:00">
+                2018-06-11
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/深度学习/" itemprop="url" rel="index">
+                    <span itemprop="name">深度学习</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>本文介绍深度学习中一些常用的优化算法。<a id="more"></a></p>
+<h1 id="梯度下降"><a href="#梯度下降" class="headerlink" title="梯度下降"></a>梯度下降</h1><p>我们先以简单的一维梯度下降为例，解释梯度下降算法可以降低目标函数值的原因。</p>
+<h2 id="一维梯度下降"><a href="#一维梯度下降" class="headerlink" title="一维梯度下降"></a>一维梯度下降</h2><p>一维梯度是一个标量，也称导数。</p>
+<p>假设函数 $f: \mathbb{R} \rightarrow \mathbb{R}$ 的输入和输出都是标量。给定足够小的数 $\epsilon$，根据泰勒展开公式，我们得到以下的近似</p>
+<script type="math/tex; mode=display">
+f(x + \epsilon) \approx f(x) + f'(x) \epsilon</script><p>假设 $\eta$ 是一个常数，将 $\epsilon$ 替换为 $-\eta f’(x)$ 后，我们有</p>
+<script type="math/tex; mode=display">
+f(x - \eta f'(x)) \approx f(x) - \eta f'(x)^2</script><p>如果 $\eta$ 是一个很小的正数，那么</p>
+<script type="math/tex; mode=display">
+f(x - \eta f'(x)) \lesssim f(x)</script><p>也就是说，如果目标函数 $f(x)$ 当前的导数 $f’(x) \neq 0$，按照</p>
+<script type="math/tex; mode=display">
+x \leftarrow x - \eta f'(x)</script><p>迭代自变量 $x$ 可能会降低 $f(x)$ 的值。由于导数 $f’(x)$ 是梯度 $\nabla_x f$。</p>
+<p>梯度下降算法中的 $\eta$ 叫做学习率。这是一个超参数，需要人工设定。学习率 $\eta$ 要取正数。需要注意的是，学习率过大可能会造成自变量 $x$ 越过（overshoot）目标函数 $f(x)$ 的最优解，甚至发散。从泰勒公式的角度讲，泰勒公式成立的前提条件是 $\epsilon$ 很小，如果 $\epsilon$ 很大，则泰勒公式不成立，梯度下降就难以收敛。</p>
+<p>然而，如果学习率过小，目标函数中自变量的收敛速度会过慢。实际中，一个合适的学习率通常是需要通过多次实验找到的。</p>
+<h2 id="多维梯度下降"><a href="#多维梯度下降" class="headerlink" title="多维梯度下降"></a>多维梯度下降</h2><p>现在考虑一个更广义的情况：目标函数的输入为向量，输出为标量。</p>
+<p>假设目标函数 $f: \mathbb{R}^d \rightarrow \mathbb{R}$ 的输入是一个 $d$ 维向量 $\boldsymbol{x} = [x_1, x_2, \ldots, x_d]^\top$。目标函数 $f(\boldsymbol{x})$ 有关 $\boldsymbol{x}$ 的梯度是由 $d$ 个偏导数组成的向量：</p>
+<script type="math/tex; mode=display">
+\nabla_{\boldsymbol{x}} f(\boldsymbol{x}) = \bigg[\frac{\partial f(\boldsymbol{x})}{\partial x_1}, \frac{\partial f(\boldsymbol{x})}{\partial x_2}, \ldots, \frac{\partial f(\boldsymbol{x})}{\partial x_d}\bigg]^\top</script><p>为表示简洁，用 $\nabla f(\boldsymbol{x})$ 代替 $\nabla_{\boldsymbol{x}} f(\boldsymbol{x})$。梯度中每个偏导数元素 $\partial f(\boldsymbol{x})/\partial x_i$ 代表着 $f$ 在 $x_i$ 方向的变化率。为了测量 $f$ 沿着单位向量 $\boldsymbol{u}$ 方向上的变化率，在多元微积分中，我们定义 $f$ 在 $\boldsymbol{x}$ 上沿着 $\boldsymbol{u}$ 方向的方向导数为</p>
+<script type="math/tex; mode=display">
+D_{\boldsymbol{u}} f(\boldsymbol{x}) = \lim_{h \rightarrow 0} \frac{f(\boldsymbol{x} + h \boldsymbol{u}) - f(\boldsymbol{x})}{h}</script><p>该方向导数可以改写为</p>
+<script type="math/tex; mode=display">
+D_{\boldsymbol{u}} f(\boldsymbol{x}) = \nabla f(\boldsymbol{x}) \cdot \boldsymbol{u}</script><p>方向导数 $D_{\boldsymbol{u}} f(\boldsymbol{x})$ 给出了 $f$ 在 $\boldsymbol{x}$上沿着所有可能方向的变化率。为了最小化 $f$，我们希望找到 $f$ 能被降低最快的方向。因此，我们可以通过单位向量 $\boldsymbol{u}$ 来最小化方向导数 $D_{\boldsymbol{u}} f(\boldsymbol{x})$。</p>
+<p>由于 </p>
+<script type="math/tex; mode=display">
+D_{\boldsymbol{u}} f(\boldsymbol{x}) = |\nabla f(\boldsymbol{x})| \cdot |\boldsymbol{u}| \cdot \text{cos} (\theta) = |\nabla f(\boldsymbol{x})| \cdot \text{cos} (\theta)</script><p>其中 $\theta$ 为梯度 $\nabla f(\boldsymbol{x})$ 和单位向量 $\boldsymbol{u}$ 之间的夹角，当 $\theta = \pi$，$\text{cos}(\theta)$ 取得最小值-1。因此，当 $\boldsymbol{u}$ 在梯度方向 $\nabla f(\boldsymbol{x})$ 的相反方向时，方向导数 $D_{\boldsymbol{u}} f(\boldsymbol{x})$ 被最小化。所以，我们可能通过下面的梯度下降算法来不断降低目标函数 $f$ 的值：</p>
+<script type="math/tex; mode=display">
+\boldsymbol{x} \leftarrow \boldsymbol{x} - \eta \nabla f(\boldsymbol{x})</script><h2 id="随机梯度下降"><a href="#随机梯度下降" class="headerlink" title="随机梯度下降"></a>随机梯度下降</h2><p>当训练数据集很大时，梯度下降每次迭代的计算开销随着样本数量线性增长。因此，当训练数据样本数很大时，梯度下降每次迭代的计算开销很高。这时我们可以使用随机梯度下降。</p>
+<p>给定学习率 $\eta$（取正数），在每次迭代时，随机梯度下降算法随机均匀采样 $i$ 并计算 $\nabla f_i(\boldsymbol{x})$来迭代 $\boldsymbol{x}$：</p>
+<script type="math/tex; mode=display">
+\boldsymbol{x} \leftarrow \boldsymbol{x} - \eta \nabla f_i(\boldsymbol{x})</script><p>事实上，随机梯度 $\nabla f_i(\boldsymbol{x})$ 是对梯度 $\nabla f(\boldsymbol{x})$ 的无偏估计：</p>
+<script type="math/tex; mode=display">
+\mathbb{E}i \nabla f_i(\boldsymbol{x}) = \frac{1}{n} \sum{i = 1}^n \nabla f_i(\boldsymbol{x}) = \nabla f(\boldsymbol{x})</script><h2 id="小批量随机梯度下降"><a href="#小批量随机梯度下降" class="headerlink" title="小批量随机梯度下降"></a>小批量随机梯度下降</h2><p>广义上，每一次迭代可以随机均匀采样一个由训练数据样本索引所组成的小批量（mini-batch）$\mathcal{B}$。一般来说， 我们可以通过重复采样（sampling with replacement）或者不重复采样（sampling without replacement）得到同一个小批量中的各个样本。前者允许同一个小批量中出现重复的样本，后者则不允许如此。对于这两者间的任一种方式，我们可以使用</p>
+<script type="math/tex; mode=display">
+\nabla f_\mathcal{B}(\boldsymbol{x}) = \frac{1}{|\mathcal{B}|} \sum_{i \in \mathcal{B}}\nabla f_i(\boldsymbol{x})</script><p>来迭代 $\boldsymbol{x}$：</p>
+<script type="math/tex; mode=display">
+\boldsymbol{x} \leftarrow \boldsymbol{x} - \eta \nabla f_\mathcal{B}(\boldsymbol{x})</script><p>其中，$|\mathcal{B}|$ 代表样本批量大小，$\eta$（取正数）称作学习率。同样，小批量随机梯度 $\nabla f_\mathcal{B}(\boldsymbol{x})$ 也是对梯度 $\nabla f(\boldsymbol{x})$ 的无偏估计:</p>
+<script type="math/tex; mode=display">
+\mathbb{E}_\mathcal{B} \nabla f_\mathcal{B}(\boldsymbol{x}) = \nabla f(\boldsymbol{x})</script><p>这个算法叫做小批量随机梯度下降。该算法每次迭代的计算开销为 $\mathcal{O}(|\mathcal{B}|)$。当批量大小为1时，该算法即随机梯度下降；当批量大小等于训练数据样本数，该算法即梯度下降。</p>
+<h1 id="Momentum"><a href="#Momentum" class="headerlink" title="Momentum"></a>Momentum</h1><p>梯度下降算法每次迭代时沿着目标函数下降最快的方向更新参数。在梯度下降中，每次更新参数的方向仅仅取决当前位置，这可能会带来一些问题。</p>
+<p>考虑一个输入为二维向量$\mathbf{x} = [x_1, x_2]^\top$，输出为标量的目标函数$f: \mathbb{R}^2 \rightarrow \mathbb{R}$。下面为该函数的等高线示意图（每条等高线表示相同函数值的点：越靠近中间函数值越小）。  </p>
+<p><img src="/images/深度学习中的优化算法_1.svg" alt="图片"></p>
+<p>由于目标函数在竖直方向（ $x_2$ 轴方向）比在水平方向（ $x_1$ 轴方向）更弯曲，给定学习率，梯度下降迭代自变量时会使自变量在竖直方向比在水平方向移动幅度更大。因此，我们需要一个较小的学习率从而避免自变量在竖直方向上越过目标函数最优解。然而，这造成了上图中自变量向最优解移动较慢。</p>
+<p>以小批量随机梯度下降为例（当批量大小等于训练集大小时，该算法即为梯度下降；批量大小为1即为随机梯度下降），对小批量随机梯度算法做如下修改，就得到了动量法：</p>
+<script type="math/tex; mode=display">
+\begin{split}\begin{aligned}
+\boldsymbol{v} &\leftarrow \gamma \boldsymbol{v} + \eta \nabla f_\mathcal{B}(\boldsymbol{x}),\\
+\boldsymbol{x} &\leftarrow \boldsymbol{x} - \boldsymbol{v}.
+\end{aligned}\end{split}</script><p>其中 $\boldsymbol{v}$ 是当前速度，动量参数 $\gamma$ 满足 $0 \leq \gamma \leq 1$。</p>
+<p>为了更清晰地理解动量法，先解释指数加权移动平均（exponentially weighted moving average）。给定超参数 $\gamma$ 且 $0 \leq \gamma &lt; 1$，当前时刻 $t$ 的变量 $y^{(t)}$ 是上一时刻 $t-1$ 的变量 $y^{(t-1)}$ 和当前时刻另一变量 $x^{(t)}$ 的线性组合：</p>
+<script type="math/tex; mode=display">
+y^{(t)} = \gamma y^{(t-1)} + (1-\gamma) x^{(t)}</script><p>对 $y^{(t)}$ 展开：</p>
+<script type="math/tex; mode=display">
+\begin{aligned} 
+y^{(t)} &= (1-\gamma) x^{(t)} + \gamma y^{(t-1)} \  \\
+&= (1-\gamma)x^{(t)} + (1-\gamma) \cdot \gamma x^{(t-1)} + \gamma^2y^{(t-2)} \  \\
+&= (1-\gamma)x^{(t)} + (1-\gamma) \cdot \gamma x^{(t-1)} + (1-\gamma) \cdot \gamma^2x^{(t-2)} + \gamma^3y^{(t-3)}\ \\
+&\ldots 
+\end{aligned}</script><p>由于</p>
+<script type="math/tex; mode=display">
+\lim_{n \rightarrow \infty} (1-\frac{1}{n})^n = \exp(-1) \approx 0.3679</script><p>可以将 $\gamma^{1/(1-\gamma)}$ 近似为 $\exp(-1)$。例如 $0.95^{20} \approx \exp(-1)$。如果把 $\exp(-1)$ 当做一个比较小的数，可以在近似中忽略所有含 $\gamma^{1/(1-\gamma)}$ 和比 $\gamma^{1/(1-\gamma)}$ 更高阶的系数的项。例如，当 $\gamma=0.95$ 时，</p>
+<script type="math/tex; mode=display">
+y^{(t)} \approx 0.05 \sum_{i=0}^{19} 0.95^i x^{(t-i)}</script><p>因此，在实际中，常常将 $y$ 看作是对最近 $1/(1-\gamma)$ 个时刻的 $x$ 值的加权平均。例如，当 $\gamma = 0.95$ 时，$y$ 可以被看作是对最近20个时刻的 $x$ 值的加权平均；当 $\gamma = 0.9$ 时，$y$ 可以看作是对最近10个时刻的 $x$ 值的加权平均：离当前时刻越近的 $x$ 值获得的权重越大。</p>
+<p>现在，我们对动量法的速度变量做变形：</p>
+<script type="math/tex; mode=display">
+\boldsymbol{v} \leftarrow \gamma \boldsymbol{v} + (1 - \gamma) \frac{\eta \nabla f_\mathcal{B}(\boldsymbol{x})}{1 - \gamma}</script><p>由指数加权移动平均的形式可得，速度变量 $\boldsymbol{v}$ 实际上对 $(\eta\nabla f_\mathcal{B}(\boldsymbol{x})) /(1-\gamma)$ 做了指数加权移动平均。给定动量超参数 $\gamma$ 和学习率 $\eta$，含动量法的小批量随机梯度下降可被看作使用了特殊梯度来迭代目标函数的自变量。这个特殊梯度是最近 $1/(1-\gamma)$ 个时刻的 $\nabla f_\mathcal{B}(\boldsymbol{x})/(1-\gamma)$ 的加权平均。</p>
+<p>给定目标函数，在动量法的每次迭代中，自变量在各个方向上的移动幅度不仅取决当前梯度，还取决过去各个梯度在各个方向上是否一致。图示展示了使用动量法的梯度下降迭代目标函数自变量的情景。我们将每个梯度代表的箭头方向在水平方向和竖直方向做分解。由于所有梯度的水平方向为正（向右）、在竖直上时正（向上）时负（向下），自变量在水平方向移动幅度逐渐增大，而在竖直方向移动幅度逐渐减小。这样，我们就可以使用较大的学习率，从而使自变量向最优解更快移动。</p>
+<p><img src="/images/深度学习中的优化算法_2.svg" alt="图片"></p>
+<p>目标函数 $f$ 的等高线图和自变量 $[x_1, x_2]$ 在使用动量法的梯度下降中的迭代。每条等高线（椭圆实线）代表所有函数值相同的自变量的坐标。实心圆代表自变量初始坐标。每个箭头头部代表自变量在每次迭代后的坐标。</p>
+<h1 id="Adagrad"><a href="#Adagrad" class="headerlink" title="Adagrad"></a>Adagrad</h1><p>优化算法中，无论是梯度下降、随机梯度下降、小批量随机梯度下降还是使用动量法，目标函数自变量的每一个元素在相同时刻都使用同一个学习率来自我迭代。</p>
+<p>举个例子，假设目标函数为 $f$，自变量为一个多维向量 $[x_1, x_2]^\top$，该向量中每一个元素在更新时都使用相同的学习率。例如在学习率为 $\eta$ 的梯度下降中，元素 $x_1$ 和 $x_2$ 都使用相同的学习率$\eta$来自我迭代：</p>
+<script type="math/tex; mode=display">
+x_1 \leftarrow x_1 - \eta \frac{\partial{f}}{\partial{x_1}}, \ x_2 \leftarrow x_2 - \eta \frac{\partial{f}}{\partial{x_2}}</script><p>如何让 $x_1$ 和 $x_2$ 使用不同的学习率自我迭代？Adagrad就是一个在迭代过程中不断自我调整学习率，并让模型参数中每个元素都使用不同学习率的优化算法。</p>
+<p>Adagrad的算法会使用一个小批量随机梯度按元素平方的累加变量 $\boldsymbol{s}$，并将其中每个元素初始化为0。在每次迭代中，首先计算小批量随机梯度 $\boldsymbol{g}$，然后将该梯度按元素平方后累加到变量 $\boldsymbol{s}$，算法如下：</p>
+<script type="math/tex; mode=display">
+\boldsymbol{s} \leftarrow \boldsymbol{s} + \boldsymbol{g} \odot \boldsymbol{g} \\
+\boldsymbol{g}^\prime \leftarrow \frac{\eta}{\sqrt{\boldsymbol{s} + \epsilon}} \odot \boldsymbol{g} \\
+\boldsymbol{x} \leftarrow \boldsymbol{x} - \boldsymbol{g}^\prime</script><p>其中 $\eta$ 是初始学习率且 $\eta &gt; 0$，$\epsilon$ 是为了维持数值稳定性而添加的常数，例如 $10^{-7}$。需要注意其中按元素开方、除法和乘法的运算。这些按元素运算使得目标函数自变量中每个元素都分别拥有自己的学习率。</p>
+<p>需要强调的是，小批量随机梯度按元素平方的累加变量 $\boldsymbol{s}$ 出现在含调整后学习率的梯度 $\boldsymbol{g}^\prime$ 的分母项。因此，如果目标函数有关自变量中某个元素的偏导数一直都较大，那么就让该元素的学习率下降快一点；反之，如果目标函数有关自变量中某个元素的偏导数一直都较小，那么就让该元素的学习率下降慢一点。然而，由于 $\boldsymbol{s}$ 一直在累加按元素平方的梯度，自变量中每个元素的学习率在迭代过程中一直在降低（或不变）。所以，当学习率在迭代早期降得较快且当前解依然不佳时，Adagrad在迭代后期由于学习率过小，可能较难找到一个有用的解。</p>
+<h1 id="RMSProp"><a href="#RMSProp" class="headerlink" title="RMSProp"></a>RMSProp</h1><p>在Adagrad中，由于调整学习率时分母上的变量 $\boldsymbol{s}$ 一直在累加按元素平方的小批量随机梯度，目标函数自变量每个元素的学习率在迭代过程中一直在降低（或不变）。所以，当学习率在迭代早期降得较快且当前解依然不佳时，Adagrad在迭代后期由于学习率过小，可能较难找到一个有用的解。为了应对这一问题，RMSProp算法对Adagrad做了一点小小的修改。</p>
+<p>RMSProp算法使用了小批量随机梯度按元素平方的指数加权移动平均变量 $\boldsymbol{s}$，并将其中每个元素初始化为0。 给定超参数 $\gamma$ 且 $0 \leq \gamma &lt; 1$ ，在每次迭代中，RMSProp首先计算小批量随机梯度 $\boldsymbol{g}$，然后对该梯度按元素平方项 $\boldsymbol{g} \odot \boldsymbol{g}$ 做指数加权移动平均，记为 $\boldsymbol{s}$，算法如下：</p>
+<script type="math/tex; mode=display">
+\boldsymbol{s} \leftarrow \gamma \boldsymbol{s} + (1 - \gamma) \boldsymbol{g} \odot \boldsymbol{g} \\
+\boldsymbol{g}^\prime \leftarrow \frac{\eta}{\sqrt{\boldsymbol{s} + \epsilon}} \odot \boldsymbol{g} \\
+\boldsymbol{x} \leftarrow \boldsymbol{x} - \boldsymbol{g}^\prime</script><p>其中 $\eta$ 是初始学习率且 $\eta &gt; 0$，$\epsilon$ 是为了维持数值稳定性而添加的常数，例如 $10^{-8}$ 。</p>
+<p>需要强调的是，RMSProp只在Adagrad的基础上修改了变量 $\boldsymbol{s}$ 的更新方法：对平方项 $\boldsymbol{g} \odot \boldsymbol{g}$ 从累加变成了指数加权移动平均。由于变量 $\boldsymbol{s}$ 可看作是最近 $1/(1-\gamma)$ 个时刻的平方项 $\boldsymbol{g} \odot \boldsymbol{g}$ 的加权平均，自变量每个元素的学习率在迭代过程中避免了“只降不升”的问题。</p>
+<h1 id="Adadelta"><a href="#Adadelta" class="headerlink" title="Adadelta"></a>Adadelta</h1><p>Adadelta也是针对Adagrad在迭代后期可能较难找到有用解的问题，对小批量随机梯度按元素平方项做指数加权移动平均而不是累加。但Adadelta中没有学习率超参数。</p>
+<p>Adadelta算法也像RMSProp一样，使用了小批量随机梯度按元素平方的指数加权移动平均变量 $\boldsymbol{s}$，并将其中每个元素初始化为0。 给定超参数 $\rho$ 且 $0 \leq \rho &lt; 1$， 在每次迭代中，RMSProp首先计算小批量随机梯度 $\boldsymbol{g}$，然后对该梯度按元素平方项 $\boldsymbol{g} \odot \boldsymbol{g}$ 做指数加权移动平均，记为$\boldsymbol{s}$：</p>
+<script type="math/tex; mode=display">
+\boldsymbol{s} \leftarrow \rho \boldsymbol{s} + (1 - \rho) \boldsymbol{g} \odot \boldsymbol{g}</script><p>然后，计算当前需要迭代的目标函数自变量的变化量 $\boldsymbol{g}^\prime$：</p>
+<script type="math/tex; mode=display">
+\boldsymbol{g}^\prime \leftarrow \frac{\sqrt{\Delta\boldsymbol{x} + \epsilon}}{\sqrt{\boldsymbol{s} + \epsilon}} \odot \boldsymbol{g}</script><p>其中 $\epsilon$ 是为了维持数值稳定性而添加的常数，例如 $10^{-5}$。和Adagrad与RMSProp一样，目标函数自变量中每个元素都分别拥有自己的学习率。上式中 $\Delta\boldsymbol{x}$ 初始化为零张量，并记录 $\boldsymbol{g}^\prime$ 按元素平方的指数加权移动平均：</p>
+<script type="math/tex; mode=display">
+\Delta\boldsymbol{x} \leftarrow \rho \Delta\boldsymbol{x} + (1 - \rho) \boldsymbol{g}^\prime \odot \boldsymbol{g}^\prime</script><p>同样地，最后的自变量迭代步骤与小批量随机梯度下降类似：</p>
+<script type="math/tex; mode=display">
+\boldsymbol{x} \leftarrow \boldsymbol{x} - \boldsymbol{g}^\prime</script><h1 id="Adam"><a href="#Adam" class="headerlink" title="Adam"></a>Adam</h1><p>Adam是一个组合了动量法和RMSProp的优化算法，使用了动量变量 $\boldsymbol{v}$ 和RMSProp中变量 $\boldsymbol{s}$，并将它们中每个元素初始化为0。在每次迭代中，时刻 $t$ 的小批量随机梯度记作 $\boldsymbol{g}_t$。</p>
+<p>和动量法类似，给定超参数 $\beta_1$ 且满足 $0 \leq \beta_1 &lt; 1$（算法作者建议设为0.9），将小批量随机梯度的指数加权移动平均记作动量变量 $\boldsymbol{v}$，并将它在时刻 $t$ 的值记作 $\boldsymbol{v}_t$：</p>
+<script type="math/tex; mode=display">
+\boldsymbol{v}_t \leftarrow \beta_1 \boldsymbol{v}_{t-1} + (1 - \beta_1) \boldsymbol{g}_t</script><p>和RMSProp中一样，给定超参数 $\beta_2$ 且满足 $0 \leq \beta_2 &lt; 1$（算法作者建议设为0.999）， 将小批量随机梯度按元素平方后做指数加权移动平均得到 $\boldsymbol{s}$ ，并将它在时刻 $t$ 的值记作 $\boldsymbol{s}_t$：</p>
+<script type="math/tex; mode=display">
+\boldsymbol{s}_t \leftarrow \beta_2 \boldsymbol{s}_{t-1} + (1 - \beta_2) \boldsymbol{g}_t \odot \boldsymbol{g}_t</script><p>需要注意的是，当 $t$ 较小时，过去各时刻小批量随机梯度权值之和会较小。例如当 $\beta_1 = 0.9$ 时，$\boldsymbol{v}_1 = 0.1\boldsymbol{g}_1$。为了消除这样的影响，对于任意时刻 $t$ ，我们可以将 $\boldsymbol{v}_t$ 再除以 $1 - \beta_1^t$ ，从而使得过去各时刻小批量随机梯度权值之和为1。这也叫做偏差修正。在Adam算法中，我们对变量 $\boldsymbol{v}$ 和 $\boldsymbol{s}$ 均作偏差修正：</p>
+<script type="math/tex; mode=display">
+\hat{\boldsymbol{v}}_t \leftarrow \frac{\boldsymbol{v}_t}{1 - \beta_1^t} \\
+\hat{\boldsymbol{s}}_t \leftarrow \frac{\boldsymbol{s}_t}{1 - \beta_2^t}</script><p>接下来，Adam算法使用以上偏差修正后的变量 $\hat{\boldsymbol{v}}_t$ 和 $\hat{\boldsymbol{s}}_t$，将模型参数中每个元素的学习率通过按元素运算重新调整：</p>
+<script type="math/tex; mode=display">
+\boldsymbol{g}_t^\prime \leftarrow \frac{\eta \hat{\boldsymbol{v}}_t}{\sqrt{\hat{\boldsymbol{s}}_t + \epsilon}}</script><p>其中 $\eta$ 是初始学习率且 $\eta &gt; 0$，$\epsilon$ 是为了维持数值稳定性而添加的常数，例如 $10^{-8}$。和Adagrad、RMSProp以及Adadelta一样，目标函数自变量中每个元素都分别拥有自己的学习率。</p>
+<p>最后，时刻 $t$ 的自变量 $\boldsymbol{x}_t$ 的迭代步骤与小批量随机梯度下降类似：</p>
+<script type="math/tex; mode=display">
+\boldsymbol{x}_t \leftarrow \boldsymbol{x}_{t-1} - \boldsymbol{g}_t^\prime</script><h1 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h1><p>[1]. <a href="https://book.douban.com/subject/27087503/" target="_blank" rel="noopener">《深度学习》 [美] 伊恩·古德费洛 / [加] 约书亚·本吉奥 / [加] 亚伦·库维尔</a><br>[2]. <a href="https://zh.gluon.ai/index.html" target="_blank" rel="noopener">动手深度学习</a></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>持续技术分享，您的支持将鼓励我继续创作！</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.jpg" alt="乡间小路 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/sgd/" rel="tag"># sgd</a>
+          
+            <a href="/tags/Adagrad/" rel="tag"># Adagrad</a>
+          
+            <a href="/tags/动量法/" rel="tag"># 动量法</a>
+          
+            <a href="/tags/RMSProp/" rel="tag"># RMSProp</a>
+          
+            <a href="/tags/Adadelta/" rel="tag"># Adadelta</a>
+          
+            <a href="/tags/Adam/" rel="tag"># Adam</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/06/10/k-means聚类/" rel="next" title="K-means聚类">
+                <i class="fa fa-chevron-left"></i> K-means聚类
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/06/11/深度学习中的一些Tricks/" rel="prev" title="深度学习中的一些Tricks">
+                深度学习中的一些Tricks <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zNjg4MS8xMzQxNw=="></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.jpg"
+                alt="乡间小路" />
+            
+              <p class="site-author-name" itemprop="name">乡间小路</p>
+              <p class="site-description motion-element" itemprop="description">把知道的东西讲清楚</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">33</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-name">分类</span>
+                
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">62</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-globe"></i>
+                推荐博客
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://www.flickering.cn/" title="火光摇曳" target="_blank">火光摇曳</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://www.wulc.me/" title="吴良超的学习笔记" target="_blank">吴良超的学习笔记</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://www.cnblogs.com/pinard/" title="刘建平Pinard" target="_blank">刘建平Pinard</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://mlnote.com/" title="水滴石穿" target="_blank">水滴石穿</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://www.cnblogs.com/makefile/" title="明也无涯" target="_blank">明也无涯</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://noahsnail.com/" title="SnailTyan" target="_blank">SnailTyan</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://lanbing510.info/" title="求知若饥，知行合一" target="_blank">求知若饥，知行合一</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://saicoco.github.io/" title="Fix you" target="_blank">Fix you</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://qiankun214.github.io/" title="月见樽" target="_blank">月见樽</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://jacobkong.github.io/" title="Jacob Kong" target="_blank">Jacob Kong</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://www.cnblogs.com/xuanyuyt/" title="xuanyuyt" target="_blank">xuanyuyt</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://blog.csdn.net/sinat_26917383" title="悟乙己" target="_blank">悟乙己</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://blog.csdn.net/julialove102123" title="女王的宫殿" target="_blank">女王的宫殿</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#梯度下降"><span class="nav-number">1.</span> <span class="nav-text">梯度下降</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#一维梯度下降"><span class="nav-number">1.1.</span> <span class="nav-text">一维梯度下降</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#多维梯度下降"><span class="nav-number">1.2.</span> <span class="nav-text">多维梯度下降</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#随机梯度下降"><span class="nav-number">1.3.</span> <span class="nav-text">随机梯度下降</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#小批量随机梯度下降"><span class="nav-number">1.4.</span> <span class="nav-text">小批量随机梯度下降</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Momentum"><span class="nav-number">2.</span> <span class="nav-text">Momentum</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Adagrad"><span class="nav-number">3.</span> <span class="nav-text">Adagrad</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#RMSProp"><span class="nav-number">4.</span> <span class="nav-text">RMSProp</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Adadelta"><span class="nav-number">5.</span> <span class="nav-text">Adadelta</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Adam"><span class="nav-number">6.</span> <span class="nav-text">Adam</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考文献"><span class="nav-number">7.</span> <span class="nav-text">参考文献</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">乡间小路</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+
+  
+
+  
+
+</body>
+</html>

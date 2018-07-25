@@ -1,0 +1,937 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="ResNet," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="ResNet在2015年被提出，在ImageNet比赛classification任务上获得第一名，因为它“简单与实用”并存，之后很多方法都建立在ResNet50或者ResNet101的基础上完成的，检测，分割，识别等领域都纷纷使用ResNet，Alpha zero也使用了ResNet。">
+<meta name="keywords" content="ResNet">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ResNet解析">
+<meta property="og:url" content="flyrie.top/2018/06/15/ResNet解析/index.html">
+<meta property="og:site_name" content="乡间小路">
+<meta property="og:description" content="ResNet在2015年被提出，在ImageNet比赛classification任务上获得第一名，因为它“简单与实用”并存，之后很多方法都建立在ResNet50或者ResNet101的基础上完成的，检测，分割，识别等领域都纷纷使用ResNet，Alpha zero也使用了ResNet。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="/images/ResNet解析_2.png">
+<meta property="og:image" content="/images/ResNet解析_5.png">
+<meta property="og:image" content="/images/ResNet解析_6.png">
+<meta property="og:image" content="/images/ResNet解析_3.png">
+<meta property="og:image" content="/images/ResNet解析_4.png">
+<meta property="og:updated_time" content="2018-07-09T16:00:05.070Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="ResNet解析">
+<meta name="twitter:description" content="ResNet在2015年被提出，在ImageNet比赛classification任务上获得第一名，因为它“简单与实用”并存，之后很多方法都建立在ResNet50或者ResNet101的基础上完成的，检测，分割，识别等领域都纷纷使用ResNet，Alpha zero也使用了ResNet。">
+<meta name="twitter:image" content="/images/ResNet解析_2.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"always","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="flyrie.top/2018/06/15/ResNet解析/"/>
+
+
+
+
+
+  <title>ResNet解析 | 乡间小路</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?95d8d402b20d99d1e2e6f2de7b397428";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">乡间小路</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="flyrie.top/2018/06/15/ResNet解析/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="乡间小路">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="乡间小路">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">ResNet解析</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-06-15T01:36:15+08:00">
+                2018-06-15
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/深度学习/" itemprop="url" rel="index">
+                    <span itemprop="name">深度学习</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>ResNet在2015年被提出，在ImageNet比赛classification任务上获得第一名，因为它“简单与实用”并存，之后很多方法都建立在ResNet50或者ResNet101的基础上完成的，检测，分割，识别等领域都纷纷使用ResNet，Alpha zero也使用了ResNet。<a id="more"></a></p>
+<h1 id="残差块"><a href="#残差块" class="headerlink" title="残差块"></a>残差块</h1><p>ResNet的基础块叫做残差块。一般有两种形式BasicBlock和Bottleneck。</p>
+<ol>
+<li><p>BasicBlock结构中，主要使用了两个$3\times3$的卷积核。 残差residual分支为：<code>OUT = CONV3*3 + BN + RELU + CONV3*3 + BN</code>，然后与恒等映射identity相加再做relu <code>OUT + X + RELU</code>。</p>
+</li>
+<li><p>Bottleneck结构中。分别使用$1\times1，3\times3，1\times1$的卷积核，残差residual分支为：<code>OUT = CONV1*1 + BN + RELU + CONV3*3 + BN + RELU + CONV1*1 + BN</code>，然后与恒等映射identity相加再做relu <code>OUT + X + RELU</code>。使用Bottleneck结构可以减少网络参数数量。</p>
+</li>
+</ol>
+<p>如下图所示(直接粘贴论文中的原图，原图没有画BN结构）：</p>
+<p><img src="/images/ResNet解析_2.png" alt="图片"></p>
+<p>这两种结构分别针对ResNet34（左图）和ResNet50/101/152（右图），目的一目了然，就是为了降低参数的数目，第一个1x1的卷积把256维channel降到64维，然后在最后通过1x1卷积恢复，整体上用的参数数目：1x1x256x64 + 3x3x64x64 + 1x1x64x256 = 69632，而不使用bottleneck的话就是两个3x3x256的卷积，参数数目: 3x3x256x256x2 = 1179648，差了16.94倍。<br>对于BasicBlock，可以用于34层或者更少的网络中，对于Bottleneck Design的ResNet通常用于更深的如101这样的网络中，目的是减少计算和参数。</p>
+<p>在之后的《Identity Mappings in Deep Residual Networks》中，又提出了一种更优的残差块结构，并且作者分析了什么样的残差结构才work。主要改变是将<code>BN</code>和<code>RELU</code>放在了<code>CONV</code>之前，对比如下：</p>
+<p><img src="/images/ResNet解析_5.png" alt="图片"><br>实验结果表明，新的残差结构要优于之前的残差结构。</p>
+<h1 id="什么样的残差块work？"><a href="#什么样的残差块work？" class="headerlink" title="什么样的残差块work？"></a>什么样的残差块work？</h1><p>下面(a)到(e)的结构哪个是我们常用的ResNet结构？ 答案是(a)和(e）。</p>
+<p><img src="/images/ResNet解析_6.png" alt="图片">  </p>
+<p>对于每个图右侧部分我们称作“residual”分支，左侧部分我们称作“identity”分支。</p>
+<p>ResNet原文中使用的结构是(a），（a)的特点有两个：  </p>
+<ul>
+<li>BN和ReLU在weight的后面；  </li>
+<li>最后的ReLU在addition的后面。</li>
+</ul>
+<p>对于特点(1)，属于常规范畴，我们平时也都这个顺序：Conv-&gt;BN-&gt;ReLU；对于特点(2），为什么ReLU放在addition后面呢？</p>
+<p><strong>图(c)的结构work么？</strong><br>答案是不work。如果ReLU作为“residual”分支的结尾，不难发现“residual”分支的结果永远非负，这样前向的时候输入会单调递增，从而会影响特征的表达能力，所以我们希望“residual”分支的结果应该在 $(-\infty, +\infty)$。这点也是我们以后设计网络时所要注意的。</p>
+<p><strong>图(b)的结构work么？</strong><br>答案是不work。这里BN改变了“identity”分支的分布，影响了信息的传递，在训练的时候会阻碍loss的下降。</p>
+<p><strong>为什么“identity”分支发生变化，会影响信息传递，从而影响训练？</strong><br>回顾ResNet的公式：</p>
+<script type="math/tex; mode=display">
+y_l=h(x_l)+F(x_l, W_l) and x_{l+1} = f(y_l)</script><p>简化以上公式，令所有“identity”分支都是 $h(x_l) = x_l$ 以及 $x_{l+1} = y_l$，那么得到:</p>
+<script type="math/tex; mode=display">
+x_{l+1} = x_l + F(x_l, W_l)</script><p>我们递归的计算:</p>
+<script type="math/tex; mode=display">
+x_{l+2} = x_{l+1} + F(x_{l+1}, W_{l+1}) = x_l + F(x_l, W_l) + F(x_{l+1}, W_{l+1})</script><script type="math/tex; mode=display">
+x_L = x_l + \sum_{i=l}^{L-1}F(x_i, W_i) \tag{1}</script><p>公式(1)，表达了任何第 $L$ 层(深层)与第 $l$ 层(浅层)之间关系；假设损失函数为loss，那么反向传播公式为：</p>
+<script type="math/tex; mode=display">
+\frac{\partial loss}{\partial x_l} = \frac{\partial loss}{\partial x_L} \frac{\partial x_L}{\partial x_l} = \frac{\partial loss}{\partial x_L} (1 + \frac{\partial}{\partial x_l}\sum_{i=l}^{L-1}F(x_i, W_i))</script><p>这个反向传播公式有几个特点：  </p>
+<ul>
+<li>关于 $x_l$ 的梯度信息与两部分值有关：$x_L$ 的梯度值，也就是说两层之间梯度信息无障碍传递了，以及 $\frac{\partial loss}{\partial x_L} \frac{\partial}{\partial x_l}\sum_{i=l}^{L-1}F(x_i, W_i))$;   </li>
+<li>$\frac{\partial loss}{\partial x_l}$的值不会轻易抵消，因为在一个mini_batch中，$\frac{\partial}{\partial x_l}\sum_{i=l}^{L-1}F(x_i, W_i))$不会一直为<code>-1</code>；</li>
+<li>有效的防止了当权重很小时，梯度消失的问题。</li>
+</ul>
+<p>以上优秀的特点只有在假设 $h(x_l) = x_l$ 以及 $x_{l+1} = y_l$ 成立时才有效，所以ResNet要尽量保证两点：  </p>
+<ul>
+<li>不轻易改变”identity“分支的值，也就是输入与输出一致； </li>
+<li>addition之后不再接改变信息分布的层；</li>
+</ul>
+<p>到此也就彻底回答了图(b)的结构为何会阻碍反向传播时的信息。</p>
+<p><strong>为什么选图(e)而不是图(d)</strong><br>在分析图(d)和图(e)之前，我们引出一个概念：<code>Post-activation</code>和<code>Pre-activation</code>，其中Post和Pre的概念是相对于weight(conv)层来说的，那么我们不难发现，图(a)、(b)、(c)都是<code>Post-activation</code>，图(d), (c)都是<code>Pre-activation</code>，而论文作者用实验结果得出了图(e)的结构比ResNet原结构要好。原因在于两点：</p>
+<ul>
+<li>反向传播基本符合假设，信息传递无阻碍；</li>
+<li>BN层作为pre-activation，起到了正则化的作用。</li>
+</ul>
+<h1 id="残差块的代码实现"><a href="#残差块的代码实现" class="headerlink" title="残差块的代码实现"></a>残差块的代码实现</h1><p>残差块mxnet代码如下：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Blocks</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">BasicBlockV1</span><span class="params">(HybridBlock)</span>:</span></span><br><span class="line">    <span class="string">r"""BasicBlock V1 from `"Deep Residual Learning for Image Recognition"</span></span><br><span class="line"><span class="string">    &lt;http://arxiv.org/abs/1512.03385&gt;`_ paper.</span></span><br><span class="line"><span class="string">    This is used for ResNet V1 for 18, 34 layers.</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    Parameters</span></span><br><span class="line"><span class="string">    ----------</span></span><br><span class="line"><span class="string">    channels : int</span></span><br><span class="line"><span class="string">        Number of output channels.</span></span><br><span class="line"><span class="string">    stride : int</span></span><br><span class="line"><span class="string">        Stride size.</span></span><br><span class="line"><span class="string">    downsample : bool, default False</span></span><br><span class="line"><span class="string">        Whether to downsample the input.</span></span><br><span class="line"><span class="string">    in_channels : int, default 0</span></span><br><span class="line"><span class="string">        Number of input channels. Default is 0, to infer from the graph.</span></span><br><span class="line"><span class="string">    """</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, channels, stride, downsample=False, in_channels=<span class="number">0</span>, **kwargs)</span>:</span></span><br><span class="line">        super(BasicBlockV1, self).__init__(**kwargs)</span><br><span class="line">        self.body = nn.HybridSequential(prefix=<span class="string">''</span>)</span><br><span class="line">        self.body.add(_conv3x3(channels, stride, in_channels))</span><br><span class="line">        self.body.add(nn.BatchNorm())</span><br><span class="line">        self.body.add(nn.Activation(<span class="string">'relu'</span>))</span><br><span class="line">        self.body.add(_conv3x3(channels, <span class="number">1</span>, channels))</span><br><span class="line">        self.body.add(nn.BatchNorm())</span><br><span class="line">        <span class="keyword">if</span> downsample:</span><br><span class="line">            self.downsample = nn.HybridSequential(prefix=<span class="string">''</span>)</span><br><span class="line">            self.downsample.add(nn.Conv2D(channels, kernel_size=<span class="number">1</span>, strides=stride,</span><br><span class="line">                                          use_bias=<span class="keyword">False</span>, in_channels=in_channels))</span><br><span class="line">            self.downsample.add(nn.BatchNorm())</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            self.downsample = <span class="keyword">None</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">hybrid_forward</span><span class="params">(self, F, x)</span>:</span></span><br><span class="line">        residual = x</span><br><span class="line"></span><br><span class="line">        x = self.body(x)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> self.downsample:</span><br><span class="line">            residual = self.downsample(residual)</span><br><span class="line"></span><br><span class="line">        x = F.Activation(residual+x, act_type=<span class="string">'relu'</span>)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> x</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">BottleneckV1</span><span class="params">(HybridBlock)</span>:</span></span><br><span class="line">    <span class="string">r"""Bottleneck V1 from `"Deep Residual Learning for Image Recognition"</span></span><br><span class="line"><span class="string">    &lt;http://arxiv.org/abs/1512.03385&gt;`_ paper.</span></span><br><span class="line"><span class="string">    This is used for ResNet V1 for 50, 101, 152 layers.</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    Parameters</span></span><br><span class="line"><span class="string">    ----------</span></span><br><span class="line"><span class="string">    channels : int</span></span><br><span class="line"><span class="string">        Number of output channels.</span></span><br><span class="line"><span class="string">    stride : int</span></span><br><span class="line"><span class="string">        Stride size.</span></span><br><span class="line"><span class="string">    downsample : bool, default False</span></span><br><span class="line"><span class="string">        Whether to downsample the input.</span></span><br><span class="line"><span class="string">    in_channels : int, default 0</span></span><br><span class="line"><span class="string">        Number of input channels. Default is 0, to infer from the graph.</span></span><br><span class="line"><span class="string">    """</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, channels, stride, downsample=False, in_channels=<span class="number">0</span>, **kwargs)</span>:</span></span><br><span class="line">        super(BottleneckV1, self).__init__(**kwargs)</span><br><span class="line">        self.body = nn.HybridSequential(prefix=<span class="string">''</span>)</span><br><span class="line">        self.body.add(nn.Conv2D(channels//<span class="number">4</span>, kernel_size=<span class="number">1</span>, strides=stride))</span><br><span class="line">        self.body.add(nn.BatchNorm())</span><br><span class="line">        self.body.add(nn.Activation(<span class="string">'relu'</span>))</span><br><span class="line">        self.body.add(_conv3x3(channels//<span class="number">4</span>, <span class="number">1</span>, channels//<span class="number">4</span>))</span><br><span class="line">        self.body.add(nn.BatchNorm())</span><br><span class="line">        self.body.add(nn.Activation(<span class="string">'relu'</span>))</span><br><span class="line">        self.body.add(nn.Conv2D(channels, kernel_size=<span class="number">1</span>, strides=<span class="number">1</span>))</span><br><span class="line">        self.body.add(nn.BatchNorm())</span><br><span class="line">        <span class="keyword">if</span> downsample:</span><br><span class="line">            self.downsample = nn.HybridSequential(prefix=<span class="string">''</span>)</span><br><span class="line">            self.downsample.add(nn.Conv2D(channels, kernel_size=<span class="number">1</span>, strides=stride,</span><br><span class="line">                                          use_bias=<span class="keyword">False</span>, in_channels=in_channels))</span><br><span class="line">            self.downsample.add(nn.BatchNorm())</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            self.downsample = <span class="keyword">None</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">hybrid_forward</span><span class="params">(self, F, x)</span>:</span></span><br><span class="line">        residual = x</span><br><span class="line"></span><br><span class="line">        x = self.body(x)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> self.downsample:</span><br><span class="line">            residual = self.downsample(residual)</span><br><span class="line"></span><br><span class="line">        x = F.Activation(x + residual, act_type=<span class="string">'relu'</span>)</span><br><span class="line">        <span class="keyword">return</span> x</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">BasicBlockV2</span><span class="params">(HybridBlock)</span>:</span></span><br><span class="line">    <span class="string">r"""BasicBlock V2 from</span></span><br><span class="line"><span class="string">    `"Identity Mappings in Deep Residual Networks"</span></span><br><span class="line"><span class="string">    &lt;https://arxiv.org/abs/1603.05027&gt;`_ paper.</span></span><br><span class="line"><span class="string">    This is used for ResNet V2 for 18, 34 layers.</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    Parameters</span></span><br><span class="line"><span class="string">    ----------</span></span><br><span class="line"><span class="string">    channels : int</span></span><br><span class="line"><span class="string">        Number of output channels.</span></span><br><span class="line"><span class="string">    stride : int</span></span><br><span class="line"><span class="string">        Stride size.</span></span><br><span class="line"><span class="string">    downsample : bool, default False</span></span><br><span class="line"><span class="string">        Whether to downsample the input.</span></span><br><span class="line"><span class="string">    in_channels : int, default 0</span></span><br><span class="line"><span class="string">        Number of input channels. Default is 0, to infer from the graph.</span></span><br><span class="line"><span class="string">    """</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, channels, stride, downsample=False, in_channels=<span class="number">0</span>, **kwargs)</span>:</span></span><br><span class="line">        super(BasicBlockV2, self).__init__(**kwargs)</span><br><span class="line">        self.bn1 = nn.BatchNorm()</span><br><span class="line">        self.conv1 = _conv3x3(channels, stride, in_channels)</span><br><span class="line">        self.bn2 = nn.BatchNorm()</span><br><span class="line">        self.conv2 = _conv3x3(channels, <span class="number">1</span>, channels)</span><br><span class="line">        <span class="keyword">if</span> downsample:</span><br><span class="line">            self.downsample = nn.Conv2D(channels, <span class="number">1</span>, stride, use_bias=<span class="keyword">False</span>,</span><br><span class="line">                                        in_channels=in_channels)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            self.downsample = <span class="keyword">None</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">hybrid_forward</span><span class="params">(self, F, x)</span>:</span></span><br><span class="line">        residual = x</span><br><span class="line">        x = self.bn1(x)</span><br><span class="line">        x = F.Activation(x, act_type=<span class="string">'relu'</span>)</span><br><span class="line">        <span class="keyword">if</span> self.downsample:</span><br><span class="line">            residual = self.downsample(x)</span><br><span class="line">        x = self.conv1(x)</span><br><span class="line"></span><br><span class="line">        x = self.bn2(x)</span><br><span class="line">        x = F.Activation(x, act_type=<span class="string">'relu'</span>)</span><br><span class="line">        x = self.conv2(x)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> x + residual</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">BottleneckV2</span><span class="params">(HybridBlock)</span>:</span></span><br><span class="line">    <span class="string">r"""Bottleneck V2 from</span></span><br><span class="line"><span class="string">    `"Identity Mappings in Deep Residual Networks"</span></span><br><span class="line"><span class="string">    &lt;https://arxiv.org/abs/1603.05027&gt;`_ paper.</span></span><br><span class="line"><span class="string">    This is used for ResNet V2 for 50, 101, 152 layers.</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    Parameters</span></span><br><span class="line"><span class="string">    ----------</span></span><br><span class="line"><span class="string">    channels : int</span></span><br><span class="line"><span class="string">        Number of output channels.</span></span><br><span class="line"><span class="string">    stride : int</span></span><br><span class="line"><span class="string">        Stride size.</span></span><br><span class="line"><span class="string">    downsample : bool, default False</span></span><br><span class="line"><span class="string">        Whether to downsample the input.</span></span><br><span class="line"><span class="string">    in_channels : int, default 0</span></span><br><span class="line"><span class="string">        Number of input channels. Default is 0, to infer from the graph.</span></span><br><span class="line"><span class="string">    """</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, channels, stride, downsample=False, in_channels=<span class="number">0</span>, **kwargs)</span>:</span></span><br><span class="line">        super(BottleneckV2, self).__init__(**kwargs)</span><br><span class="line">        self.bn1 = nn.BatchNorm()</span><br><span class="line">        self.conv1 = nn.Conv2D(channels//<span class="number">4</span>, kernel_size=<span class="number">1</span>, strides=<span class="number">1</span>, use_bias=<span class="keyword">False</span>)</span><br><span class="line">        self.bn2 = nn.BatchNorm()</span><br><span class="line">        self.conv2 = _conv3x3(channels//<span class="number">4</span>, stride, channels//<span class="number">4</span>)</span><br><span class="line">        self.bn3 = nn.BatchNorm()</span><br><span class="line">        self.conv3 = nn.Conv2D(channels, kernel_size=<span class="number">1</span>, strides=<span class="number">1</span>, use_bias=<span class="keyword">False</span>)</span><br><span class="line">        <span class="keyword">if</span> downsample:</span><br><span class="line">            self.downsample = nn.Conv2D(channels, <span class="number">1</span>, stride, use_bias=<span class="keyword">False</span>,</span><br><span class="line">                                        in_channels=in_channels)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            self.downsample = <span class="keyword">None</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">hybrid_forward</span><span class="params">(self, F, x)</span>:</span></span><br><span class="line">        residual = x</span><br><span class="line">        x = self.bn1(x)</span><br><span class="line">        x = F.Activation(x, act_type=<span class="string">'relu'</span>)</span><br><span class="line">        <span class="keyword">if</span> self.downsample:</span><br><span class="line">            residual = self.downsample(x)</span><br><span class="line">        x = self.conv1(x)</span><br><span class="line"></span><br><span class="line">        x = self.bn2(x)</span><br><span class="line">        x = F.Activation(x, act_type=<span class="string">'relu'</span>)</span><br><span class="line">        x = self.conv2(x)</span><br><span class="line"></span><br><span class="line">        x = self.bn3(x)</span><br><span class="line">        x = F.Activation(x, act_type=<span class="string">'relu'</span>)</span><br><span class="line">        x = self.conv3(x)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> x + residual</span><br></pre></td></tr></table></figure></p>
+<h1 id="网络结构"><a href="#网络结构" class="headerlink" title="网络结构"></a>网络结构</h1><p>VGG-19、简单网络与ResNet的对比：</p>
+<p><img src="/images/ResNet解析_3.png" alt="图片"></p>
+<p>特点如下：</p>
+<ol>
+<li>对于相同的输出特征图尺寸，层具有相同数量的滤波器。  </li>
+<li>如果特征图尺寸减半，则滤波器数量加倍。通过步长为2的卷积层直接执行下采样。  </li>
+<li>网络以全局平均池化层和具有softmax的1000维全连接层结束。  </li>
+<li>不使用dropout。</li>
+</ol>
+<p>如下是作者讨论的各种ResNet的架构  </p>
+<p><img src="/images/ResNet解析_4.png" alt="图片"></p>
+<h1 id="ResNet解决了什么问题"><a href="#ResNet解决了什么问题" class="headerlink" title="ResNet解决了什么问题"></a>ResNet解决了什么问题</h1><p>ResNet解决什么问题？下面是一些观点：   </p>
+<ol>
+<li>梯度消失的角度。在进行梯度反传计算时，从误差函数(顶部)开始，朝着输入数据方向(底部)逐层计算梯度。当层串联在一起的时候，根据链式法则每层的梯度乘在一起，这样经常导致梯度大小指数衰减。从而在靠近底部的层只得到很小的梯度，随之权重的更新量也变小，使得他们的收敛缓慢，train不动了。越深的网络这个问题越明显。ResNet因为有一个恒等映射，相当于一个高速通道，梯度反传的时候可以直接通过这个高速通道反向传播，前面的层也有梯度，这样整个网络就可以更好的训练，也能将网络做的更深，得到更多的特征。</li>
+<li>梯度相关性的角度。<a href="https://arxiv.org/abs/1702.08591" target="_blank" rel="noopener">The Shattered Gradients Problem: If resnets are the answer, then what is the question?</a>这篇论文专门讨论ResNet为什么有效，论文大意是说，神经网络越来越深的时候，反传回来的梯度之间的相关性会越来越差，最后接近白噪声。因为我们知道图像是具备局部相关性的，那其实可以认为梯度也应该具备类似的相关性，这样更新的梯度才有意义，如果梯度接近白噪声，那梯度更新可能根本就是在做随机扰动。有了梯度相关性这个指标之后，作者分析了一系列的结构和激活函数，发现resnet在保持梯度相关性方面很优秀(相关性衰减从 $\frac{1}{2^L}$ 到了 $\frac{1}{2^L}$ ）。这一点其实也很好理解，从梯度流来看，有一路梯度是保持原样不动地往回传，这部分的相关性是非常强的。</li>
+</ol>
+<h1 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h1><p>[1]. <a href="https://arxiv.org/abs/1512.03385" target="_blank" rel="noopener">Deep Residual Learning for Image Recognition</a><br>[2]. <a href="https://arxiv.org/abs/1603.05027" target="_blank" rel="noopener">Identity Mappings in Deep Residual Networks</a><br>[3]. <a href="https://arxiv.org/abs/1409.1556" target="_blank" rel="noopener">Very Deep Convolutional Networks for Large-Scale Image Recognition</a><br>[4]. <a href="https://papers.nips.cc/paper/4824-imagenet-classification-with-deep-convolutional-neural-networks.pdf" target="_blank" rel="noopener">ImageNet Classification with Deep Convolutional<br>Neural Networks</a><br>[5]. <a href="http://www.dengfanxin.cn/wp-content/uploads/2016/03/1998Lecun.pdf" target="_blank" rel="noopener">Gradient-Based Learning Applied to Document Recognition</a><br>[6]. <a href="https://blog.csdn.net/lanran2/article/details/80247515" target="_blank" rel="noopener">ResNetV2：ResNet深度解析</a></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>持续技术分享，您的支持将鼓励我继续创作！</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.jpg" alt="乡间小路 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/ResNet/" rel="tag"># ResNet</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/06/13/LeNet、AlexNet、VGGNet总结/" rel="next" title="LeNet、AlexNet、VGGNet总结">
+                <i class="fa fa-chevron-left"></i> LeNet、AlexNet、VGGNet总结
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/06/16/linux常用命令 /" rel="prev" title="linux常用命令">
+                linux常用命令 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zNjg4MS8xMzQxNw=="></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.jpg"
+                alt="乡间小路" />
+            
+              <p class="site-author-name" itemprop="name">乡间小路</p>
+              <p class="site-description motion-element" itemprop="description">把知道的东西讲清楚</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">33</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-name">分类</span>
+                
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">62</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-globe"></i>
+                推荐博客
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://www.flickering.cn/" title="火光摇曳" target="_blank">火光摇曳</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://www.wulc.me/" title="吴良超的学习笔记" target="_blank">吴良超的学习笔记</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://www.cnblogs.com/pinard/" title="刘建平Pinard" target="_blank">刘建平Pinard</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://mlnote.com/" title="水滴石穿" target="_blank">水滴石穿</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://www.cnblogs.com/makefile/" title="明也无涯" target="_blank">明也无涯</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://noahsnail.com/" title="SnailTyan" target="_blank">SnailTyan</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://lanbing510.info/" title="求知若饥，知行合一" target="_blank">求知若饥，知行合一</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://saicoco.github.io/" title="Fix you" target="_blank">Fix you</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://qiankun214.github.io/" title="月见樽" target="_blank">月见樽</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://jacobkong.github.io/" title="Jacob Kong" target="_blank">Jacob Kong</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://www.cnblogs.com/xuanyuyt/" title="xuanyuyt" target="_blank">xuanyuyt</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://blog.csdn.net/sinat_26917383" title="悟乙己" target="_blank">悟乙己</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://blog.csdn.net/julialove102123" title="女王的宫殿" target="_blank">女王的宫殿</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#残差块"><span class="nav-number">1.</span> <span class="nav-text">残差块</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#什么样的残差块work？"><span class="nav-number">2.</span> <span class="nav-text">什么样的残差块work？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#残差块的代码实现"><span class="nav-number">3.</span> <span class="nav-text">残差块的代码实现</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#网络结构"><span class="nav-number">4.</span> <span class="nav-text">网络结构</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#ResNet解决了什么问题"><span class="nav-number">5.</span> <span class="nav-text">ResNet解决了什么问题</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考文献"><span class="nav-number">6.</span> <span class="nav-text">参考文献</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">乡间小路</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+
+  
+
+  
+
+</body>
+</html>

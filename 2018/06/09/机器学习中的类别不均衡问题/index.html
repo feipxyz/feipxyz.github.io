@@ -1,0 +1,911 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="类别不均衡,欠采样,过采样,再缩放,SMOTE,EasyEnsemble,BalanceCascade," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="类别不均衡是指在分类学习算法中，不同类别样本的比例相差悬殊，它会对算法的学习过程造成重大的干扰。">
+<meta name="keywords" content="类别不均衡,欠采样,过采样,再缩放,SMOTE,EasyEnsemble,BalanceCascade">
+<meta property="og:type" content="article">
+<meta property="og:title" content="机器学习中的类别不均衡问题">
+<meta property="og:url" content="flyrie.top/2018/06/09/机器学习中的类别不均衡问题/index.html">
+<meta property="og:site_name" content="乡间小路">
+<meta property="og:description" content="类别不均衡是指在分类学习算法中，不同类别样本的比例相差悬殊，它会对算法的学习过程造成重大的干扰。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-06-13T16:58:21.314Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="机器学习中的类别不均衡问题">
+<meta name="twitter:description" content="类别不均衡是指在分类学习算法中，不同类别样本的比例相差悬殊，它会对算法的学习过程造成重大的干扰。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"always","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="flyrie.top/2018/06/09/机器学习中的类别不均衡问题/"/>
+
+
+
+
+
+  <title>机器学习中的类别不均衡问题 | 乡间小路</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?95d8d402b20d99d1e2e6f2de7b397428";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">乡间小路</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="flyrie.top/2018/06/09/机器学习中的类别不均衡问题/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="乡间小路">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="乡间小路">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">机器学习中的类别不均衡问题</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-06-09T00:46:15+08:00">
+                2018-06-09
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/机器学习/" itemprop="url" rel="index">
+                    <span itemprop="name">机器学习</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>类别不均衡是指在分类学习算法中，不同类别样本的比例相差悬殊，它会对算法的学习过程造成重大的干扰。<a id="more"></a>比如在一个二分类的问题上，有1000个样本，其中5个正样本，995个负样本，在这种情况下，算法只需将所有的样本预测为负样本，那么它的精度也可以达到99.5%，虽然结果的精度很高，但它依然没有价值，因为这样的学习算法不能预测出正样本。 </p>
+<p>解决方法:</p>
+<ol>
+<li>欠采样，减少数量较多那一类样本的数量，使得正负样本比例均衡。</li>
+<li>过采样，增加数量较少那一类样本的数量，使得正负样本比例均衡。</li>
+<li>不处理样本，样本分类阈值移动。</li>
+</ol>
+<h1 id="欠采样"><a href="#欠采样" class="headerlink" title="欠采样"></a>欠采样</h1><p>如果随机从多数类样本中抽取一部分数据进行删除，可能会误删样本中一些重要的信息。不建议直接随机删除。目前比较流行的方法是EasyEnsemble和BalanceCascade。</p>
+<h2 id="EasyEnsemble"><a href="#EasyEnsemble" class="headerlink" title="EasyEnsemble"></a>EasyEnsemble</h2><ol>
+<li>首先从多数类中有放回随机抽取出若干子集。</li>
+<li>将每个子集与少数类数据联合起来训练生成多个基分类器。</li>
+<li>最终将这些基分类器组合形成一个集成学习系统。</li>
+</ol>
+<h2 id="BalanceCascade"><a href="#BalanceCascade" class="headerlink" title="BalanceCascade"></a>BalanceCascade</h2><p>通过一次随机欠采样产生训练集，训练一个分类器，对于那些分类正确的多数类样本不放回，然后对这个剩下的多数类样本再次进行欠采样产生第二个训练集，训练第二个分类器，同样把分类正确的样本不放回，以此类推，直到满足某个停止条件，最终的模型也是集成分类器。</p>
+<h1 id="过采样"><a href="#过采样" class="headerlink" title="过采样"></a>过采样</h1><p>过采样法不能简单地对初始正例样本进行重复采样，否则会造成严重的过拟合。目前的代表性算法是SMOTE，此算法基于“插值”来为少数类合成新的样本。</p>
+<h2 id="SMOTE"><a href="#SMOTE" class="headerlink" title="SMOTE"></a>SMOTE</h2><p>设训练集的一个少数类的样本数为 $T$ ，SMOTE算法将为这个少数类合成 $NT$ 个新样本。考虑该少数类的一个样本 $i$ ，其特征向量为 $\boldsymbol x_i,i\in\{1,…,T\}$ ：</p>
+<ol>
+<li><p>首先从该少数类的全部 $T$ 个样本中找到样本 $\boldsymbol x_i$ 的 $k$ 个近邻（例如用欧氏距离），记为 $\boldsymbol x_{i(near)},near\in\{1,…,k\}$ ；</p>
+</li>
+<li><p>然后从这 $k$ 个近邻中随机选择一个样本 $\boldsymbol x_{i(nn)}$ ，再生成一个 0 到 1 之间的随机数 $\zeta_1$ ，从而合成一个新样本 $\boldsymbol x_{i1}$ ：</p>
+<script type="math/tex; mode=display">
+\boldsymbol x_{i1}=\boldsymbol x_i+\zeta_1\cdot (\boldsymbol x_{i(nn)}−\boldsymbol x_i)</script></li>
+<li><p>将步骤2重复进行 $N$ 次，从而可以合成 $N$ 个新样本：$\boldsymbol x_{inew},new\in{1,…,N}$。</p>
+</li>
+</ol>
+<p>那么，对全部的 $T$ 个少数类样本进行上述操作，便可为该少数类合成 $NT$ 个新样本。</p>
+<p>如果样本的特征维数是 2 维，那么每个样本都可以用二维平面上的一个点来表示。SMOTE算法所合成出的一个新样本 $\boldsymbol x_{i1}$ 相当于是表示样本 $\boldsymbol x_i$ 的点和表示样本 $\boldsymbol x_{i(nn)}$ 的点之间所连线段上的一个点。所以说该算法是基于“插值”来合成新样本。</p>
+<h1 id="调整分类阈值"><a href="#调整分类阈值" class="headerlink" title="调整分类阈值"></a>调整分类阈值</h1><p>从线性分类器的角度来进行理解。使用 $\boldsymbol {y=\omega^Tx}+b$ 对新样本 $\boldsymbol x$ 进行分类的时候，实际上是在用预测出的 $\boldsymbol y$ 与一个阈值进行比较，比如通常情况下我们将这个阈值设置为 0.5。当大于 0.5 则判定为正例，否则判定为反例。$\boldsymbol y$ 实际上表达了正例的可能性，几率 $\frac{y}{1-y}$ 反映的是正例的可能性与反例的可能性的比值。当输出为 1 的时候表示两种可能性相同。所以有如下决策：</p>
+<script type="math/tex; mode=display">
+若\frac{y}{1-y}>1\ \ 则预测为正例</script><p>然而，当训练样本中的正负样本数目不同的时候，这时我们令 $m^+$ 表示正例样本的数量，$m^-$ 表示负样本的数量，则可以得到观测几率 $\frac{m^+}{m^-}$。<strong>因为通常假设训练集是真是样本集的无偏采样，所以观测几率也就代表了真实几率</strong>。所以应该存在下面的判定决策：</p>
+<script type="math/tex; mode=display">
+若\frac{y}{1-y}>\frac{m^+}{m^-}\ \ 则预测为正例</script><p>但是我们的分类器是基于 $\frac{y}{1-y}&gt;1$ 进行决策，所以，需要对上面这个预测值进行调整，使得在执行 $\frac{y}{1-y}&gt;1$ 时，实际是在执行 $\frac{y}{1-y}&gt;\frac{m^+}{m^-}$。只需要做出如下调整即可：</p>
+<script type="math/tex; mode=display">
+\frac{y'}{1-y'}=\frac{y}{1-y}\times \frac{m^-}{m^+}</script><p>而这也就是类别不平衡学习的基本策略——再缩放(rescaling)。</p>
+<p>从上面的公式中我们就可以看出，再缩放的思想十分简单，但是在实际应用中却并不是很容易，主要是 “训练集是真实样本总体的无偏采样” 这个假设往往不成立，也就是说，不一定能有效基于训练样本的观测几率来推断出真是几率。</p>
+<h1 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h1><p>[1]. <a href="https://www.cnblogs.com/Determined22/p/5772538.html" target="_blank" rel="noopener">类不平衡问题与SMOTE过采样算法</a><br>[2]. <a href="https://book.douban.com/subject/26708119/" target="_blank" rel="noopener">《机器学习》 周志华</a><br>[3]. <a href="https://blog.csdn.net/u011414200/article/details/50664266" target="_blank" rel="noopener">不均衡学习的抽样方法</a></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>持续技术分享，您的支持将鼓励我继续创作！</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.jpg" alt="乡间小路 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/类别不均衡/" rel="tag"># 类别不均衡</a>
+          
+            <a href="/tags/欠采样/" rel="tag"># 欠采样</a>
+          
+            <a href="/tags/过采样/" rel="tag"># 过采样</a>
+          
+            <a href="/tags/再缩放/" rel="tag"># 再缩放</a>
+          
+            <a href="/tags/SMOTE/" rel="tag"># SMOTE</a>
+          
+            <a href="/tags/EasyEnsemble/" rel="tag"># EasyEnsemble</a>
+          
+            <a href="/tags/BalanceCascade/" rel="tag"># BalanceCascade</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/06/08/支持向量机（SVM）/" rel="next" title="支持向量机（SVM）">
+                <i class="fa fa-chevron-left"></i> 支持向量机（SVM）
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/06/10/k-means聚类/" rel="prev" title="K-means聚类">
+                K-means聚类 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zNjg4MS8xMzQxNw=="></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.jpg"
+                alt="乡间小路" />
+            
+              <p class="site-author-name" itemprop="name">乡间小路</p>
+              <p class="site-description motion-element" itemprop="description">把知道的东西讲清楚</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">33</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-name">分类</span>
+                
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">62</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-globe"></i>
+                推荐博客
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://www.flickering.cn/" title="火光摇曳" target="_blank">火光摇曳</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://www.wulc.me/" title="吴良超的学习笔记" target="_blank">吴良超的学习笔记</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://www.cnblogs.com/pinard/" title="刘建平Pinard" target="_blank">刘建平Pinard</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://mlnote.com/" title="水滴石穿" target="_blank">水滴石穿</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://www.cnblogs.com/makefile/" title="明也无涯" target="_blank">明也无涯</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://noahsnail.com/" title="SnailTyan" target="_blank">SnailTyan</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://lanbing510.info/" title="求知若饥，知行合一" target="_blank">求知若饥，知行合一</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://saicoco.github.io/" title="Fix you" target="_blank">Fix you</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://qiankun214.github.io/" title="月见樽" target="_blank">月见樽</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://jacobkong.github.io/" title="Jacob Kong" target="_blank">Jacob Kong</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://www.cnblogs.com/xuanyuyt/" title="xuanyuyt" target="_blank">xuanyuyt</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://blog.csdn.net/sinat_26917383" title="悟乙己" target="_blank">悟乙己</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://blog.csdn.net/julialove102123" title="女王的宫殿" target="_blank">女王的宫殿</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#欠采样"><span class="nav-number">1.</span> <span class="nav-text">欠采样</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#EasyEnsemble"><span class="nav-number">1.1.</span> <span class="nav-text">EasyEnsemble</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#BalanceCascade"><span class="nav-number">1.2.</span> <span class="nav-text">BalanceCascade</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#过采样"><span class="nav-number">2.</span> <span class="nav-text">过采样</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#SMOTE"><span class="nav-number">2.1.</span> <span class="nav-text">SMOTE</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#调整分类阈值"><span class="nav-number">3.</span> <span class="nav-text">调整分类阈值</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考文献"><span class="nav-number">4.</span> <span class="nav-text">参考文献</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">乡间小路</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+
+  
+
+  
+
+</body>
+</html>

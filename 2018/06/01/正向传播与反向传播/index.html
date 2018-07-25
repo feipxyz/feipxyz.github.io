@@ -1,0 +1,968 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="神经网络,反向传播," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="神经网络中的梯度计算主要靠正向传播（forward propagation）和反向传播（back-propagation）。">
+<meta name="keywords" content="神经网络,反向传播">
+<meta property="og:type" content="article">
+<meta property="og:title" content="反向传播算法">
+<meta property="og:url" content="flyrie.top/2018/06/01/正向传播与反向传播/index.html">
+<meta property="og:site_name" content="乡间小路">
+<meta property="og:description" content="神经网络中的梯度计算主要靠正向传播（forward propagation）和反向传播（back-propagation）。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="/images/正向传播与反向传播_1.svg">
+<meta property="og:updated_time" content="2018-07-12T09:30:08.691Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="反向传播算法">
+<meta name="twitter:description" content="神经网络中的梯度计算主要靠正向传播（forward propagation）和反向传播（back-propagation）。">
+<meta name="twitter:image" content="/images/正向传播与反向传播_1.svg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"always","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="flyrie.top/2018/06/01/正向传播与反向传播/"/>
+
+
+
+
+
+  <title>反向传播算法 | 乡间小路</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?95d8d402b20d99d1e2e6f2de7b397428";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">乡间小路</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="flyrie.top/2018/06/01/正向传播与反向传播/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="乡间小路">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="乡间小路">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">反向传播算法</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-06-01T01:26:14+08:00">
+                2018-06-01
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/深度学习/" itemprop="url" rel="index">
+                    <span itemprop="name">深度学习</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>神经网络中的梯度计算主要靠正向传播（forward propagation）和反向传播（back-propagation）。<a id="more"></a></p>
+<p>正向传播指的是对神经网络沿着从输入层到输出层的顺序，依次计算并存储模型中间变量的过程。反向传播指的是计算神经网络参数梯度的方法。总的来说，反向传播中会依据微积分中的链式法则，沿着从输出层到输入层的顺序，依次计算并存储损失函数有关神经网络各层的中间变量以及参数的梯度。反向传播时，计算有关各层变量和参数的梯度可能会依赖于各层变量和参数的当前值。而这些变量的当前值来自正向传播的计算结果。</p>
+<p>为了解释正向传播和反向传播，我们以一个简单的$L_2$范数正则化的多层感知机为例。</p>
+<h1 id="定义模型"><a href="#定义模型" class="headerlink" title="定义模型"></a>定义模型</h1><p>我们以类别数为$q$的分类问题为例。给定一个特征为$\boldsymbol{x} \in \mathbb{R}^d$和标签为离散值$y$的训练数据样本。不考虑偏差项，我们可以得到中间变量</p>
+<script type="math/tex; mode=display">
+\boldsymbol{z} = \boldsymbol{W}^{(1)} \boldsymbol{x}</script><p>其中$\boldsymbol{W}^{(1)} \in \mathbb{R}^{h \times d}$是模型参数。将中间变量$\boldsymbol{z} \in \mathbb{R}^h$应用按元素操作的激活函数$\phi$后，我们将得到向量长度为$h$的隐藏层变量</p>
+<script type="math/tex; mode=display">
+\boldsymbol{h} = \phi (\boldsymbol{z})</script><p>隐藏层$\boldsymbol{h} \in \mathbb{R}^h$也是一个中间变量。通过模型参数$\boldsymbol{W}^{(2)} \in \mathbb{R}^{q \times h}$可以得到向量长度为$q$的输出层变量</p>
+<script type="math/tex; mode=display">
+\boldsymbol{o} = \boldsymbol{W}^{(2)} \boldsymbol{h}</script><p>假设损失函数为$\ell$，我们可以计算出单个数据样本的损失项</p>
+<script type="math/tex; mode=display">
+L = \ell(\boldsymbol{o}, y)</script><p>根据$L_2$范数正则化的定义，给定超参数$\lambda$，正则化项即</p>
+<script type="math/tex; mode=display">
+s = \frac{\lambda}{2} (|\boldsymbol{W}^{(1)}|_F^2 + |\boldsymbol{W}^{(2)}|_F^2)</script><p>其中每个矩阵Frobenius范数的平方项即该矩阵元素的平方和。最终，模型在给定的数据样本上带正则化的损失为</p>
+<script type="math/tex; mode=display">
+J = L + s</script><p>我们将$J$称为有关给定数据样本的目标函数，并在以下的讨论中简称目标函数。</p>
+<h1 id="模型计算图"><a href="#模型计算图" class="headerlink" title="模型计算图"></a>模型计算图</h1><p>为了可视化模型变量和参数之间在计算中的依赖关系，我们可以绘制模型计算图，如图3.6所示。例如，正则化项$s$的计算依赖模型参数$\boldsymbol{W}^{(1)}$和$\boldsymbol{W}^{(2)}$。</p>
+<p><img src="/images/正向传播与反向传播_1.svg" alt="图片"></p>
+<h1 id="正向传播"><a href="#正向传播" class="headerlink" title="正向传播"></a>正向传播</h1><p>在反向传播计算梯度之前，我们先做一次正向传播。也就是说，按照上图中箭头顺序，并根据模型参数的当前值，依次计算并存储模型中各个中间变量的值。例如，在计算损失项$L$之前，我们需要依次计算并存储$\boldsymbol{z}, \boldsymbol{h}, \boldsymbol{o}$的值。</p>
+<h1 id="反向传播"><a href="#反向传播" class="headerlink" title="反向传播"></a>反向传播</h1><p>计算图模型的参数是$\boldsymbol{W}^{(1)}$和$\boldsymbol{W}^{(2)}$。对于小批量中每个样本，我们都需要对目标函数$J$有关$\boldsymbol{W}^{(1)}$和$\boldsymbol{W}^{(2)}$的梯度求平均来迭代$\boldsymbol{W}^{(1)}$和$\boldsymbol{W}^{(2)}$。也就是说，每一次迭代都需要计算模型参数梯度$\partial J/\partial \boldsymbol{W}^{(1)}$和$\partial J/\partial \boldsymbol{W}^{(2)}$。根据计算图中的依赖关系，我们可以按照其中箭头所指的反方向依次计算并存储梯度。</p>
+<p>为了表述方便，对输入输出$\mathsf{X}, \mathsf{Y}, \mathsf{Z}$为任意形状张量的函数$\mathsf{Y}=f(\mathsf{X})$和$\mathsf{Z}=g(\mathsf{Y})$，我们使用</p>
+<script type="math/tex; mode=display">
+\frac{\partial \mathsf{Z}}{\partial \mathsf{X}} = \text{prod}(\frac{\partial \mathsf{Z}}{\partial \mathsf{Y}}, \frac{\partial \mathsf{Y}}{\partial \mathsf{X}})</script><p>来表达链式法则。</p>
+<p>首先，我们计算目标函数有关损失项和有关正则项的梯度</p>
+<script type="math/tex; mode=display">
+\frac{\partial J}{\partial L} = 1 \\
+\frac{\partial J}{\partial s} = 1</script><p>其次，我们依据链式法则计算目标函数有关输出层变量的梯度$\partial J/\partial \boldsymbol{o} \in \mathbb{R}^q$：</p>
+<script type="math/tex; mode=display">
+\frac{\partial J}{\partial \boldsymbol{o}} = \text{prod}(\frac{\partial J}{\partial L}, \frac{\partial L}{\partial \boldsymbol{o}}) = \frac{\partial L}{\partial \boldsymbol{o}}</script><p>接下来，我们可以很直观地计算出正则项有关两个参数的梯度：</p>
+<script type="math/tex; mode=display">
+\frac{\partial s}{\partial \boldsymbol{W}^{(1)}} = \lambda \boldsymbol{W}^{(1)} \\
+\frac{\partial s}{\partial \boldsymbol{W}^{(2)}} = \lambda \boldsymbol{W}^{(2)}</script><p>现在，我们可以计算最靠近输出层的模型参数的梯度$\partial J/\partial \boldsymbol{W}^{(2)} \in \mathbb{R}^{q \times h}$。在计算图中，$J$分别通过$\boldsymbol{o}$和$s$依赖$\boldsymbol{W}^{(2)}$。依据链式法则，我们得到</p>
+<script type="math/tex; mode=display">
+\frac{\partial J}{\partial \boldsymbol{W}^{(2)}} = \text{prod}(\frac{\partial J}{\partial \boldsymbol{o}}, \frac{\partial \boldsymbol{o}}{\partial \boldsymbol{W}^{(2)}}) + \text{prod}(\frac{\partial J}{\partial s}, \frac{\partial s}{\partial \boldsymbol{W}^{(2)}}) = \frac{\partial J}{\partial \boldsymbol{o}} \boldsymbol{h}^\top + \lambda \boldsymbol{W}^{(2)}</script><p>沿着输出层向隐藏层继续反向传播，隐藏层变量的梯度$\partial J/\partial \boldsymbol{h} \in \mathbb{R}^h$可以这样计算：</p>
+<script type="math/tex; mode=display">
+\frac{\partial J}{\partial \boldsymbol{h}} = \text{prod}(\frac{\partial J}{\partial \boldsymbol{o}}, \frac{\partial \boldsymbol{o}}{\partial \boldsymbol{h}}) = {\boldsymbol{W}^{(2)}}^\top \frac{\partial J}{\partial \boldsymbol{o}}</script><p>其中，激活函数$\phi$是按元素操作的。中间变量$\boldsymbol{z}$的梯度$\partial J/\partial \boldsymbol{z} \in \mathbb{R}^h$的计算需要使用按元素乘法符$\odot$：</p>
+<script type="math/tex; mode=display">
+\frac{\partial J}{\partial \boldsymbol{z}} = \text{prod}(\frac{\partial J}{\partial \boldsymbol{h}}, \frac{\partial \boldsymbol{h}}{\partial \boldsymbol{z}}) = \frac{\partial J}{\partial \boldsymbol{h}} \odot \phi^\prime(\boldsymbol{z})</script><p>最终，我们可以得到最靠近输入层的模型参数的梯度$\partial J/\partial \boldsymbol{W}^{(1)} \in \mathbb{R}^{h \times d}$。在计算图中，$J$分别通过$\boldsymbol{z}$和$s$依赖$\boldsymbol{W}^{(1)}$。依据链式法则，我们得到</p>
+<script type="math/tex; mode=display">
+\frac{\partial J}{\partial \boldsymbol{W}^{(1)}} = \text{prod}(\frac{\partial J}{\partial \boldsymbol{z}}, \frac{\partial \boldsymbol{z}}{\partial \boldsymbol{W}^{(1)}}) + \text{prod}(\frac{\partial J}{\partial s}, \frac{\partial s}{\partial \boldsymbol{W}^{(1)}}) = \frac{\partial J}{\partial \boldsymbol{z}} \boldsymbol{x}^\top + \lambda \boldsymbol{W}^{(1)}</script><p>需要强调的是，每次迭代中，上述各个依次计算出的梯度会被依次存储或更新。这可以用来避免重复计算某些梯度需要的值。例如，由于输出层变量梯度$\partial J/\partial \boldsymbol{o}$被计算存储，反向传播稍后的参数梯度$\partial J/\partial \boldsymbol{W}^{(2)}$和隐藏层变量梯度$\partial J/\partial \boldsymbol{h}$的计算可以直接读取输出层变量梯度的值，而无需重复计算。</p>
+<h1 id="正向传播和反向传播相互依赖"><a href="#正向传播和反向传播相互依赖" class="headerlink" title="正向传播和反向传播相互依赖"></a>正向传播和反向传播相互依赖</h1><p>事实上，正向传播和反向传播相互依赖。为什么这么说呢？</p>
+<p>一方面，正向传播的计算可能依赖于模型参数的当前值。而这些模型参数是在反向传播的梯度计算后通过优化算法迭代的。例如，计算图中，计算正则化项$s$依赖模型参数$\boldsymbol{W}^{(1)}$和$\boldsymbol{W}^{(2)}$的当前值。而这些当前值是优化算法最近一次根据反向传播算出梯度后迭代得到的。</p>
+<p>另一方面，反向传播的梯度计算可能依赖于各变量的当前值。而这些变量的当前值是通过正向传播计算的。举例来说，参数梯度$\partial J/\partial \boldsymbol{W}^{(2)}$的计算需要依赖隐藏层变量的当前值$\boldsymbol{h}$。这个当前值是通过从输入层到输出层的正向传播计算并存储得到的。</p>
+<p>因此，在模型参数初始化完成后，我们可以交替地进行正向传播和反向传播，并根据反向传播计算的梯度迭代模型参数。</p>
+<h1 id="卷积网络中的反向传播"><a href="#卷积网络中的反向传播" class="headerlink" title="卷积网络中的反向传播"></a>卷积网络中的反向传播</h1><p>卷积神经网络相比于多层感知机，增加了两种新的层次——卷积层与池化层。</p>
+<h2 id="池化层梯度"><a href="#池化层梯度" class="headerlink" title="池化层梯度"></a>池化层梯度</h2><p>池化层用于削减数据量，在这一层上前向传播的数据会有损失，则在反向传播时，传播来的梯度也会有所损失。一般来说，池化层没有参数，于是仅需要计算梯度反向传播的结果。</p>
+<p>池化层的反向传播的方法是upsample，先将矩阵还原成原大小，之后：</p>
+<ul>
+<li>对于最大值池化，将梯度放置于每个池化区域取得最大值的位置，其他位置为0</li>
+<li>对于平均值池化，则把的所有子矩阵的各个池化局域的值取平均后放在还原后的子矩阵位置</li>
+</ul>
+<p>例如对于矩阵：</p>
+<script type="math/tex; mode=display">
+\left( \begin{array}{} 1& 2 \\ 3& 4 \end{array} \right)</script><p>假设经过$2\times2$的池化，还原为原来大小：</p>
+<script type="math/tex; mode=display">
+\left( \begin{array}{ccc} 0&0&0&0 \\ 0&1& 2&0 \\ 0&3&4&0 \\ 0&0&0&0 \end{array} \right)</script><p>若是最大值池化，假设每个窗口的最大值位置都是左上，则传播结果为：</p>
+<script type="math/tex; mode=display">
+\left( \begin{array}{ccc} 1&0&2&0 \\ 0&0& 0&0 \\ 3&0&4&0 \\ 0&0&0&0 \end{array} \right)</script><p>若是经过平均值池化，则传播结果为：</p>
+<script type="math/tex; mode=display">
+\left( \begin{array}{ccc} 0.25&0.25&0.5&0.5 \\ 0.25&0.25& 0.5&0.5 \\ 0.75&0.75&1&1 \\ 0.75&0.75&1&1 \end{array} \right)</script><h2 id="卷积层梯度"><a href="#卷积层梯度" class="headerlink" title="卷积层梯度"></a>卷积层梯度</h2><h3 id="已知卷积层的-delta-l-，求上一隐藏层的-delta-l-1"><a href="#已知卷积层的-delta-l-，求上一隐藏层的-delta-l-1" class="headerlink" title="已知卷积层的$\delta^l$，求上一隐藏层的$\delta^l-1$"></a>已知卷积层的$\delta^l$，求上一隐藏层的$\delta^l-1$</h3><p>　<br>对于卷积网络，前向传播公式为：</p>
+<script type="math/tex; mode=display">
+a^l= \sigma(z^l) = \sigma(a^{l-1}*W^l +b^l)</script><p>其中，上标代表层数，星号代表卷积，而 $b$ 代表偏置, $\sigma$ 为激活函数，这里一般都是ReLU。</p>
+<p>DNN的反向传播公式为：</p>
+<script type="math/tex; mode=display">
+\delta^{l} = \cfrac{\partial J(W,b)}{\partial z^l} = \cfrac{\partial J(W,b)}{\partial z^{l+1}}\cfrac{\partial z^{l+1}}{\partial z^{l}} = \delta^{l+1}\cfrac{\partial z^{l+1}}{\partial z^{l}}</script><p>因此要推导出$\delta^{l-1}$和$\delta^{l}$的递推关系，必须计算$\frac{\partial z^{l}}{\partial z^{l-1}}$的梯度表达式。注意到$z^{l}$和$z^{l-1}$的关系为：</p>
+<script type="math/tex; mode=display">
+z^l = a^{l-1}*W^l +b^l =\sigma(z^{l-1})*W^l +b^l</script><p>因此：</p>
+<script type="math/tex; mode=display">
+\delta^{l-1} =  \delta^{l}\frac{\partial z^{l}}{\partial z^{l-1}} = \delta^{l}*rot180(W^{l}) \odot  \sigma^{'}(z^{l-1})</script><p>这里对于含有卷积的式子求导时，卷积核被旋转了180度。即式子中的<code>rot180()</code>，翻转180度的意思是上下翻转一次，接着左右翻转一次。在DNN中这里只是矩阵的转置。那么为什么呢？</p>
+<p>举一个例子来说明，对于以下卷积等式：</p>
+<script type="math/tex; mode=display">
+\left( \begin{array}{ccc} a_{11}&a_{12}&a_{13} \\ a_{21}&a_{22}&a_{23}\\ a_{31}&a_{32}&a_{33} \end{array} \right)    *  \left( \begin{array}{ccc} w_{11}&w_{12}\\ w_{21}&w_{22} \end{array} \right) = \left( \begin{array}{ccc} z_{11}&z_{12}\\ z_{21}&z_{22} \end{array} \right)</script><p>利用卷积的定义，很容易得出：</p>
+<script type="math/tex; mode=display">
+z_{11} = a_{11}w_{11} + a_{12}w_{12} + a_{21}w_{21} +   a_{22}w_{22} \\
+z_{12} = a_{12}w_{11} + a_{13}w_{12} + a_{22}w_{21} +   a_{23}w_{22} \\
+z_{21} = a_{21}w_{11} + a_{22}w_{12} + a_{31}w_{21} +   a_{32}w_{22} \\
+z_{22} = a_{22}w_{11} + a_{23}w_{12} + a_{32}w_{21} +   a_{33}w_{22} \\</script><p>接着我们模拟反向求导：</p>
+<script type="math/tex; mode=display">
+\nabla a^{l-1} = \frac{\partial J(W,b)}{\partial a^{l-1}} = \frac{\partial J(W,b)}{\partial z^{l}} \frac{\partial z^{l}}{\partial a^{l-1}} = \delta^{l} \frac{\partial z^{l}}{\partial a^{l-1}}</script><p>比如对于$a_{11}$的梯度，由于在4个等式中$a_{11}$只和$z_{11}$有乘积关系，从而：</p>
+<script type="math/tex; mode=display">
+\nabla a_{11} = \delta_{11}w_{11}</script><p>对于$a_{12}$的梯度，由于在4个等式中$a_{12}$和$z_{12}，z_{11}$有乘积关系，从而：</p>
+<script type="math/tex; mode=display">
+\nabla a_{12} = \delta_{11}w_{12} + \delta_{12}w_{11}</script><p>同样的道理我们得到：</p>
+<script type="math/tex; mode=display">
+\nabla a_{13} = \delta_{12}w_{12} \\
+\nabla a_{21} = \delta_{11}w_{21} + \delta_{21}w_{11} \\
+\nabla a_{22} = \delta_{11}w_{22} + \delta_{12}w_{21} + \delta_{21}w_{12} + \delta_{22}w_{11} \\
+\nabla a_{23} = \delta_{12}w_{22} + \delta_{22}w_{12} \\
+\nabla a_{31} = \delta_{21}w_{21} \\
+\nabla a_{32} = \delta_{21}w_{22} + \delta_{22}w_{21} \\
+\nabla a_{33} = \delta_{22}w_{22} \\</script><p>这上面9个式子可以用一个矩阵卷积的形式表示，即：</p>
+<script type="math/tex; mode=display">
+\left( \begin{array}{ccc} 0&0&0&0 \\ 0&\delta_{11}& \delta_{12}&0 \\ 0&\delta_{21}&\delta_{22}&0 \\ 0&0&0&0 \end{array} \right) * \left( \begin{array}{ccc} w_{22}&w_{21}\\ w_{12}&w_{11} \end{array} \right)  = \left( \begin{array}{ccc} \nabla a_{11}&\nabla a_{12}&\nabla a_{13} \\ \nabla a_{21}&\nabla a_{22}&\nabla a_{23}\\ \nabla a_{31}&\nabla a_{32}&\nabla a_{33} \end{array} \right)</script><p>为了符合梯度计算，我们在误差矩阵周围填充了一圈0，此时我们将卷积核翻转后和反向传播的梯度误差进行卷积，就得到了前一次的梯度误差。这个例子直观的介绍了为什么对含有卷积的式子求导时，卷积核要翻转180度的原因。</p>
+<h3 id="已知卷积层的-delta-l-，推导该层的-W-b-的梯度"><a href="#已知卷积层的-delta-l-，推导该层的-W-b-的梯度" class="headerlink" title="已知卷积层的$\delta^l$，推导该层的$W,b$的梯度"></a>已知卷积层的$\delta^l$，推导该层的$W,b$的梯度</h3><p>现在已经可以递推出每一层的梯度$\delta^l$了，对于全连接层，可以按DNN的反向传播算法求该层$W,b$的梯度，而池化层并没有$W,b$，也不用求$W,b$的梯度。只有卷积层的$W,b$需要求出。</p>
+<p>注意到卷积层z和W,b的关系为：</p>
+<script type="math/tex; mode=display">
+z^l = a^{l-1}*W^l +b</script><p>因此我们有：</p>
+<script type="math/tex; mode=display">
+\frac{\partial J(W,b)}{\partial W^{l}} = \frac{\partial J(W,b)}{\partial z^{l}}\frac{\partial z^{l}}{\partial W^{l}} =\delta^l*rot180(a^{l-1})</script><p>而对于$b$,则稍微有些特殊，因为$\delta^l$是三维张量，而$b$只是一个向量，不能像DNN那样直接和$\delta^l$相成。通常的做法是将$\delta^l$的各个子矩阵的项分别求和，得到一个误差向量，即为$b$的梯度：</p>
+<script type="math/tex; mode=display">
+\frac{\partial J(W,b)}{\partial b^{l}} = \sum\limits_{u,v}(\delta^l)_{u,v}</script><h1 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h1><p>[1]. <a href="http://zh.gluon.ai/chapter_recurrent-neural-networks/bptt.html" target="_blank" rel="noopener">动手深度学习</a><br>[2]. <a href="https://www.cnblogs.com/pinard/p/6494810.html" target="_blank" rel="noopener">卷积神经网络(CNN)反向传播算法</a></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>持续技术分享，您的支持将鼓励我继续创作！</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.jpg" alt="乡间小路 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/神经网络/" rel="tag"># 神经网络</a>
+          
+            <a href="/tags/反向传播/" rel="tag"># 反向传播</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/05/31/K近邻法/" rel="next" title="K近邻法">
+                <i class="fa fa-chevron-left"></i> K近邻法
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/06/02/EffectivePython读书笔记/" rel="prev" title="《Effective Python》 读书笔记">
+                《Effective Python》 读书笔记 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zNjg4MS8xMzQxNw=="></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.jpg"
+                alt="乡间小路" />
+            
+              <p class="site-author-name" itemprop="name">乡间小路</p>
+              <p class="site-description motion-element" itemprop="description">把知道的东西讲清楚</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">33</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-name">分类</span>
+                
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">62</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-globe"></i>
+                推荐博客
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://www.flickering.cn/" title="火光摇曳" target="_blank">火光摇曳</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://www.wulc.me/" title="吴良超的学习笔记" target="_blank">吴良超的学习笔记</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://www.cnblogs.com/pinard/" title="刘建平Pinard" target="_blank">刘建平Pinard</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://mlnote.com/" title="水滴石穿" target="_blank">水滴石穿</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://www.cnblogs.com/makefile/" title="明也无涯" target="_blank">明也无涯</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://noahsnail.com/" title="SnailTyan" target="_blank">SnailTyan</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://lanbing510.info/" title="求知若饥，知行合一" target="_blank">求知若饥，知行合一</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://saicoco.github.io/" title="Fix you" target="_blank">Fix you</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://qiankun214.github.io/" title="月见樽" target="_blank">月见樽</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://jacobkong.github.io/" title="Jacob Kong" target="_blank">Jacob Kong</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://www.cnblogs.com/xuanyuyt/" title="xuanyuyt" target="_blank">xuanyuyt</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://blog.csdn.net/sinat_26917383" title="悟乙己" target="_blank">悟乙己</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://blog.csdn.net/julialove102123" title="女王的宫殿" target="_blank">女王的宫殿</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#定义模型"><span class="nav-number">1.</span> <span class="nav-text">定义模型</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#模型计算图"><span class="nav-number">2.</span> <span class="nav-text">模型计算图</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#正向传播"><span class="nav-number">3.</span> <span class="nav-text">正向传播</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#反向传播"><span class="nav-number">4.</span> <span class="nav-text">反向传播</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#正向传播和反向传播相互依赖"><span class="nav-number">5.</span> <span class="nav-text">正向传播和反向传播相互依赖</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#卷积网络中的反向传播"><span class="nav-number">6.</span> <span class="nav-text">卷积网络中的反向传播</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#池化层梯度"><span class="nav-number">6.1.</span> <span class="nav-text">池化层梯度</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#卷积层梯度"><span class="nav-number">6.2.</span> <span class="nav-text">卷积层梯度</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#已知卷积层的-delta-l-，求上一隐藏层的-delta-l-1"><span class="nav-number">6.2.1.</span> <span class="nav-text">已知卷积层的$\delta^l$，求上一隐藏层的$\delta^l-1$</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#已知卷积层的-delta-l-，推导该层的-W-b-的梯度"><span class="nav-number">6.2.2.</span> <span class="nav-text">已知卷积层的$\delta^l$，推导该层的$W,b$的梯度</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考文献"><span class="nav-number">7.</span> <span class="nav-text">参考文献</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">乡间小路</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+
+  
+
+  
+
+</body>
+</html>

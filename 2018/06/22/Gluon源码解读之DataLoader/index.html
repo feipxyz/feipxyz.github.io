@@ -1,0 +1,893 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="mxnet," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="本文介绍mxnet中数据加载的两个类Dataset与DataLoader。">
+<meta name="keywords" content="mxnet">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Mxnet源码解读之Dataset与DataLoader">
+<meta property="og:url" content="flyrie.top/2018/06/22/Gluon源码解读之DataLoader/index.html">
+<meta property="og:site_name" content="乡间小路">
+<meta property="og:description" content="本文介绍mxnet中数据加载的两个类Dataset与DataLoader。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-07-15T01:51:22.200Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Mxnet源码解读之Dataset与DataLoader">
+<meta name="twitter:description" content="本文介绍mxnet中数据加载的两个类Dataset与DataLoader。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"always","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="flyrie.top/2018/06/22/Gluon源码解读之DataLoader/"/>
+
+
+
+
+
+  <title>Mxnet源码解读之Dataset与DataLoader | 乡间小路</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?95d8d402b20d99d1e2e6f2de7b397428";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">乡间小路</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="flyrie.top/2018/06/22/Gluon源码解读之DataLoader/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="乡间小路">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="乡间小路">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Mxnet源码解读之Dataset与DataLoader</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-06-22T00:46:14+08:00">
+                2018-06-22
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/深度学习/" itemprop="url" rel="index">
+                    <span itemprop="name">深度学习</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/深度学习/mxnet/" itemprop="url" rel="index">
+                    <span itemprop="name">mxnet</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>本文介绍mxnet中数据加载的两个类<code>Dataset</code>与<code>DataLoader</code>。<a id="more"></a></p>
+<h1 id="Dataset基类"><a href="#Dataset基类" class="headerlink" title="Dataset基类"></a>Dataset基类</h1><ol>
+<li>所有的DataSet类继承自<code>Dataset</code>抽象类，且必须实现<code>__getitem__</code>和<code>__len__</code>方法。</li>
+<li><code>transform(self, fn, lazy=True)</code>。在原数据集上应用<code>fn</code>方法得到一个新的数据集。如果<code>lazy</code>为<code>False</code>，立即返回一个新的数据集，如果<code>lazy</code>为<code>True</code>，返回的是一个含有转换方法的类，在真正使用数据的时候再进行转换。<code>fn</code>是转换函数，针对每一个样本。</li>
+<li><code>transform_first(self, fn, lazy=True)</code>，只对第一个元素做transform操作，例如只对data做操作，而保持label不变<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Dataset</span><span class="params">(object)</span>:</span></span><br><span class="line">    <span class="string">"""Abstract dataset class. All datasets should have this interface.</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    Subclasses need to override `__getitem__`, which returns the i-th</span></span><br><span class="line"><span class="string">    element, and `__len__`, which returns the total number elements.</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    .. note:: An mxnet or numpy array can be directly used as a dataset.</span></span><br><span class="line"><span class="string">    """</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__getitem__</span><span class="params">(self, idx)</span>:</span></span><br><span class="line">        <span class="keyword">raise</span> NotImplementedError</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__len__</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="keyword">raise</span> NotImplementedError</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">transform</span><span class="params">(self, fn, lazy=True)</span>:</span></span><br><span class="line">        <span class="string">"""Returns a new dataset with each sample transformed by the</span></span><br><span class="line"><span class="string">        transformer function `fn`.</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">        Parameters</span></span><br><span class="line"><span class="string">        ----------</span></span><br><span class="line"><span class="string">        fn : callable</span></span><br><span class="line"><span class="string">            A transformer function that takes a sample as input and</span></span><br><span class="line"><span class="string">            returns the transformed sample.</span></span><br><span class="line"><span class="string">        lazy : bool, default True</span></span><br><span class="line"><span class="string">            If False, transforms all samples at once. Otherwise,</span></span><br><span class="line"><span class="string">            transforms each sample on demand. Note that if `fn`</span></span><br><span class="line"><span class="string">            is stochastic, you must set lazy to True or you will</span></span><br><span class="line"><span class="string">            get the same result on all epochs.</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">        Returns</span></span><br><span class="line"><span class="string">        -------</span></span><br><span class="line"><span class="string">        Dataset</span></span><br><span class="line"><span class="string">            The transformed dataset.</span></span><br><span class="line"><span class="string">        """</span></span><br><span class="line">        trans = _LazyTransformDataset(self, fn)</span><br><span class="line">        <span class="keyword">if</span> lazy:</span><br><span class="line">            <span class="keyword">return</span> trans</span><br><span class="line">        <span class="keyword">return</span> SimpleDataset([i <span class="keyword">for</span> i <span class="keyword">in</span> trans])</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">transform_first</span><span class="params">(self, fn, lazy=True)</span>:</span></span><br><span class="line">        <span class="string">"""Returns a new dataset with the first element of each sample</span></span><br><span class="line"><span class="string">        transformed by the transformer function `fn`.</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">        This is useful, for example, when you only want to transform data</span></span><br><span class="line"><span class="string">        while keeping label as is.</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">        Parameters</span></span><br><span class="line"><span class="string">        ----------</span></span><br><span class="line"><span class="string">        fn : callable</span></span><br><span class="line"><span class="string">            A transformer function that takes the first elemtn of a sample</span></span><br><span class="line"><span class="string">            as input and returns the transformed element.</span></span><br><span class="line"><span class="string">        lazy : bool, default True</span></span><br><span class="line"><span class="string">            If False, transforms all samples at once. Otherwise,</span></span><br><span class="line"><span class="string">            transforms each sample on demand. Note that if `fn`</span></span><br><span class="line"><span class="string">            is stochastic, you must set lazy to True or you will</span></span><br><span class="line"><span class="string">            get the same result on all epochs.</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">        Returns</span></span><br><span class="line"><span class="string">        -------</span></span><br><span class="line"><span class="string">        Dataset</span></span><br><span class="line"><span class="string">            The transformed dataset.</span></span><br><span class="line"><span class="string">        """</span></span><br><span class="line">        <span class="function"><span class="keyword">def</span> <span class="title">base_fn</span><span class="params">(x, *args)</span>:</span></span><br><span class="line">            <span class="keyword">if</span> args:</span><br><span class="line">                <span class="keyword">return</span> (fn(x),) + args</span><br><span class="line">            <span class="keyword">return</span> fn(x)</span><br><span class="line">        <span class="keyword">return</span> self.transform(base_fn, lazy)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">_fork</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="string">"""Protective operations required when launching multiprocess workers."""</span></span><br><span class="line">        <span class="comment"># for non file descriptor related datasets, just skip</span></span><br><span class="line">        <span class="keyword">pass</span></span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h1 id="ImageFolderDataset派生类"><a href="#ImageFolderDataset派生类" class="headerlink" title="ImageFolderDataset派生类"></a>ImageFolderDataset派生类</h1><ol>
+<li><code>root</code>是存放图片的根目录。如<code>root/car/0001.jpg root/car/xxxa.jpg root/car/yyyb.jpg</code></li>
+<li><code>flag</code>表示要不要转换为3通道，If 0, always convert loaded images to greyscale (1 channel). If 1, always convert loaded images to colored (3 channels).<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ImageFolderDataset</span><span class="params">(dataset.Dataset)</span>:</span></span><br><span class="line">    <span class="string">"""A dataset for loading image files stored in a folder structure like::</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">        root/car/0001.jpg</span></span><br><span class="line"><span class="string">        root/car/xxxa.jpg</span></span><br><span class="line"><span class="string">        root/car/yyyb.jpg</span></span><br><span class="line"><span class="string">        root/bus/123.jpg</span></span><br><span class="line"><span class="string">        root/bus/023.jpg</span></span><br><span class="line"><span class="string">        root/bus/wwww.jpg</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    Parameters</span></span><br><span class="line"><span class="string">    ----------</span></span><br><span class="line"><span class="string">    root : str</span></span><br><span class="line"><span class="string">        Path to root directory.</span></span><br><span class="line"><span class="string">    flag : &#123;0, 1&#125;, default 1</span></span><br><span class="line"><span class="string">        If 0, always convert loaded images to greyscale (1 channel).</span></span><br><span class="line"><span class="string">        If 1, always convert loaded images to colored (3 channels).</span></span><br><span class="line"><span class="string">    transform : callable, default None</span></span><br><span class="line"><span class="string">        A function that takes data and label and transforms them:</span></span><br><span class="line"><span class="string">    ::</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">        transform = lambda data, label: (data.astype(np.float32)/255, label)</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    Attributes</span></span><br><span class="line"><span class="string">    ----------</span></span><br><span class="line"><span class="string">    synsets : list</span></span><br><span class="line"><span class="string">        List of class names. `synsets[i]` is the name for the integer label `i`</span></span><br><span class="line"><span class="string">    items : list of tuples</span></span><br><span class="line"><span class="string">        List of all images in (filename, label) pairs.</span></span><br><span class="line"><span class="string">    """</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, root, flag=<span class="number">1</span>, transform=None)</span>:</span></span><br><span class="line">        self._root = os.path.expanduser(root)</span><br><span class="line">        self._flag = flag</span><br><span class="line">        self._transform = transform</span><br><span class="line">        self._exts = [<span class="string">'.jpg'</span>, <span class="string">'.jpeg'</span>, <span class="string">'.png'</span>]</span><br><span class="line">        self._list_images(self._root)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">_list_images</span><span class="params">(self, root)</span>:</span></span><br><span class="line">        self.synsets = []</span><br><span class="line">        self.items = []</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> folder <span class="keyword">in</span> sorted(os.listdir(root)):</span><br><span class="line">            path = os.path.join(root, folder)</span><br><span class="line">            <span class="keyword">if</span> <span class="keyword">not</span> os.path.isdir(path):</span><br><span class="line">                warnings.warn(<span class="string">'Ignoring %s, which is not a directory.'</span>%path, stacklevel=<span class="number">3</span>)</span><br><span class="line">                <span class="keyword">continue</span></span><br><span class="line"></span><br><span class="line">            <span class="comment"># 给每个文件夹从0开始生成一个label，将对应的文件夹名称放到synsets里面</span></span><br><span class="line">            label = len(self.synsets)</span><br><span class="line">            self.synsets.append(folder)</span><br><span class="line"></span><br><span class="line">            <span class="comment"># 将文件夹中所有的filename加入到self.items中</span></span><br><span class="line">            <span class="keyword">for</span> filename <span class="keyword">in</span> sorted(os.listdir(path)):</span><br><span class="line">                filename = os.path.join(path, filename)</span><br><span class="line">                <span class="comment"># 得到扩展名，判断下是不是支持的扩展名</span></span><br><span class="line">                ext = os.path.splitext(filename)[<span class="number">1</span>]</span><br><span class="line">                <span class="keyword">if</span> ext.lower() <span class="keyword">not</span> <span class="keyword">in</span> self._exts:</span><br><span class="line">                    warnings.warn(<span class="string">'Ignoring %s of type %s. Only support %s'</span>%(</span><br><span class="line">                        filename, ext, <span class="string">', '</span>.join(self._exts)))</span><br><span class="line">                    <span class="keyword">continue</span></span><br><span class="line">                self.items.append((filename, label))</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__getitem__</span><span class="params">(self, idx)</span>:</span></span><br><span class="line">        img = image.imread(self.items[idx][<span class="number">0</span>], self._flag)</span><br><span class="line">        label = self.items[idx][<span class="number">1</span>]</span><br><span class="line">        <span class="keyword">if</span> self._transform <span class="keyword">is</span> <span class="keyword">not</span> <span class="keyword">None</span>:</span><br><span class="line">            <span class="keyword">return</span> self._transform(img, label)</span><br><span class="line">        <span class="keyword">return</span> img, label</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__len__</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="keyword">return</span> len(self.items)</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h1 id="DataLoader"><a href="#DataLoader" class="headerlink" title="DataLoader"></a>DataLoader</h1><ol>
+<li><code>dataset</code>：一个<code>Dataset</code>的对象。</li>
+<li><code>batch_size</code>：批量大小。</li>
+<li><code>shuffle</code>：是否打乱次序。</li>
+<li><code>last_batch</code>：当最后一个批量大小不足<code>batch_size</code>时，如何处理。<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">DataLoader</span><span class="params">(object)</span>:</span></span><br><span class="line">    <span class="string">"""Loads data from a dataset and returns mini-batches of data.</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    Parameters</span></span><br><span class="line"><span class="string">    ----------</span></span><br><span class="line"><span class="string">    dataset : Dataset</span></span><br><span class="line"><span class="string">        Source dataset. Note that numpy and mxnet arrays can be directly used</span></span><br><span class="line"><span class="string">        as a Dataset.</span></span><br><span class="line"><span class="string">    batch_size : int</span></span><br><span class="line"><span class="string">        Size of mini-batch.</span></span><br><span class="line"><span class="string">    shuffle : bool</span></span><br><span class="line"><span class="string">        Whether to shuffle the samples.</span></span><br><span class="line"><span class="string">    sampler : Sampler</span></span><br><span class="line"><span class="string">        The sampler to use. Either specify sampler or shuffle, not both.</span></span><br><span class="line"><span class="string">    last_batch : &#123;'keep', 'discard', 'rollover'&#125;</span></span><br><span class="line"><span class="string">        How to handle the last batch if batch_size does not evenly divide</span></span><br><span class="line"><span class="string">        `len(dataset)`.</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">        keep - A batch with less samples than previous batches is returned.</span></span><br><span class="line"><span class="string">        discard - The last batch is discarded if its incomplete.</span></span><br><span class="line"><span class="string">        rollover - The remaining samples are rolled over to the next epoch.</span></span><br><span class="line"><span class="string">    batch_sampler : Sampler</span></span><br><span class="line"><span class="string">        A sampler that returns mini-batches. Do not specify batch_size,</span></span><br><span class="line"><span class="string">        shuffle, sampler, and last_batch if batch_sampler is specified.</span></span><br><span class="line"><span class="string">    batchify_fn : callable</span></span><br><span class="line"><span class="string">        Callback function to allow users to specify how to merge samples</span></span><br><span class="line"><span class="string">        into a batch. Defaults to `default_batchify_fn`::</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">            def default_batchify_fn(data):</span></span><br><span class="line"><span class="string">                if isinstance(data[0], nd.NDArray):</span></span><br><span class="line"><span class="string">                    return nd.stack(*data)</span></span><br><span class="line"><span class="string">                elif isinstance(data[0], tuple):</span></span><br><span class="line"><span class="string">                    data = zip(*data)</span></span><br><span class="line"><span class="string">                    return [default_batchify_fn(i) for i in data]</span></span><br><span class="line"><span class="string">                else:</span></span><br><span class="line"><span class="string">                    data = np.asarray(data)</span></span><br><span class="line"><span class="string">                    return nd.array(data, dtype=data.dtype)</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    num_workers : int, default 0</span></span><br><span class="line"><span class="string">        The number of multiprocessing workers to use for data preprocessing.</span></span><br><span class="line"><span class="string">        `num_workers &gt; 0` is not supported on Windows yet.</span></span><br><span class="line"><span class="string">    """</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, dataset, batch_size=None, shuffle=False, sampler=None,</span></span></span><br><span class="line"><span class="function"><span class="params">                 last_batch=None, batch_sampler=None, batchify_fn=None,</span></span></span><br><span class="line"><span class="function"><span class="params">                 num_workers=<span class="number">0</span>)</span>:</span></span><br><span class="line">        self._dataset = dataset</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> batch_sampler <span class="keyword">is</span> <span class="keyword">None</span>:</span><br><span class="line">            <span class="keyword">if</span> batch_size <span class="keyword">is</span> <span class="keyword">None</span>:</span><br><span class="line">                <span class="keyword">raise</span> ValueError(<span class="string">"batch_size must be specified unless "</span> \</span><br><span class="line">                                 <span class="string">"batch_sampler is specified"</span>)</span><br><span class="line">            <span class="keyword">if</span> sampler <span class="keyword">is</span> <span class="keyword">None</span>:</span><br><span class="line">                <span class="keyword">if</span> shuffle:</span><br><span class="line">                    sampler = _sampler.RandomSampler(len(dataset))</span><br><span class="line">                <span class="keyword">else</span>:</span><br><span class="line">                    sampler = _sampler.SequentialSampler(len(dataset))</span><br><span class="line">            <span class="keyword">elif</span> shuffle:</span><br><span class="line">                <span class="keyword">raise</span> ValueError(<span class="string">"shuffle must not be specified if sampler is specified"</span>)</span><br><span class="line"></span><br><span class="line">            batch_sampler = _sampler.BatchSampler(</span><br><span class="line">                sampler, batch_size, last_batch <span class="keyword">if</span> last_batch <span class="keyword">else</span> <span class="string">'keep'</span>)</span><br><span class="line">        <span class="keyword">elif</span> batch_size <span class="keyword">is</span> <span class="keyword">not</span> <span class="keyword">None</span> <span class="keyword">or</span> shuffle <span class="keyword">or</span> sampler <span class="keyword">is</span> <span class="keyword">not</span> <span class="keyword">None</span> <span class="keyword">or</span> \</span><br><span class="line">                last_batch <span class="keyword">is</span> <span class="keyword">not</span> <span class="keyword">None</span>:</span><br><span class="line">            <span class="keyword">raise</span> ValueError(<span class="string">"batch_size, shuffle, sampler and last_batch must "</span> \</span><br><span class="line">                             <span class="string">"not be specified if batch_sampler is specified."</span>)</span><br><span class="line"></span><br><span class="line">        self._batch_sampler = batch_sampler</span><br><span class="line">        self._num_workers = num_workers <span class="keyword">if</span> num_workers &gt;= <span class="number">0</span> <span class="keyword">else</span> <span class="number">0</span></span><br><span class="line">        <span class="keyword">if</span> batchify_fn <span class="keyword">is</span> <span class="keyword">None</span>:</span><br><span class="line">            <span class="keyword">if</span> num_workers &gt; <span class="number">0</span>:</span><br><span class="line">                self._batchify_fn = default_mp_batchify_fn</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                self._batchify_fn = default_batchify_fn</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            self._batchify_fn = batchify_fn</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__iter__</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="keyword">if</span> self._num_workers == <span class="number">0</span>:</span><br><span class="line">            generator = <span class="keyword">lambda</span>: [(<span class="keyword">yield</span> self._batchify_fn([self._dataset[idx] <span class="keyword">for</span> idx <span class="keyword">in</span> batch]))</span><br><span class="line">                                 <span class="keyword">for</span> batch <span class="keyword">in</span> self._batch_sampler]</span><br><span class="line">            <span class="keyword">return</span> generator()</span><br><span class="line"></span><br><span class="line">        <span class="comment"># multi-worker</span></span><br><span class="line">        <span class="keyword">return</span> _MultiWorkerIter(self._num_workers, self._dataset,</span><br><span class="line">                                self._batchify_fn, self._batch_sampler)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__len__</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="keyword">return</span> len(self._batch_sampler)</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>持续技术分享，您的支持将鼓励我继续创作！</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.jpg" alt="乡间小路 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/mxnet/" rel="tag"># mxnet</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/06/20/目标检测之SSD/" rel="next" title="目标检测之SSD">
+                <i class="fa fa-chevron-left"></i> 目标检测之SSD
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/06/23/循环神经网络(RNN)/" rel="prev" title="循环神经网络(RNN)">
+                循环神经网络(RNN) <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zNjg4MS8xMzQxNw=="></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.jpg"
+                alt="乡间小路" />
+            
+              <p class="site-author-name" itemprop="name">乡间小路</p>
+              <p class="site-description motion-element" itemprop="description">把知道的东西讲清楚</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">33</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-name">分类</span>
+                
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">62</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-globe"></i>
+                推荐博客
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://www.flickering.cn/" title="火光摇曳" target="_blank">火光摇曳</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://www.wulc.me/" title="吴良超的学习笔记" target="_blank">吴良超的学习笔记</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://www.cnblogs.com/pinard/" title="刘建平Pinard" target="_blank">刘建平Pinard</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://mlnote.com/" title="水滴石穿" target="_blank">水滴石穿</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://www.cnblogs.com/makefile/" title="明也无涯" target="_blank">明也无涯</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://noahsnail.com/" title="SnailTyan" target="_blank">SnailTyan</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://lanbing510.info/" title="求知若饥，知行合一" target="_blank">求知若饥，知行合一</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://saicoco.github.io/" title="Fix you" target="_blank">Fix you</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://qiankun214.github.io/" title="月见樽" target="_blank">月见樽</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://jacobkong.github.io/" title="Jacob Kong" target="_blank">Jacob Kong</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://www.cnblogs.com/xuanyuyt/" title="xuanyuyt" target="_blank">xuanyuyt</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://blog.csdn.net/sinat_26917383" title="悟乙己" target="_blank">悟乙己</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://blog.csdn.net/julialove102123" title="女王的宫殿" target="_blank">女王的宫殿</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Dataset基类"><span class="nav-number">1.</span> <span class="nav-text">Dataset基类</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#ImageFolderDataset派生类"><span class="nav-number">2.</span> <span class="nav-text">ImageFolderDataset派生类</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#DataLoader"><span class="nav-number">3.</span> <span class="nav-text">DataLoader</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">乡间小路</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+
+  
+
+  
+
+</body>
+</html>

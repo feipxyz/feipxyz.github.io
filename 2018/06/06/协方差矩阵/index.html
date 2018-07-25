@@ -1,0 +1,934 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="协方差矩阵,协方差,方差," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="协方差（Covariance）在概率论和统计学中用于衡量两个变量的总体误差。而方差是协方差的一种特殊情况，即当两个变量是相同的情况。">
+<meta name="keywords" content="协方差矩阵,协方差,方差">
+<meta property="og:type" content="article">
+<meta property="og:title" content="协方差矩阵">
+<meta property="og:url" content="flyrie.top/2018/06/06/协方差矩阵/index.html">
+<meta property="og:site_name" content="乡间小路">
+<meta property="og:description" content="协方差（Covariance）在概率论和统计学中用于衡量两个变量的总体误差。而方差是协方差的一种特殊情况，即当两个变量是相同的情况。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-06-11T01:51:35.942Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="协方差矩阵">
+<meta name="twitter:description" content="协方差（Covariance）在概率论和统计学中用于衡量两个变量的总体误差。而方差是协方差的一种特殊情况，即当两个变量是相同的情况。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"always","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="flyrie.top/2018/06/06/协方差矩阵/"/>
+
+
+
+
+
+  <title>协方差矩阵 | 乡间小路</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?95d8d402b20d99d1e2e6f2de7b397428";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">乡间小路</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="flyrie.top/2018/06/06/协方差矩阵/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="乡间小路">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="乡间小路">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">协方差矩阵</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-06-06T00:01:15+08:00">
+                2018-06-06
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Math/" itemprop="url" rel="index">
+                    <span itemprop="name">Math</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>协方差（Covariance）在概率论和统计学中用于衡量两个变量的总体误差。而方差是协方差的一种特殊情况，即当两个变量是相同的情况。<a id="more"></a><br>简单来讲，协方差就是衡量两个变量相关性的变量。当协方差为正时，两个变量呈正相关关系（同增同减）；当协方差为负时，两个变量呈负相关关系（一增一减）。<br>而协方差矩阵，只是将所有变量的协方差关系用矩阵的形式表现出来而已。通过矩阵这一工具，可以更方便地进行数学运算。</p>
+<h1 id="协方差"><a href="#协方差" class="headerlink" title="协方差"></a>协方差</h1><p>通常，在提到协方差的时候，需要对其进一步区分。</p>
+<ol>
+<li>随机变量的协方差。跟数学期望、方差一样，是分布的一个总体参数。</li>
+<li>样本的协方差。是样本集的一个统计量，可作为联合分布总体参数的一个估计。在实际中计算的通常是样本的协方差。</li>
+</ol>
+<h2 id="随机变量的协方差"><a href="#随机变量的协方差" class="headerlink" title="随机变量的协方差"></a>随机变量的协方差</h2><p>在概率论和统计中，协方差是对两个随机变量联合分布线性相关程度的一种度量。两个随机变量越线性相关，协方差越大，完全线性无关，协方差为零。定义如下:</p>
+<script type="math/tex; mode=display">
+\operatorname {cov} (X,Y)=\operatorname {E} {\ {\big [}(X-\operatorname {E} [X])(Y-\operatorname {E} [Y]){\big ]}}</script><p>当$X，Y$是同一个随机变量时，$X$与其自身的协方差就是$X$的方差，可以说方差是协方差的一个特例。</p>
+<script type="math/tex; mode=display">
+\operatorname{var}(X) = \operatorname{cov}(X,X) = \operatorname{E}\big[(X-\operatorname{E}[X])^2]</script><p>由于随机变量的取值范围不同，两个协方差不具备可比性。如 $X，Y，Z$ 分别是三个随机变量，想要比较 $X$ 与 $Y$ 的线性相关程度强，还是 $X$ 与 $Z$ 的线性相关程度强，通过 $\operatorname{cov}(X,Y)$ 与 $\operatorname{cov}(X,Z)$ 无法直接比较。定义相关系数 $\eta$ 为</p>
+<script type="math/tex; mode=display">
+\eta ={\dfrac {\operatorname {cov} (X,Y)}{\sqrt {\operatorname {var} (X)\cdot \operatorname {var} (Y)}}}\</script><p>通过 $X$ 的方差 $\operatorname{var}(X)$ 与 $Y$ 的方差 $\operatorname{var}(Y)$ 对协方差 $\operatorname{cov}(X,Y)$ 归一化，得到相关系数 $\eta，\eta$ 的取值范围是 $[-1,1]$ 。1表示完全线性相关，-1表示完全线性负相关，0表示线性无关。线性无关并不代表完全无关，更不代表相互独立。</p>
+<h2 id="样本的协方差"><a href="#样本的协方差" class="headerlink" title="样本的协方差"></a>样本的协方差</h2><p>在实际中，通常我们手头会有一些样本，样本有多个属性，每个样本可以看成一个多维随机变量的样本点，我们需要分析两个维度之间的线性关系。协方差及相关系数是度量随机变量间线性关系的参数，由于不知道具体的分布，只能通过样本来进行估计。</p>
+<p>设样本对应的多维随机变量为 $\textbf X=[X_1, X_2, X_3, …, X_n]^T$，样本集合为 $\{\textbf x_{\cdot j}=[x_{1j},x_{2j},…,x_{nj}]^T|1\leqslant j\leqslant m\}$ ，$m$ 为样本数量。与样本方差的计算相似，$a$ 和 $b$ 两个维度样本的协方差公式为，其中 $1\leqslant a\leqslant n，1\leqslant b\leqslant n$，$n$ 为样本维度</p>
+<script type="math/tex; mode=display">
+\operatorname {cov}(a,b)=\dfrac {\sum_{j=1}^m{(x_{aj}-\bar x_a)(x_{bj}-\bar x_b)}}{m-1}</script><p>这里分母为 $m-1$ 是因为随机变量的数学期望未知，以样本均值代替，自由度减一。</p>
+<h1 id="协方差矩阵"><a href="#协方差矩阵" class="headerlink" title="协方差矩阵"></a>协方差矩阵</h1><p>这里主要讨论样本的协方差矩阵。</p>
+<h2 id="两个特征变量的协方差矩阵"><a href="#两个特征变量的协方差矩阵" class="headerlink" title="两个特征变量的协方差矩阵"></a>两个特征变量的协方差矩阵</h2><p>协方差本身就能够处理二维问题，两个变量的协方差矩阵并没有实际意义，不过为了方便后面多维的推广，我们还是从二维开始。</p>
+<p>用一个例子来解释会更加形象。</p>
+<p>假设我们有 4 个样本，每个样本都有两个变量，也就是两个特征，它们表示如下：</p>
+<script type="math/tex; mode=display">
+x_1=(1,2)，x_2=(3,6)，x_3=(4,2)，x_4=(5,2)</script><p>用一个矩阵表示为：</p>
+<script type="math/tex; mode=display">
+Z=\begin{bmatrix}
+1 & 2 \\
+3 & 6 \\
+4 & 2 \\
+5 & 2
+\end{bmatrix}</script><p>现在，我们用两个变量空间 $X，Y$ 来表示这两个特征：</p>
+<script type="math/tex; mode=display">
+X=\begin{bmatrix} 1 \\ 3 \\ 4 \\ 5 \end{bmatrix},  \ \ \    Y=\begin{bmatrix} 2 \\ 6 \\ 2 \\ 2 \end{bmatrix}</script><p>由于协方差反应的是两个变量之间的相关性，因此，协方差矩阵表示的是所有变量之间两两相关的关系，具体来讲，一个包含两个特征的矩阵，其协方差矩阵应该有 $2 \times 2$ 大小：</p>
+<script type="math/tex; mode=display">
+Cov(Z)=\begin{bmatrix} Cov(X,X) & Cov(X,Y) \\ Cov(Y,X) & Cov(Y,Y) \end{bmatrix}</script><p>接下来，就来逐一计算 $Cov(Z)$ 的值。<br>首先，我们需要先计算出 $X，Y$ 两个特征空间的平均值：$\overline x=3.25，\overline y=3$。<br>然后，根据协方差的数学定义，计算协方差矩阵的每个元素：</p>
+<script type="math/tex; mode=display">
+\begin{align*} 
+& Cov(X,X)=\frac{(1-3.25)^2+(3-3.25)^2+(4-3.25)^2+(5-3.25)^2}{4-1}=2.9167 \\
+& Cov(X,Y)=\frac{(1-3.25)(2-3)+(3-3.25)(6-3)+(4-3.25)(2-3)+(5-3.25)(2-3)}{4-1}=-0.3333 \\
+& Cov(Y,X)=\frac{(2-3)(1-3.25)+(6-3)(3-3.25)+(2-3)(4-3.25)+(2-3)(5-3.25)}{4-1}=-0.3333 \\
+& Cov(Y,Y)=\frac{(2-3)^2+(6-3)^2+(2-3)^2+(2-3)^2}{4-1}=4
+\end{align*}</script><p>所以协方差矩阵 </p>
+<script type="math/tex; mode=display">
+Cov(Z)=\begin{bmatrix} 2.9167 & -0.3333 \\ -0.3333 & 4.000 \end{bmatrix}</script><p>好了，虽然这只是一个二维特征的例子，但我们已经可以从中总结出协方差矩阵 $\Sigma$ 的「计算套路」：</p>
+<script type="math/tex; mode=display">
+\Sigma_{ij}=\frac{(样本矩阵第i列-第i列均值)^T(样本矩阵第j列-第j列均值)}{样本数-1}</script><p>这里所说的样本矩阵可以参考上面例子中的 $Z$。</p>
+<h2 id="多个特征变量的协方差矩阵"><a href="#多个特征变量的协方差矩阵" class="headerlink" title="多个特征变量的协方差矩阵"></a>多个特征变量的协方差矩阵</h2><p>协方差矩阵是个对称矩阵，对角线上的元素是各维度上随机变量的方差。</p>
+<p>假设我们有三个样本：</p>
+<script type="math/tex; mode=display">
+x_1=(1,2,3,4)^T， x_2=(3,4,1,2)^T， x_3=(2,3,1,4)^T。</script><p>同理我们将它们表示成样本矩阵：</p>
+<script type="math/tex; mode=display">
+Z=\begin{bmatrix} 1 & 2 & 3 & 4 \\ 3 & 4 & 1 & 2 \\ 2 & 3 & 1 & 4 \end{bmatrix}</script><p>按照上面给出的计算套路，我们需要先计算出矩阵每一列的均值，从左到右分别为：2、3、1.67、3.33。<br>然后按照上面讲到的公式，计算矩阵每个元素的值，四个变量的协方差矩阵，大小为 $4 \times 4$ ：</p>
+<script type="math/tex; mode=display">
+\Sigma_{11}=\frac{(第1列-第1列的均值)^T*(第1列-第1列的均值)}{样本数-1} \\=\frac{(-1,1,0)^T*(-1,1,0)}{2}=1</script><p>（后面的依此类推……）</p>
+<h2 id="独立变量的协方差"><a href="#独立变量的协方差" class="headerlink" title="独立变量的协方差"></a>独立变量的协方差</h2><p>以上的讨论都是针对一般情况进行计算的，毕竟变量互相独立的情况较少。</p>
+<p>如果两个变量 $X, Y$ 独立，那么它们的协方差 $Cov(X,Y) = 0$。简要证明如下（简单起见，假设变量是离散的）：</p>
+<p>由于 $X, Y$ 独立，所以它们的概率密度函数满足：$p(x,y)=p_x(x)p_y(y)$。</p>
+<p>求出期望：</p>
+<script type="math/tex; mode=display">
+\begin{eqnarray} E(XY) & = &\sum_x \sum_y {x*y*p(x,y)} \notag \\
+& = &\sum_x \sum_y x*y*p_x(x)*p_y(y) \notag \\
+& = &\sum_x{x*p_x(x)}\sum_y{y*p_y(y)} \notag \\
+& = &E(X)E(Y) \notag
+\end{eqnarray}</script><p>利用协方差的另一个公式：$Cov(X,Y)=E(X,Y)-E(X)E(Y)$，可以推出，当 $X, Y$ 相互独立时，$Cov(X, Y)=0$。</p>
+<p>这时，协方差矩阵就变成一个对角矩阵了：</p>
+<script type="math/tex; mode=display">
+Cov(Z)=\begin{bmatrix} Cov(X,X) & 0\\ 0 & Cov(Y,Y) \end{bmatrix}</script><h1 id="协方差矩阵的作用"><a href="#协方差矩阵的作用" class="headerlink" title="协方差矩阵的作用"></a>协方差矩阵的作用</h1><p>作为一种数学工具，协方差矩阵经常被用来计算特征之间的某种联系。在机器学习的论文中，协方差矩阵的出现概率还是很高的，用于降维的主成分分析法（PCA）就用到了协方差矩阵。另外，由于协方差矩阵是一个对称矩阵，因此它包含了很多很有用的性质，这也导致它受青睐的程度较高。</p>
+<h1 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h1><p>[1]. <a href="https://www.cnblogs.com/terencezhou/p/6235974.html" target="_blank" rel="noopener">协方差与协方差矩阵</a><br>[2]. <a href="https://www.cnblogs.com/jermmyhsu/p/8195588.html" target="_blank" rel="noopener">协方差矩阵</a></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>持续技术分享，您的支持将鼓励我继续创作！</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.jpg" alt="乡间小路 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/协方差矩阵/" rel="tag"># 协方差矩阵</a>
+          
+            <a href="/tags/协方差/" rel="tag"># 协方差</a>
+          
+            <a href="/tags/方差/" rel="tag"># 方差</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/06/05/Numpy基础/" rel="next" title="Numpy基础">
+                <i class="fa fa-chevron-left"></i> Numpy基础
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/06/06/主成分分析（PCA）原理/" rel="prev" title="主成分分析（PCA）">
+                主成分分析（PCA） <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zNjg4MS8xMzQxNw=="></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.jpg"
+                alt="乡间小路" />
+            
+              <p class="site-author-name" itemprop="name">乡间小路</p>
+              <p class="site-description motion-element" itemprop="description">把知道的东西讲清楚</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">33</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-name">分类</span>
+                
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">62</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-globe"></i>
+                推荐博客
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://www.flickering.cn/" title="火光摇曳" target="_blank">火光摇曳</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://www.wulc.me/" title="吴良超的学习笔记" target="_blank">吴良超的学习笔记</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://www.cnblogs.com/pinard/" title="刘建平Pinard" target="_blank">刘建平Pinard</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://mlnote.com/" title="水滴石穿" target="_blank">水滴石穿</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://www.cnblogs.com/makefile/" title="明也无涯" target="_blank">明也无涯</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://noahsnail.com/" title="SnailTyan" target="_blank">SnailTyan</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://lanbing510.info/" title="求知若饥，知行合一" target="_blank">求知若饥，知行合一</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://saicoco.github.io/" title="Fix you" target="_blank">Fix you</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://qiankun214.github.io/" title="月见樽" target="_blank">月见樽</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://jacobkong.github.io/" title="Jacob Kong" target="_blank">Jacob Kong</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://www.cnblogs.com/xuanyuyt/" title="xuanyuyt" target="_blank">xuanyuyt</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://blog.csdn.net/sinat_26917383" title="悟乙己" target="_blank">悟乙己</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://blog.csdn.net/julialove102123" title="女王的宫殿" target="_blank">女王的宫殿</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#协方差"><span class="nav-number">1.</span> <span class="nav-text">协方差</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#随机变量的协方差"><span class="nav-number">1.1.</span> <span class="nav-text">随机变量的协方差</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#样本的协方差"><span class="nav-number">1.2.</span> <span class="nav-text">样本的协方差</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#协方差矩阵"><span class="nav-number">2.</span> <span class="nav-text">协方差矩阵</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#两个特征变量的协方差矩阵"><span class="nav-number">2.1.</span> <span class="nav-text">两个特征变量的协方差矩阵</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#多个特征变量的协方差矩阵"><span class="nav-number">2.2.</span> <span class="nav-text">多个特征变量的协方差矩阵</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#独立变量的协方差"><span class="nav-number">2.3.</span> <span class="nav-text">独立变量的协方差</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#协方差矩阵的作用"><span class="nav-number">3.</span> <span class="nav-text">协方差矩阵的作用</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考文献"><span class="nav-number">4.</span> <span class="nav-text">参考文献</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">乡间小路</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+
+  
+
+  
+
+</body>
+</html>

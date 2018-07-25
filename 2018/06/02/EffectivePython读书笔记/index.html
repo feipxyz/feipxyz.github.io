@@ -1,0 +1,1247 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Python," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="《Effective Python 59》 是非常值得一读的Python进阶书籍，它阐述了Python语言中一些鲜为人知的微妙特性，并给出了能够改善代码功能及运行效率的习惯用法。相比其他Python书籍，这本书有以下几个特点：">
+<meta name="keywords" content="Python">
+<meta property="og:type" content="article">
+<meta property="og:title" content="《Effective Python》 读书笔记">
+<meta property="og:url" content="flyrie.top/2018/06/02/EffectivePython读书笔记/index.html">
+<meta property="og:site_name" content="乡间小路">
+<meta property="og:description" content="《Effective Python 59》 是非常值得一读的Python进阶书籍，它阐述了Python语言中一些鲜为人知的微妙特性，并给出了能够改善代码功能及运行效率的习惯用法。相比其他Python书籍，这本书有以下几个特点：">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-06-14T01:42:51.178Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="《Effective Python》 读书笔记">
+<meta name="twitter:description" content="《Effective Python 59》 是非常值得一读的Python进阶书籍，它阐述了Python语言中一些鲜为人知的微妙特性，并给出了能够改善代码功能及运行效率的习惯用法。相比其他Python书籍，这本书有以下几个特点：">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"always","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="flyrie.top/2018/06/02/EffectivePython读书笔记/"/>
+
+
+
+
+
+  <title>《Effective Python》 读书笔记 | 乡间小路</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?95d8d402b20d99d1e2e6f2de7b397428";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">乡间小路</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="flyrie.top/2018/06/02/EffectivePython读书笔记/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="乡间小路">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="乡间小路">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">《Effective Python》 读书笔记</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-06-02T01:46:14+08:00">
+                2018-06-02
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Python/" itemprop="url" rel="index">
+                    <span itemprop="name">Python</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>《Effective Python 59》 是非常值得一读的Python进阶书籍，它阐述了Python语言中一些鲜为人知的微妙特性，并给出了能够改善代码功能及运行效率的习惯用法。相比其他Python书籍，这本书有以下几个特点：<br><a id="more"></a> </p>
+<ol>
+<li>从工程实践出发、以场景为主导阐述如何编写高质量、可维护的代码，并配套的代码范例。</li>
+<li>内容不拖沓，省去很多基础语法。</li>
+<li>不厚，只有二百多页（这一点至关重要）。 </li>
+</ol>
+<p>这是我看完之后做的一份读书笔记，列出来以供以后不时查阅。（还没写完，持续更新…）</p>
+<h1 id="用Pythonic方式来思考"><a href="#用Pythonic方式来思考" class="headerlink" title="用Pythonic方式来思考"></a>用Pythonic方式来思考</h1><h2 id="bytes、str与unicode的区别"><a href="#bytes、str与unicode的区别" class="headerlink" title="bytes、str与unicode的区别"></a>bytes、str与unicode的区别</h2><p>很多时候项目从Python2.x迁移到Python3.x会遇到字符编码的问题，原因是Pyhton2.x和Python3.x的字符编码不统一，具体如下：<br>Python3：有两种表示字符序列的类型：<code>bytes</code>和<code>str</code>：</p>
+<ol>
+<li><code>bytes</code>：8个二进制位</li>
+<li><code>str</code>：<code>unicode</code>字符  </li>
+</ol>
+<p>Python2：有两种表示字符序列的类型：<code>str</code>和<code>unicode</code>：</p>
+<ol>
+<li><code>str</code>：8个二进制位</li>
+<li><code>unicode</code>：<code>unicode</code>字符</li>
+</ol>
+<p><code>unicode</code>$\rightarrow$ 二进制: 常见的编码方式是<code>utf-8</code>，使用<code>encode</code>方法  </p>
+<p>二进制$\rightarrow$<code>unicode</code>: 使用<code>decode</code>方法</p>
+<p>在编程的时候，编解码放在接口外面来做。程序核心使用unicode字符，且不要对字符编码做任何假设。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">to_str</span><span class="params">(bytes_or_str)</span>:</span></span><br><span class="line">    <span class="keyword">if</span> isinstance(bytes_or_str, bytes):</span><br><span class="line">        value = bytes_or_str.decoce(<span class="string">'utf-8'</span>)</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        value = bytes_or_str</span><br><span class="line">    <span class="keyword">return</span> value</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">to_bytes</span><span class="params">(bytes_or_str)</span>:</span></span><br><span class="line">    <span class="keyword">if</span> isinstance(bytes_or_str, str):</span><br><span class="line">        value = bytes_or_str.encode(<span class="string">'utf-8'</span>)</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        value = bytes_or_str</span><br><span class="line">    <span class="keyword">return</span> value</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>在Python3中，涉及到文件处理的操作（使用内置的open函数）会默认的以UTF-8进行编码。而在Python2中默认采用二进制形式来编码。这也是导致很多意外事故发生的根源，特别是对于那些更习惯使用Python2的程序员而言。</p>
+</blockquote>
+<p>比方说，将几个随机的二进制数据写入到一个文件中。在Python2中，下面的这段代码可以正常的工作，但是在Python3中却会报错并退出。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">with</span> open(<span class="string">'random.bin'</span>, <span class="string">'w'</span>) <span class="keyword">as</span> f:</span><br><span class="line">    f.write(os.urandom(<span class="number">10</span>))</span><br></pre></td></tr></table></figure>
+<pre><code>---------------------------------------------------------------------------
+
+TypeError                                 Traceback (most recent call last)
+
+&lt;ipython-input-4-71b20f96b6df&gt; in &lt;module&gt;()
+      1 import os
+      2 with open(&#39;random.bin&#39;, &#39;w&#39;) as f:
+----&gt; 3     f.write(os.urandom(10))
+
+
+TypeError: write() argument must be str, not bytes
+</code></pre><p>导致这个异常发生的原因是在Python3中对于open函数又新增了一个名为encoding的参数。此参数默认为UTF-8。这样在文件句柄上进行read和write操作时，必须传入Unicode字符串的str实例，而不是包含了二进制数据的bytes实例。</p>
+<h2 id="用生成器表达式来改写数据量较大的列表推导"><a href="#用生成器表达式来改写数据量较大的列表推导" class="headerlink" title="用生成器表达式来改写数据量较大的列表推导"></a>用生成器表达式来改写数据量较大的列表推导</h2><ol>
+<li>当输入的数据量较大时，列表推导可能因为占用太多内存而出问题。</li>
+<li>使用圆括号构成生成器表达式，由生成器表达式所返回的迭代器，可以逐次产生输出值，从而避免内存占用问题。</li>
+<li>把某个生成器表达式所返回的迭代器，放在另一个生成器表达式的<code>for</code>子表达式中，即可将二者组合起来。</li>
+<li>串在一起的生成器表达式执行速度很快，果要把多种手法组合起来，以操作大批量数据，最好是用生成器表达式实现。</li>
+</ol>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 这种类表推导只适合处理少量的输入值，对于大量数据，最好考虑生成器表达式而不是列表生成式</span></span><br><span class="line">value = [len(x) <span class="keyword">for</span> x <span class="keyword">in</span> open(<span class="string">'my_file.txt'</span>)]</span><br><span class="line"></span><br><span class="line"><span class="comment"># 生成器表达</span></span><br><span class="line">value = (len(x) <span class="keyword">for</span> x <span class="keyword">in</span> open(<span class="string">'my_file.txt'</span>))</span><br><span class="line">print(<span class="string">'value: '</span>, value)</span><br><span class="line">print(<span class="string">'next value: '</span>,next(value))</span><br><span class="line">print(<span class="string">'next value: '</span>, next(value))</span><br><span class="line"></span><br><span class="line"><span class="comment"># 使用生成器表达式的另一个好处是可以互相组合</span></span><br><span class="line"><span class="comment"># 这种连锁生成器表达式，可以迅速在python中执行</span></span><br><span class="line">roots = ((x, x*<span class="number">10</span>) <span class="keyword">for</span> x <span class="keyword">in</span> value)</span><br><span class="line">print(<span class="string">'next roots: '</span>, next(roots))</span><br></pre></td></tr></table></figure>
+<pre><code>value:  &lt;generator object &lt;genexpr&gt; at 0x000001A6AC0D1308&gt;
+next value:  7
+next value:  1
+next roots:  (6, 60)
+</code></pre><h2 id="尽量用enumerate代替range"><a href="#尽量用enumerate代替range" class="headerlink" title="尽量用enumerate代替range"></a>尽量用enumerate代替range</h2><ol>
+<li><code>enumerate</code>提供了一种精简的写法，可以在遍历迭代器时获知每个元素的索引。</li>
+<li>尽量用<code>enumerate</code>来改写那种将<code>range</code>与下标访问相结合的序列遍历代码。</li>
+<li>可以个<code>enumerate</code>提供第二个参数，以指定开始计数时所用的值（默认值为0）。</li>
+</ol>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 第一种写法。不推荐</span></span><br><span class="line">print(<span class="string">'range写法，不推荐'</span>)</span><br><span class="line">flavor_list = [<span class="string">'vanilla'</span>, <span class="string">'chocolate'</span>, <span class="string">'pecan'</span>, <span class="string">'strawberry'</span>]</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(len(flavor_list)):</span><br><span class="line">    print(<span class="string">'%d: %s'</span> % (i+<span class="number">1</span>, flavor_list[i]))</span><br><span class="line"></span><br><span class="line"><span class="comment"># enumerate</span></span><br><span class="line">print(<span class="string">'\nenumerate方法'</span>)</span><br><span class="line"><span class="keyword">for</span> i, flavor <span class="keyword">in</span> enumerate(flavor_list):</span><br><span class="line">    print(<span class="string">'%d: %s'</span> % (i+<span class="number">1</span>, flavor))</span><br><span class="line">    </span><br><span class="line"><span class="comment"># 还可以直接指定enumerate函数开始计数时所用的值</span></span><br><span class="line">print(<span class="string">'\n指定enumerate函数开始计数时所用的值'</span>)</span><br><span class="line"><span class="keyword">for</span> i, flavor <span class="keyword">in</span> enumerate(flavor_list, <span class="number">1</span>):</span><br><span class="line">    print(<span class="string">'%d: %s'</span> % (i, flavor))</span><br></pre></td></tr></table></figure>
+<pre><code>range写法，不推荐
+1: vanilla
+2: chocolate
+3: pecan
+4: strawberry
+
+enumerate方法
+1: vanilla
+2: chocolate
+3: pecan
+4: strawberry
+
+指定enumerate函数开始计数时所用的值
+1: vanilla
+2: chocolate
+3: pecan
+4: strawberry
+</code></pre><h2 id="用zip函数同时遍历两个迭代器"><a href="#用zip函数同时遍历两个迭代器" class="headerlink" title="用zip函数同时遍历两个迭代器"></a>用zip函数同时遍历两个迭代器</h2><ol>
+<li>内置的<code>zip</code>可以平行地遍历多个迭代器。</li>
+<li>Python3中的<code>zip</code>相当于生成器，会在遍历过程中逐次产生元组，而Python2中直接把这些元组完全生成好，并一次性返回整份列表。</li>
+<li>如果提供的迭代器长度不等，<code>zip</code>会提前终止。</li>
+</ol>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">names = [<span class="string">'LiMing'</span>, <span class="string">'LiLi'</span>, <span class="string">'ZhangMei'</span>]</span><br><span class="line">letters = [len(n) <span class="keyword">for</span> n <span class="keyword">in</span> names]</span><br><span class="line">longest_name = <span class="keyword">None</span></span><br><span class="line">max_letters = <span class="number">0</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(len(names)):</span><br><span class="line">    count = letters[i]</span><br><span class="line">    <span class="keyword">if</span> count &gt; max_letters:</span><br><span class="line">        max_letters = count</span><br><span class="line">        longest_name = names[i]</span><br><span class="line"></span><br><span class="line">print(longest_name, max_letters)</span><br></pre></td></tr></table></figure>
+<pre><code>ZhangMei 8
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">longest_name = <span class="keyword">None</span></span><br><span class="line">max_letters = <span class="number">0</span></span><br><span class="line"><span class="keyword">for</span> name, count <span class="keyword">in</span> zip(names, letters):</span><br><span class="line">    <span class="keyword">if</span> count &gt; max_letters:</span><br><span class="line">        longest_name = name</span><br><span class="line">        max_letters = count</span><br><span class="line">        </span><br><span class="line">print(longest_name, max_letters)</span><br></pre></td></tr></table></figure>
+<pre><code>ZhangMei 8
+</code></pre><h2 id="不要在for和while循环后面写else块"><a href="#不要在for和while循环后面写else块" class="headerlink" title="不要在for和while循环后面写else块"></a>不要在for和while循环后面写else块</h2><ol>
+<li>Python有种特殊写法，可在<code>for</code>和<code>while</code>循环的内部语句块之后紧跟一个<code>else</code>块。</li>
+<li>但这种写法既不直观，又容易让人误解，应该避免这种写法。</li>
+</ol>
+<h2 id="合理利用-try-except-else-finally-结构中的每个代码块"><a href="#合理利用-try-except-else-finally-结构中的每个代码块" class="headerlink" title="合理利用 try/except/else/finally 结构中的每个代码块"></a>合理利用 try/except/else/finally 结构中的每个代码块</h2><ol>
+<li><p><code>try...finally...</code><br>这种结构简单的说是在<code>try</code>下的全部操作如果某项失败的话就终止并执行<code>finally</code>下定义的语句。如果全部操作都没有报错，那么最后也执行<code>finally</code>下定义的语句，经常用于既要向上传播异常，又要在异常发生时执行某些清理操作。</p>
+</li>
+<li><p><code>try...except...else...</code>   </p>
+</li>
+<li>可以混合使用。</li>
+</ol>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># try...finally...</span></span><br><span class="line">handle = open(<span class="string">'my_file.txt'</span>, <span class="string">'w'</span>)</span><br><span class="line"><span class="keyword">try</span>:</span><br><span class="line">    handle.write(<span class="string">'111'</span>)</span><br><span class="line">    handle.write(<span class="string">'222'</span>)</span><br><span class="line"><span class="keyword">finally</span>:</span><br><span class="line">    print(<span class="string">'close handle'</span>)</span><br><span class="line">    handle.close()</span><br><span class="line"></span><br><span class="line"><span class="comment"># try...except...else...</span></span><br><span class="line"><span class="keyword">import</span> json</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">load_json_key</span><span class="params">(data, key)</span>:</span></span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        result_dict = json.load_json_key(data)</span><br><span class="line">    <span class="keyword">except</span> ValueError <span class="keyword">as</span> e:</span><br><span class="line">        <span class="keyword">raise</span> KeyError <span class="keyword">from</span> e</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="keyword">return</span> result_dict[key]</span><br><span class="line"></span><br><span class="line"><span class="comment"># 混合使用</span></span><br><span class="line">UNDEFINED = object()</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">divide_json</span><span class="params">(path)</span>:</span></span><br><span class="line">    handle = open(path, <span class="string">'r+'</span>)</span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        data = handle.read()</span><br><span class="line">        op = json.loads(data)</span><br><span class="line">        value = (op[<span class="string">'numerator'</span>], op[<span class="string">'denominator'</span>])</span><br><span class="line">    <span class="keyword">except</span> ZeroDivisionError <span class="keyword">as</span> e:</span><br><span class="line">        <span class="keyword">return</span> UNDEFINED</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        op[<span class="string">'result'</span>] = value</span><br><span class="line">        result = json.dumps(op)</span><br><span class="line">        handle.seek(<span class="number">0</span>)</span><br><span class="line">        handle.write(result)</span><br><span class="line">        <span class="keyword">return</span> value</span><br><span class="line">    <span class="keyword">finally</span>:</span><br><span class="line">        handle.close()</span><br></pre></td></tr></table></figure>
+<pre><code>close handle
+</code></pre><h1 id="函数"><a href="#函数" class="headerlink" title="函数"></a>函数</h1><h2 id="尽量用异常来表示特殊情况，而不要返回None"><a href="#尽量用异常来表示特殊情况，而不要返回None" class="headerlink" title="尽量用异常来表示特殊情况，而不要返回None"></a>尽量用异常来表示特殊情况，而不要返回None</h2><ol>
+<li>返回<code>None</code>的来作为特殊的含义很出错，因为<code>None</code>和其他的变量（例如 <code>zero</code>，空字符串）在条件表达式的判断下是等价的。</li>
+<li>函数在遇到特殊情况时，应该抛出异常，而不是返回None。这样调用者就能够合理地按照函数中的说明文档来处理由此而引发的异常了。</li>
+</ol>
+<p>用<code>None</code>表示特殊情况如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">divide</span><span class="params">(a, b)</span>:</span></span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">True</span>, a/b</span><br><span class="line">    <span class="keyword">except</span> ZeroDivisionError:</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">False</span>, <span class="keyword">None</span></span><br><span class="line">    </span><br><span class="line">sucess, result = divide(<span class="number">3</span>,<span class="number">3</span>)</span><br><span class="line">result</span><br></pre></td></tr></table></figure>
+<pre><code>1.0
+</code></pre><p>用异常表示特殊情况如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">divide</span><span class="params">(a, b)</span>:</span></span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        <span class="keyword">return</span> a / b</span><br><span class="line">    <span class="keyword">except</span> ZeroDivisionError <span class="keyword">as</span> e:</span><br><span class="line">        <span class="keyword">raise</span> ValueError(<span class="string">'Invalid inputs'</span>) <span class="keyword">from</span> e</span><br><span class="line"></span><br><span class="line"><span class="keyword">try</span>:</span><br><span class="line">    result = divide(<span class="number">3</span>, <span class="number">0</span>)</span><br><span class="line"><span class="keyword">except</span> ValueError:</span><br><span class="line">    print(<span class="string">'Invlid inputs'</span>)</span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">    print(<span class="string">'Result is: %f'</span> % result)</span><br></pre></td></tr></table></figure>
+<pre><code>Invlid inputs
+</code></pre><p>第一种方法问题在于，Python程序员习惯用<code>-</code>表示用不到的变量，那很有可能调用者会轻易的跳过元组的第一部。第二种方法让程序员不得不处理异常情况。</p>
+<h2 id="了解如何在闭包里使用外围作用域中的变量"><a href="#了解如何在闭包里使用外围作用域中的变量" class="headerlink" title="了解如何在闭包里使用外围作用域中的变量"></a>了解如何在闭包里使用外围作用域中的变量</h2><p>假如有一份数字列表，要对其排序，但在排序时，要把出现在某个组群中的数字，放在组群外的那些数字之前，简单的实现如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">sort_priority</span><span class="params">(values, group)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">helper</span><span class="params">(x)</span>:</span></span><br><span class="line">        <span class="keyword">if</span> x <span class="keyword">in</span> group:</span><br><span class="line">            <span class="keyword">return</span> (<span class="number">0</span>, x)</span><br><span class="line">        <span class="keyword">return</span> (<span class="number">1</span>, x)</span><br><span class="line">    values.sort(key=helper)</span><br><span class="line"></span><br><span class="line">numbers = [<span class="number">8</span>, <span class="number">3</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">5</span>, <span class="number">4</span>, <span class="number">7</span>, <span class="number">6</span>, <span class="number">-1</span>]</span><br><span class="line">group = &#123;<span class="number">2</span>, <span class="number">3</span>, <span class="number">5</span>, <span class="number">7</span>&#125;</span><br><span class="line">sort_priority(numbers, group)</span><br><span class="line">numbers</span><br></pre></td></tr></table></figure>
+<pre><code>[2, 3, 5, 7, -1, 1, 4, 6, 8]
+</code></pre><p>上面程序能正常工作的原因是以下三个方面：  </p>
+<ul>
+<li>Python支持闭包：闭包是一种定义在某个作用域中的函数，这种函数引用了那个作用域中的变量  </li>
+<li>Python的函数是一级对象，也就是说，我们可以直接引用函数、把函数赋给变量、把函数当成参数  </li>
+<li>Python使用特殊规则比较两个元祖，首先比较下标为0的对应元素，如果相等，再比较下标为1的对应元素，以此类推</li>
+</ul>
+<p>若果增加一个功能，如果在数字出现在了组群中，返回一个标志，先试试下面这种写法：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">sort_priority2</span><span class="params">(numbers, group)</span>:</span></span><br><span class="line">    found = <span class="keyword">False</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">helper</span><span class="params">(x)</span>:</span></span><br><span class="line">        <span class="keyword">if</span> x <span class="keyword">in</span> group:</span><br><span class="line">            found = <span class="keyword">True</span></span><br><span class="line">            <span class="keyword">return</span> (<span class="number">0</span>, x)</span><br><span class="line">        <span class="keyword">return</span> (<span class="number">1</span>, x)</span><br><span class="line">    numbers.sort(key=helper)</span><br><span class="line">    <span class="keyword">return</span> found</span><br><span class="line"></span><br><span class="line">found = sort_priority2(numbers, group)</span><br><span class="line">print(found)</span><br><span class="line">print(numbers)</span><br></pre></td></tr></table></figure>
+<pre><code>False
+[2, 3, 5, 7, -1, 1, 4, 6, 8]
+</code></pre><p>排序的结果是对的，但标志不对。解释如下：</p>
+<p>当在表达式中引用变量的时候，Python解释器会按如下顺序遍历各作用域： </p>
+<ul>
+<li>当前函数的作用域。</li>
+<li>任何外围作用域（比如其他的包含着的函数）。</li>
+<li>包含当前代码的模块域（也称之为全局作用域）。</li>
+<li>内置域（包含了像len,str等函数的域）。</li>
+</ul>
+<p>如果上述地方都没找到，就抛出异常。</p>
+<p>当给变量赋值时，如果变量在当前作用域内已经被定义过，那么该变量会具备新值，如果当前作用域没有这个变量，Python会把这次的赋值行为视为对变量的定义</p>
+<p>在Python3中有一种特殊的写法，能够获取闭包内的数据，我们可以用<code>nonlocal</code>语句表明这样的意图。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">sort_priority2</span><span class="params">(numbers, group)</span>:</span></span><br><span class="line">    found = <span class="keyword">False</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">helper</span><span class="params">(x)</span>:</span></span><br><span class="line">        <span class="keyword">nonlocal</span> found</span><br><span class="line">        <span class="keyword">if</span> x <span class="keyword">in</span> group:</span><br><span class="line">            found = <span class="keyword">True</span></span><br><span class="line">            <span class="keyword">return</span> (<span class="number">0</span>, x)</span><br><span class="line">        <span class="keyword">return</span> (<span class="number">1</span>, x)</span><br><span class="line">    numbers.sort(key=helper)</span><br><span class="line">    <span class="keyword">return</span> found</span><br><span class="line"></span><br><span class="line">found = sort_priority2(numbers, group)</span><br><span class="line">print(found)</span><br><span class="line">print(numbers)</span><br></pre></td></tr></table></figure>
+<pre><code>True
+[2, 3, 5, 7, -1, 1, 4, 6, 8]
+</code></pre><ul>
+<li><code>nonlocal</code>清楚的表明：如果在闭包内给该变量赋值，那么修改的其实是闭包外的那个作用域中的变量，<code>nonlocal</code>不能延伸到模块级别</li>
+<li>Python2中不支持<code>nonlocal</code></li>
+<li><code>nonlocal</code>可能也会像全局变量一样遭到滥用，建议只在及其简单的函数中使用这种机制</li>
+<li>如果使用<code>nonlocal</code>的那些代码，已经写的越来越复杂了，那就应该将相关的状态封装成辅助类</li>
+</ul>
+<p>下面定义的类与<code>nonlocal</code>的功能相同</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Sorter</span><span class="params">(object)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, group)</span>:</span></span><br><span class="line">        self.group = group</span><br><span class="line">        self.found = <span class="keyword">False</span></span><br><span class="line">        </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__call__</span><span class="params">(self, x)</span>:</span></span><br><span class="line">        <span class="keyword">if</span> x <span class="keyword">in</span> self.group:</span><br><span class="line">            self.found = <span class="keyword">True</span></span><br><span class="line">            <span class="keyword">return</span> (<span class="number">0</span>, x)</span><br><span class="line">        <span class="keyword">return</span> (<span class="number">1</span>, x)</span><br><span class="line"></span><br><span class="line">numbers = [<span class="number">8</span>, <span class="number">3</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">5</span>, <span class="number">4</span>, <span class="number">7</span>, <span class="number">6</span>, <span class="number">-1</span>]</span><br><span class="line">group = &#123;<span class="number">2</span>, <span class="number">3</span>, <span class="number">5</span>, <span class="number">7</span>&#125;</span><br><span class="line">sorter = Sorter(group)</span><br><span class="line">numbers.sort(key=sorter)</span><br><span class="line">print(sorter.found)</span><br><span class="line">print(numbers)</span><br></pre></td></tr></table></figure>
+<pre><code>True
+[2, 3, 5, 7, -1, 1, 4, 6, 8]
+</code></pre><h2 id="考虑用生成器来改写直接返回列表的函数"><a href="#考虑用生成器来改写直接返回列表的函数" class="headerlink" title="考虑用生成器来改写直接返回列表的函数"></a>考虑用生成器来改写直接返回列表的函数</h2><p>如果函数要产生一系列结果，最简单的做法是返回一份列表。例如，想知道一个字符串中每个单词的首字母在句子中的位置。代码如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">index_words</span><span class="params">(text)</span>:</span></span><br><span class="line">    result = []</span><br><span class="line">    <span class="keyword">if</span> text:</span><br><span class="line">        result.append(<span class="number">0</span>)</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">for</span> index, letter <span class="keyword">in</span> enumerate(text):</span><br><span class="line">        <span class="keyword">if</span> letter == <span class="string">' '</span>:</span><br><span class="line">            result.append(index + <span class="number">1</span>)</span><br><span class="line">    <span class="keyword">return</span> result</span><br><span class="line"></span><br><span class="line">address = <span class="string">'Four score and seven years ago...'</span></span><br><span class="line">result = index_words(address)</span><br><span class="line">result</span><br></pre></td></tr></table></figure>
+<pre><code>[0, 5, 11, 15, 21, 27]
+</code></pre><p>这段代码的问题如下：</p>
+<ul>
+<li>代码杂乱拥挤。每次都要调用<code>append</code>方法，而且要初始化<code>result</code>，返回<code>result</code>。</li>
+<li>在返回前，要把所有的结果放在列表中，在输入量大的情况下，有内存崩溃的风险</li>
+</ul>
+<p>下面这个生成器函数，返回一个迭代器，与之前的代码功能相同。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">index_words</span><span class="params">(text)</span>:</span></span><br><span class="line">    <span class="keyword">if</span> text:</span><br><span class="line">        <span class="keyword">yield</span> <span class="number">0</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">for</span> index, letter <span class="keyword">in</span> enumerate(text):</span><br><span class="line">        <span class="keyword">if</span> letter == <span class="string">' '</span>:</span><br><span class="line">            <span class="keyword">yield</span> index+<span class="number">1</span></span><br><span class="line">address = <span class="string">'Four score and seven years ago...'</span></span><br><span class="line">result = index_words(address)</span><br><span class="line">print(result)</span><br><span class="line">list(result)</span><br></pre></td></tr></table></figure>
+<pre><code>&lt;generator object index_words at 0x000001A6AC0FA9E8&gt;
+
+
+
+
+
+[0, 5, 11, 15, 21, 27]
+</code></pre><h2 id="在参数上迭代时，要多加小心"><a href="#在参数上迭代时，要多加小心" class="headerlink" title="在参数上迭代时，要多加小心"></a>在参数上迭代时，要多加小心</h2><ol>
+<li>Python的迭代器协议，描述了容器和迭代器应该如何与<code>iter</code>和<code>next</code>内置函数、<code>for</code>循环函数及相关表达式相互配合。</li>
+<li>把<code>__iter__</code>方法实现为生成器，即可定义自己的容器类型。</li>
+<li>想判断某个值是迭代器还是容器，可以拿该值为参数，两次调用<code>iter</code>函数，若结果相同，则是迭代器。</li>
+</ol>
+<p>当一个函数接收的参数是一个对象列表，那么很有可能要在这个列表上迭代。如下代码计算个体占总体的百分比。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">normalize</span><span class="params">(numbers)</span>:</span></span><br><span class="line">    total = sum(numbers)</span><br><span class="line">    result = []</span><br><span class="line">    <span class="keyword">for</span> num <span class="keyword">in</span> numbers:</span><br><span class="line">        result.append(<span class="number">100</span> * num / total)</span><br><span class="line">    <span class="keyword">return</span> result</span><br><span class="line"></span><br><span class="line">visits = [<span class="number">15</span>, <span class="number">35</span>, <span class="number">80</span>]</span><br><span class="line">normalize(visits)</span><br></pre></td></tr></table></figure>
+<pre><code>[11.538461538461538, 26.923076923076923, 61.53846153846154]
+</code></pre><p>如果将个体数据放在一份文件里，然后从文件中读取，我们定义<code>read_vists</code>函数，然后定义一个生成器以便将数据应用到更大数据集上。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">read_vists</span><span class="params">(path)</span>:</span></span><br><span class="line">    <span class="keyword">with</span> open(path) <span class="keyword">as</span> f:</span><br><span class="line">        <span class="keyword">for</span> line <span class="keyword">in</span> f:</span><br><span class="line">            <span class="keyword">yield</span> int(line)</span><br><span class="line"></span><br><span class="line">it = read_vists(<span class="string">'data.txt'</span>)</span><br><span class="line">percentages = normalize(it)</span><br><span class="line">percentages</span><br></pre></td></tr></table></figure>
+<pre><code>[]
+</code></pre><p>奇怪的是，以生成器返回的迭代器为参数，来调用<code>normalize</code>，没有产生任何结果。原因是迭代器只能产生一轮结果，在<code>sum</code>函数那里已经用完了。但之后在已经用完的迭代器上继续迭代时，没有报错。<br>一种解决方法是通过参数来接受另外一个函数，那个函数每次调用后，都能返回新的迭代器。代码如下。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">normalize_func</span><span class="params">(numbers)</span>:</span></span><br><span class="line">    total = sum(get_iter()) <span class="comment"># 一个新的迭代器</span></span><br><span class="line">    result = []</span><br><span class="line">    <span class="keyword">for</span> value <span class="keyword">in</span> get_iter(): <span class="comment"># 又一个新的迭代器</span></span><br><span class="line">        percent = <span class="number">100</span> * value / total</span><br><span class="line">        result.append(percent)</span><br><span class="line">    <span class="keyword">return</span> result</span><br></pre></td></tr></table></figure>
+<p>这种方法显得生硬，很不Pythnic。另一种解决方法是新编一种实现迭代器协议的容器类。</p>
+<blockquote>
+<p>实际上，当Python执行类似<code>for x in foo</code>这样的表达式的时候，它就会调用<code>iter(foo)</code>。内置的<code>iter</code>函数然后会调用<code>foo.__iter__</code>方法。该方法返回一个迭代器对象，而那个迭代器对象，则实现了<code>__next__</code>方法。然后循环语句会在迭代器对象上反复调用<code>next</code>方法，直到产生StopIteration异常。</p>
+</blockquote>
+<p>只需自己的类把<code>__iter__</code>方法实现为生成器就满足上述要求。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ReadVisits</span><span class="params">(object)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, data_path)</span>:</span></span><br><span class="line">        self.data_path = data_path</span><br><span class="line">        </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__iter__</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="keyword">with</span> open(self.data_path) <span class="keyword">as</span> f:</span><br><span class="line">            <span class="keyword">for</span> line <span class="keyword">in</span> f:</span><br><span class="line">                <span class="keyword">yield</span> int(line)</span><br><span class="line">                </span><br><span class="line">visits = ReadVisits(<span class="string">'data.txt'</span>)</span><br><span class="line">normalize(visits)</span><br></pre></td></tr></table></figure>
+<pre><code>&lt;generator object ReadVisits.__iter__ at 0x000001A6AC0D1C50&gt;
+</code></pre><p><code>normalize</code>的<code>sum</code>方法会调用<code>ReadVisits.__iter__</code>方法，之后的<code>for</code>循环也会调用<code>ReadVisits.__iter__</code>方法。  </p>
+<blockquote>
+<p>迭代器协议有这样的规定：如果把迭代器对象传给内置的<code>iter</code>函数，那么此函数会把该迭代器返回，反之，如果传给<code>iter</code>的是个容器类型的对象，那么<code>iter</code>函数则每次回返回新的迭代器对象，我们可以根据这种行为来判断输入值是不是迭代器对象本身，如果是，就抛出错误</p>
+</blockquote>
+<p>下面是对第一个函数的完善。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">normalize_defensive</span><span class="params">(numbers)</span>:</span></span><br><span class="line">    <span class="keyword">if</span> iter(numbers) == iter(numbers):</span><br><span class="line">        <span class="keyword">raise</span> TypeError(<span class="string">'Must supply a container'</span>)</span><br><span class="line">    total = sum(numbers)</span><br><span class="line">    result = []</span><br><span class="line">    <span class="keyword">for</span> value <span class="keyword">in</span> numbers:</span><br><span class="line">        percent = <span class="number">100</span> * value / total</span><br><span class="line">        result.append(percent)</span><br><span class="line">    <span class="keyword">return</span> result</span><br><span class="line"></span><br><span class="line">visits = ReadVisits(<span class="string">'data.txt'</span>)</span><br><span class="line">normalize_defensive(visits)</span><br></pre></td></tr></table></figure>
+<pre><code>[7.6923076923076925,
+ 28.205128205128204,
+ 33.97435897435897,
+ 9.615384615384615,
+ 20.512820512820515]
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">it = read_vists(<span class="string">'data.txt'</span>)</span><br><span class="line">normalize_defensive(it)</span><br></pre></td></tr></table></figure>
+<pre><code>---------------------------------------------------------------------------
+
+TypeError                                 Traceback (most recent call last)
+
+&lt;ipython-input-32-df5cf9d8e72a&gt; in &lt;module&gt;()
+      1 it = read_vists(&#39;data.txt&#39;)
+----&gt; 2 normalize_defensive(it)
+
+
+&lt;ipython-input-29-ce5cccbce26d&gt; in normalize_defensive(numbers)
+      1 def normalize_defensive(numbers):
+      2     if iter(numbers) == iter(numbers):
+----&gt; 3         raise TypeError(&#39;Must supply a container&#39;)
+      4     total = sum(numbers)
+      5     result = []
+
+
+TypeError: Must supply a container
+</code></pre><h2 id="用数量可变的位置参数减少视觉杂讯"><a href="#用数量可变的位置参数减少视觉杂讯" class="headerlink" title="用数量可变的位置参数减少视觉杂讯"></a>用数量可变的位置参数减少视觉杂讯</h2><p>令函数接受可选的位置参数（<code>*args</code>)，能够使代码更加清晰，并能减少视觉杂讯。  </p>
+<p>例如： 你想打印一些调试信息。假如该函数的参数个数固定不变，那它就必须接受一段信息及一份含有待打印值的列表。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">log</span><span class="params">(message, values)</span>:</span></span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> values:</span><br><span class="line">        print(message)</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        value_str = <span class="string">','</span>.join(str(x) <span class="keyword">for</span> x <span class="keyword">in</span> values)</span><br><span class="line">        print(<span class="string">'%s: %s'</span> % (message, value_str))</span><br><span class="line">log(<span class="string">'My Number are'</span>, [<span class="number">11</span>, <span class="number">22</span>, <span class="number">33</span>])</span><br></pre></td></tr></table></figure>
+<pre><code>My Number are: 11,22,33
+</code></pre><p>但是如果没有values要打印的时候也必须传递一个空列表，这样使得代码既麻烦又杂乱。  </p>
+<p>我们在位置参数前加一个<code>*</code>来实现可变参数</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">log</span><span class="params">(message, *values)</span>:</span></span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> values:</span><br><span class="line">        print(message)</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        value_str = <span class="string">','</span>.join(str(x) <span class="keyword">for</span> x <span class="keyword">in</span> values)</span><br><span class="line">        print(<span class="string">'%s: %s'</span> % (message, value_str))</span><br><span class="line">log(<span class="string">'My Number are'</span>, <span class="number">12</span>, <span class="number">33</span> ,<span class="number">44</span>)</span><br><span class="line"></span><br><span class="line">numbers = [<span class="number">12</span>, <span class="number">33</span>, <span class="number">44</span>]</span><br><span class="line">log(<span class="string">'My Number are'</span>, *numbers)</span><br><span class="line"></span><br><span class="line">log(<span class="string">'My Number are'</span>)</span><br></pre></td></tr></table></figure>
+<pre><code>My Number are: 12,33,44
+My Number are: 12,33,44
+My Number are
+</code></pre><p>有两个应该注意的问题：  </p>
+<ol>
+<li>第一个是可变参数在被传递给函数的时候要转变成元组。这意味着如果调用者对生成器使用了<code>*</code>操作符，来调用这种函数，程序将会先把生成器迭代一轮，并把生成器锁生成的每一个值，都放在元组中，如果数据量巨大，可能消耗大量内存，并导致程序崩溃。  </li>
+<li>使用<code>*args</code>参数的话，如果以后再新增其他的位置参数，就必须修改原来调用该函数的那些旧代码，如果不更新调用代码，则会产生难以调试的错误。</li>
+</ol>
+<h2 id="用关键字参数表达可选的行为"><a href="#用关键字参数表达可选的行为" class="headerlink" title="用关键字参数表达可选的行为"></a>用关键字参数表达可选的行为</h2><ol>
+<li>Python函数中的所有的位置参数都可以通过关键字来传值，关键字参数的顺序不限，只要把函数所要求的全部位置参数都指定好即可。</li>
+<li>还可以混合使用关键字参数和位置参数来调用函数。  </li>
+<li>位置参数必须出现在关键字参数之前。</li>
+<li>只使用位置参数来调用函数，可能导致这些参数值的含义不够明确，而关键字参数则能够阐明每个参数的意图。</li>
+<li>给函数添加新的行为时，可以使用带默认值的关键字参数，以便于原有的调用代码保持兼容，关键字参数提供了一种扩充函数参数的有效方式。</li>
+<li>可先的关键字参数，总是应该以关键字形式来指定，而不应该以位置参数的形式来指定。</li>
+</ol>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">remainder</span><span class="params">(number, divisor)</span>:</span></span><br><span class="line">    <span class="keyword">return</span> number % divisor</span><br><span class="line"></span><br><span class="line">remainder(<span class="number">20</span>, <span class="number">7</span>)</span><br><span class="line">remainder(<span class="number">20</span>, divisor=<span class="number">7</span>)</span><br><span class="line">remainder(number=<span class="number">20</span>, divisor=<span class="number">7</span>)</span><br><span class="line">remainder(divisor=<span class="number">7</span>, number=<span class="number">20</span>)</span><br></pre></td></tr></table></figure>
+<pre><code>6
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">remainder(number=<span class="number">20</span>, <span class="number">7</span>)</span><br></pre></td></tr></table></figure>
+<pre><code>  File &quot;&lt;ipython-input-15-fa871e527313&gt;&quot;, line 1
+    remainder(number=20, 7)
+                        ^
+SyntaxError: positional argument follows keyword argument
+</code></pre><h2 id="用None和文档字符串来描述具有动态默认值的参数"><a href="#用None和文档字符串来描述具有动态默认值的参数" class="headerlink" title="用None和文档字符串来描述具有动态默认值的参数"></a>用None和文档字符串来描述具有动态默认值的参数</h2><ol>
+<li>参数的默认值，只会在程序加载模块并读到本函数的定义时评估一次，对于<code>{}</code>、<code>[]</code>等动态的值，者可能导致奇怪的行为。</li>
+<li>对于以动态值作为实际默认值的关键字参数来说，应该把形式上的默认值写为<code>None</code>，并在函数的文档字符串里面描述该默认值所对应的实际行为。</li>
+</ol>
+<p>例如打印日志时想要加上打印的时间。<br>先看如下的写法：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> datetime <span class="keyword">import</span> datetime</span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">log</span><span class="params">(message, when=datetime.now<span class="params">()</span>)</span>:</span></span><br><span class="line">    print(<span class="string">'%s: %s'</span> % (when, message))</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">log(<span class="string">'Hi there!'</span>)</span><br><span class="line">time.sleep(<span class="number">1</span>)</span><br><span class="line">log(<span class="string">'Hi again!'</span>)</span><br></pre></td></tr></table></figure>
+<pre><code>2018-05-30 11:37:23.481681: Hi there!
+2018-05-30 11:37:23.481681: Hi again!
+</code></pre><p>从上面打印的信息来看，时间戳是相同的，这是因为<code>datetime.now</code>仅仅被执行了一次，也及时它只在函数定义的时候执行了一次。</p>
+<p>参数的默认值，仅仅在模块被加载进来的时候执行一次，而这通常发生在程序开始运行的时候。当模块已经加载完这段代码后，参数的默认值就不会被改变了。</p>
+<p>在Python中如果想真正实现动态默认值，习惯上把默认值设为<code>None</code>，并且在文档字符串中记录详细的行为和使用方法。当代码发现一个值为<code>None</code>的参数的时候，就可以为其分配默认值了。</p>
+<p>修改打印日志的函数，产生不同的时间戳，代码如下。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">log</span><span class="params">(message, when=None)</span>:</span></span><br><span class="line">    <span class="string">"""</span></span><br><span class="line"><span class="string">    Log a message with a timestamp.</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    Args:</span></span><br><span class="line"><span class="string">        message: Message to print</span></span><br><span class="line"><span class="string">        when: datetime of when the message occurred.</span></span><br><span class="line"><span class="string">            Default to the present time.</span></span><br><span class="line"><span class="string">    """</span></span><br><span class="line">    when = datetime.now() <span class="keyword">if</span> when <span class="keyword">is</span> <span class="keyword">None</span> <span class="keyword">else</span> when</span><br><span class="line">    print(<span class="string">"%s: %s"</span> %(when, message))</span><br><span class="line"></span><br><span class="line">log(<span class="string">"hi there!"</span>)</span><br><span class="line">time.sleep(<span class="number">1</span>)</span><br><span class="line">log(<span class="string">'hi again!'</span>)</span><br></pre></td></tr></table></figure>
+<pre><code>2018-05-30 11:43:57.224250: hi there!
+2018-05-30 11:43:58.224661: hi again!
+</code></pre><p><strong>如果参数的实际默认值是可变类型（mutable），那就一定要记得用<code>None</code>作为形式上的默认值。</strong>  </p>
+<p>例如实现一个功能：加载一个被编码为JSON的数据值，如果解码的时候失败了，你想默认返回一个空字典。代码如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> json</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">decode</span><span class="params">(data, default=&#123;&#125;)</span>:</span></span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        <span class="keyword">return</span> json.loads(data)</span><br><span class="line">    <span class="keyword">except</span> ValueError:</span><br><span class="line">        <span class="keyword">return</span> default</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">foo = decode(<span class="string">'bad data'</span>)</span><br><span class="line">foo[<span class="string">'stuff'</span>] = <span class="number">5</span></span><br><span class="line">bar = decode(<span class="string">'also bad'</span>)</span><br><span class="line">bar[<span class="string">'meep'</span>] = <span class="number">1</span></span><br><span class="line">print(foo)</span><br><span class="line">print(bar)</span><br></pre></td></tr></table></figure>
+<pre><code>{&#39;stuff&#39;: 5, &#39;meep&#39;: 1}
+{&#39;stuff&#39;: 5, &#39;meep&#39;: 1}
+</code></pre><p>我们本以为<code>foo</code>和<code>bar</code>会表示两份不同的字典，每份字典都有一个键值对，但以上代码的结果却是，修改一个的话很明显也会改变另一个。错误的根本原因是：<code>foo</code>和<code>bar</code>其实都等同于卸载<code>default</code>参数默认值中的那个字典，它们表示的都是同一个字典对象。</p>
+<p>由于default参数的默认值只在模块加载时执行一次，所以凡是以默认的空字典调用这个函数的代码，都将共享一份字典</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">assert</span> foo <span class="keyword">is</span> bar</span><br></pre></td></tr></table></figure>
+<p>解决办法就是对关键字参数设置默认值None并且记录在该函数的说明文档中。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">decode</span><span class="params">(data, default=None)</span>:</span></span><br><span class="line">    <span class="string">"""Load JSON data from string.</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    Args:</span></span><br><span class="line"><span class="string">        data: JSON data to be decoded.</span></span><br><span class="line"><span class="string">        default: Value to return if decoding fails.</span></span><br><span class="line"><span class="string">            Defaults to an empty dictionary.</span></span><br><span class="line"><span class="string">    """</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> default <span class="keyword">is</span> <span class="keyword">None</span>:</span><br><span class="line">        default = &#123;&#125;</span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        <span class="keyword">return</span> json.loads(data)</span><br><span class="line">    <span class="keyword">except</span> ValueError:</span><br><span class="line">        <span class="keyword">return</span> default</span><br><span class="line">    </span><br><span class="line">foo = decode(<span class="string">'bad data'</span>)</span><br><span class="line">foo[<span class="string">'stuff'</span>] = <span class="number">5</span></span><br><span class="line">bar = decode(<span class="string">'also bad'</span>)</span><br><span class="line">bar[<span class="string">'meep'</span>] = <span class="number">1</span></span><br><span class="line">print(<span class="string">'Foo:'</span>, foo)</span><br><span class="line">print(<span class="string">'Bar:'</span>, bar)</span><br></pre></td></tr></table></figure>
+<pre><code>Foo: {&#39;stuff&#39;: 5}
+Bar: {&#39;meep&#39;: 1}
+</code></pre><h2 id="用只能以关键字形式指定的参数来确保代码明确清晰"><a href="#用只能以关键字形式指定的参数来确保代码明确清晰" class="headerlink" title="用只能以关键字形式指定的参数来确保代码明确清晰"></a>用只能以关键字形式指定的参数来确保代码明确清晰</h2><p>对于函数的某些关键变量，希望调用者明确改参数的值，使代码清晰，减少逻辑错误。此时，可以使用命名关键字参数。示例如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">safe_division_c</span><span class="params">(number, division, *, ignore_overflow=False, </span></span></span><br><span class="line"><span class="function"><span class="params">                    c=False)</span>:</span></span><br><span class="line">    <span class="keyword">pass</span></span><br></pre></td></tr></table></figure>
+<p><code>ignore_overflow</code>和<code>ignore_overflow</code>只能通过关键字参数赋值的形式被使用，而不是通过位置参数赋值的方式，也不能像默然参数那样省略。</p>
+<h1 id="类与继承"><a href="#类与继承" class="headerlink" title="类与继承"></a>类与继承</h1><h2 id="尽量用辅助类来维护程序的状态，而不是字典和元组"><a href="#尽量用辅助类来维护程序的状态，而不是字典和元组" class="headerlink" title="尽量用辅助类来维护程序的状态，而不是字典和元组"></a>尽量用辅助类来维护程序的状态，而不是字典和元组</h2><ol>
+<li>不要使用包含其他字典的字典，也不要使用过长的元组（元组里的元素超过两个，就应该考虑用其他办法实现）。</li>
+<li>如果容器中包含简单又不可变的数据，那么可以先使用<code>namedtuple</code>来表示，待稍后有需要时，再修改为完整的类。</li>
+<li>保存内部状态的字典如果变得复杂，那就应该吧这些代码拆解为多个辅助类。</li>
+</ol>
+<p><code>namedtuple</code>是继承自<code>tuple</code>的子类。<code>namedtuple</code>创建一个和<code>tuple</code>类似的对象，而且对象拥有可访问的属性。由于这种具名元组的属性都带有名称，所以当需求发生变化，以致要给简单的数据容器添加新的行为时，很容易就能从<code>namedtuple</code>迁移到自己定义的类。</p>
+<p>尽管<code>namedtuple</code>在很多场合很有用，但它在有些场合使用反而不好。  </p>
+<ul>
+<li><code>namedtuple</code>类无法指定各参数的默认值。对于可选属性比较多的数据来说，<code>namedtuple</code>用起来很不方便。</li>
+<li><code>namedtuple</code>实例的各项属性，依然可以通过下标及迭代访问。这可能导致其他人以不符合设计者意图的方式使用这些元组，从而使以后很难迁移成真正的类。</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> collections <span class="keyword">import</span> namedtuple</span><br><span class="line"></span><br><span class="line">User = namedtuple(<span class="string">'User'</span>, [<span class="string">'name'</span>, <span class="string">'sex'</span>, <span class="string">'age'</span>])</span><br><span class="line">user1 = User(name=<span class="string">'kongxx'</span>, sex=<span class="string">'male'</span>, age=<span class="number">21</span>)</span><br><span class="line">print(<span class="string">'age:'</span>, user1.age)</span><br><span class="line">print(<span class="string">'sex:'</span>, user1.sex)</span><br><span class="line">print(<span class="string">'user1[0]:'</span>,user1[<span class="number">0</span>])</span><br></pre></td></tr></table></figure>
+<pre><code>age: 21
+sex: male
+user1[0]: kongxx
+</code></pre><h2 id="简单的接口应该接受函数，而不是类的实例"><a href="#简单的接口应该接受函数，而不是类的实例" class="headerlink" title="简单的接口应该接受函数，而不是类的实例"></a>简单的接口应该接受函数，而不是类的实例</h2><ol>
+<li>对于连接各种Python组件的简单接口来说，通常应该给其直接传入函数，而不是先定义某个类，然后再传入该类的实例。</li>
+<li>Python中的函数和方法都可以像一级对象那样引用，因此，它们和其他类型的对象一样，也能够放在表达式里。</li>
+<li>通过名为<code>__call__</code>的特殊方法，可以使类的实例能够像普通的Python函数那样得到调用。</li>
+<li>如果要用函数来保存状态，那就应该定义新的类，并令其实现<code>__call__</code>方法，而不要定义带状态的闭包。<code>__call__</code>方法强烈地暗示了该类的用途，它告诉我们，这个类的功能就相当于一个带有状态的闭包。</li>
+</ol>
+<p>例如：Python内置的<code>defaultdict</code>类，这个数据结构允许调用者提供一个函数，在查询本字典时，如果字典中没有待查询的键时，此函数返回一个默认值。而且为字典中的这个缺省键来返回一个默认值。提供像这样的函数接口，可以使得API更容易被构建和测试，因为它能够把附带的效果和确定的行为分开。  </p>
+<p>例如：现在我们要给<code>defaultdict</code>传入一个产生默认值的挂钩函数，并令其统计出该字典一共遇到了多少个缺失的键。  </p>
+<p>第一种方式：带状态的闭包。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> collections <span class="keyword">import</span> defaultdict</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">increment_with_report</span><span class="params">(current, increments)</span>:</span></span><br><span class="line">    added_count = <span class="number">0</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">missing</span><span class="params">()</span>:</span></span><br><span class="line">        <span class="keyword">nonlocal</span> added_count  <span class="comment"># 状态闭包</span></span><br><span class="line">        added_count  += <span class="number">1</span></span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line"></span><br><span class="line">    result = defaultdict(missing, current)</span><br><span class="line">    <span class="keyword">for</span> key, amount <span class="keyword">in</span> increments:</span><br><span class="line">        result[key] += amount</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> result, added_count</span><br><span class="line"></span><br><span class="line">current = &#123;<span class="string">'green'</span>: <span class="number">12</span>, <span class="string">'blue'</span>: <span class="number">3</span>&#125;</span><br><span class="line">increments = [</span><br><span class="line">    (<span class="string">'red'</span>, <span class="number">5</span>),</span><br><span class="line">    (<span class="string">'blue'</span>, <span class="number">17</span>),</span><br><span class="line">    (<span class="string">'orange'</span>, <span class="number">9</span>)</span><br><span class="line">]</span><br><span class="line"></span><br><span class="line">result, count = increment_with_report(current, increments)</span><br><span class="line"><span class="keyword">assert</span> count == <span class="number">2</span></span><br></pre></td></tr></table></figure>
+<p>尽管<code>defaultdict</code>并不知道<code>missing</code>挂钩函数里保存了状态，但是运行上面的代码，依旧会产生预期的结果。</p>
+<p>但上述方法读起来不够直观。</p>
+<p>第二种方法：定义一个小的类，把想追踪的状态信息封装起来。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">CountMissing</span><span class="params">(object)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></span><br><span class="line">        self.added = <span class="number">0</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">missing</span><span class="params">(self)</span>:</span></span><br><span class="line">        self.added += <span class="number">1</span></span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line">    </span><br><span class="line">counter = CountMissing()</span><br><span class="line">result = defaultdict(counter.missing, current)</span><br><span class="line"><span class="keyword">for</span> key, amount <span class="keyword">in</span> increments:</span><br><span class="line">    result[key] += amount</span><br><span class="line"><span class="keyword">assert</span> counter.added == <span class="number">2</span></span><br></pre></td></tr></table></figure>
+<p>这种方法却是比<code>increment_with_report</code>函数更加清晰，但是，单看这个类，依然不太容易理解<code>CounMissing</code>的意图，<code>CountMissing</code>对象由谁构造？<code>missing</code>方法谁来调用？该类以后是否需要添加新的方法？直到你看到了使用它的defaultdict函数，你才会明白这些问题。  </p>
+<p>为了厘清这些问题，我们可以在Python代码中定义<code>__call__</code>这个特殊的方法。该方法使对象能够像函数一样被调用。此外，如果把这样的实例传给内置的<code>callable</code>函数，那么<code>callable</code>会返回<code>True</code>。</p>
+<p>第三种方法：类中实现<code>__call__</code>方法。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">BetterCountMissing</span><span class="params">(object)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></span><br><span class="line">        self.added = <span class="number">0</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__call__</span><span class="params">(self)</span>:</span></span><br><span class="line">        self.added += <span class="number">1</span></span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line"></span><br><span class="line">counter = BetterCountMissing()</span><br><span class="line"><span class="keyword">assert</span> callable(counter)</span><br><span class="line">result = defaultdict(counter, current)</span><br><span class="line"><span class="keyword">for</span> key, amount <span class="keyword">in</span> increments:</span><br><span class="line">    result[key] += amount</span><br><span class="line"><span class="keyword">assert</span> counter.added == <span class="number">2</span></span><br></pre></td></tr></table></figure>
+<h2 id="用-classmethod形式的多态去通用地构建对象"><a href="#用-classmethod形式的多态去通用地构建对象" class="headerlink" title="用@classmethod形式的多态去通用地构建对象"></a>用@classmethod形式的多态去通用地构建对象</h2><ol>
+<li>Python的每个类只能有一个构造器，也就是一个<code>__init__</code>方法。</li>
+<li>使用<code>@classmethod</code>可以用一种与构造器相仿的方式构造类的对象。</li>
+</ol>
+<p>参考链接：<br><a href="https://stackoverflow.com/questions/12179271/meaning-of-classmethod-and-staticmethod-for-beginner" target="_blank" rel="noopener">https://stackoverflow.com/questions/12179271/meaning-of-classmethod-and-staticmethod-for-beginner</a><br>例子如下。首先我们有一个处理时间的类：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Date</span><span class="params">(object)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, day=<span class="number">0</span>, month=<span class="number">0</span>, year=<span class="number">0</span>)</span>:</span></span><br><span class="line">        self.day = day</span><br><span class="line">        self.month = month</span><br><span class="line">        self.year = year</span><br></pre></td></tr></table></figure>
+<p>如果我们要通过字符串创建<code>Date</code>实例，此时我们要做如下操作：  </p>
+<ol>
+<li>将<code>str</code>的日期转为<code>int</code>。</li>
+<li>通过<code>int</code>的日期构建<code>Date</code> </li>
+</ol>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">day, month, year = map(int, <span class="string">'11-09-2012'</span>.split(<span class="string">'-'</span>))  </span><br><span class="line">date1 = Date(day, month, year)</span><br></pre></td></tr></table></figure>
+<p>如果我们经常要使用字符串创建<code>Date</code>实例，很显然如果能实现重载就更加方便，<code>C++</code>有重载的方法，但Python没有重载，每个类只有一个构造器，只有一个<code>__init__</code>方法，因此<code>@classmethod</code>方法应运而生。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Date</span><span class="params">(object)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, day=<span class="number">0</span>, month=<span class="number">0</span>, year=<span class="number">0</span>)</span>:</span></span><br><span class="line">        self.day = day</span><br><span class="line">        self.month = month</span><br><span class="line">        self.year = year</span><br><span class="line"></span><br><span class="line"><span class="meta">    @classmethod</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">from_string</span><span class="params">(cls, date_as_string)</span>:</span></span><br><span class="line">        day, month, year = map(int, date_as_string.split(<span class="string">'-'</span>))</span><br><span class="line">        date1 = cls(day, month, year)</span><br><span class="line">        <span class="keyword">return</span> date1</span><br><span class="line"></span><br><span class="line">date2 = Date.from_string(<span class="string">'11-09-2012'</span>)</span><br></pre></td></tr></table></figure>
+<p><code>cls</code>表示这个类本身</p>
+<p><code>@staticmethod</code>与<code>@classmethod</code>的区别是不构建类的实例，也不访问、依赖和改变类，只是一个函数。和普通的非class的method作用是一样的，只不过是命名空间是在类里面。一般使用场景就是和类相关的操作。</p>
+<p>加入我们要验证日期的合法性，我们可以使用<code>@staticmethod</code>，如下。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Date</span><span class="params">(object)</span>:</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, day=<span class="number">0</span>, month=<span class="number">0</span>, year=<span class="number">0</span>)</span>:</span></span><br><span class="line">        self.day = day</span><br><span class="line">        self.month = month</span><br><span class="line">        self.year = year</span><br><span class="line"></span><br><span class="line"><span class="meta">    @classmethod</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">from_string</span><span class="params">(cls, date_as_string)</span>:</span></span><br><span class="line">        day, month, year = map(int, date_as_string.split(<span class="string">'-'</span>))</span><br><span class="line">        date1 = cls(day, month, year)</span><br><span class="line">        <span class="keyword">return</span> date1</span><br><span class="line"></span><br><span class="line"><span class="meta">    @staticmethod</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">is_date_valid</span><span class="params">(date_as_string)</span>:</span></span><br><span class="line">        day, month, year = map(int, date_as_string.split(<span class="string">'-'</span>))</span><br><span class="line">        <span class="keyword">return</span> day &lt;= <span class="number">31</span> <span class="keyword">and</span> month &lt;= <span class="number">12</span> <span class="keyword">and</span> year &lt;= <span class="number">3999</span></span><br><span class="line"></span><br><span class="line">date2 = Date.from_string(<span class="string">'11-09-2012'</span>)</span><br><span class="line">is_date = Date.is_date_valid(<span class="string">'11-09-2012'</span>)</span><br></pre></td></tr></table></figure>
+<h2 id="用super初始化父类"><a href="#用super初始化父类" class="headerlink" title="用super初始化父类"></a>用<code>super</code>初始化父类</h2><ol>
+<li>Python采用MRO解决超类初始化次序以及菱形继承问题。</li>
+<li>总是应该使用super来初始化父类。</li>
+</ol>
+<p>初始化父类的传统方式是在子类中直接调用父类的<code>__init__</code>方法。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyBaseClass</span><span class="params">(object)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, value)</span>:</span></span><br><span class="line">        self.value = value</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyChildClass</span><span class="params">(MyBaseClass)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></span><br><span class="line">        MyBaseClass.__init__(self, <span class="number">5</span>)</span><br></pre></td></tr></table></figure>
+<p>这种方法对于单继承体系是可行的，但是如果子类收到多继承的影响，由于调用父类初始化方法的顺序并不固定，可能产生无法预知的行为（尤其在菱形继承体系下）。</p>
+<p><code>super</code>函数定义了方法解析顺序(<code>MRO</code>)以解决这一问题，<code>MRO</code>以标准的流程来安排超类之间的初始化顺序：深度优先、从左至右，也保证了菱形继承中超类的初始化方法只执行一次。这个<code>MRO</code>的顺序可以通过名为<code>mro</code>的类方法类查询。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pprint <span class="keyword">import</span> pprint</span><br><span class="line"></span><br><span class="line"><span class="comment"># Python 2</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">TimesFiveCorrect</span><span class="params">(MyBaseClass)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, value)</span>:</span></span><br><span class="line">        super(TimesFiveCorrect, self).__init__(value)</span><br><span class="line">        self.value *= <span class="number">5</span></span><br><span class="line"></span><br><span class="line">        </span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">PlusTwoCorrect</span><span class="params">(MyBaseClass)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, value)</span>:</span></span><br><span class="line">        super(PlusTwoCorrect, self).__init__(value)</span><br><span class="line">        self.value += <span class="number">2</span></span><br><span class="line"></span><br><span class="line">        </span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">GoodWay</span><span class="params">(TimesFiveCorrect, PlusTwoCorrect)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, value)</span>:</span></span><br><span class="line">        super(GoodWay, self).__init__(value)</span><br><span class="line"></span><br><span class="line">foo = GoodWay(<span class="number">5</span>)</span><br><span class="line">print(<span class="string">"Should be 5 * (5 + 2) = 35 and is "</span> , foo.value)</span><br><span class="line">pprint(GoodWay.mro())</span><br></pre></td></tr></table></figure>
+<pre><code>Should be 5 * (5 + 2) = 35 and is  35
+[&lt;class &#39;__main__.GoodWay&#39;&gt;,
+ &lt;class &#39;__main__.TimesFiveCorrect&#39;&gt;,
+ &lt;class &#39;__main__.PlusTwoCorrect&#39;&gt;,
+ &lt;class &#39;__main__.MyBaseClass&#39;&gt;,
+ &lt;class &#39;object&#39;&gt;]
+</code></pre><p>调用<code>GoodWay(5)</code>的时候，它会调用<code>TimesFiveCorrect.__init__</code>，而<code>TimesFiveCorrect.__init__</code>又会调用<code>PlusTwoCorrect.__init__</code>，<code>PlusTwoCorrect.__init__</code>会调用<code>MyBaseClass.__init__</code>。到达钻石顶部之后，所有的初始化过程会按照相反的顺序进行。</p>
+<p>在Python3中将<code>super</code>方法写法简化了，具体示例如下。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Implicit</span><span class="params">(MyBaseClass)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, value)</span>:</span></span><br><span class="line">        super().__init__(value * <span class="number">2</span>)</span><br></pre></td></tr></table></figure>
+<h2 id="只在使用Mix-in组件制作工具类时进行多重继承"><a href="#只在使用Mix-in组件制作工具类时进行多重继承" class="headerlink" title="只在使用Mix-in组件制作工具类时进行多重继承"></a>只在使用<code>Mix-in</code>组件制作工具类时进行多重继承</h2><ol>
+<li>尽量避免多继承，能用<code>mix-in</code>组件实现的效果，就不要用多继承来做。</li>
+</ol>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ToDictMixin</span><span class="params">(object)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">to_dict</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="keyword">return</span> self._traverse_dict(self.__dict__)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">_traverse_dict</span><span class="params">(self, instance_dict)</span>:</span></span><br><span class="line">        output = &#123;&#125;</span><br><span class="line">        <span class="keyword">for</span> key, value <span class="keyword">in</span> instance_dict.items():</span><br><span class="line">            output[key] = self._traverse(key, value)</span><br><span class="line">        <span class="keyword">return</span> output</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">_traverse</span><span class="params">(self, key, value)</span>:</span></span><br><span class="line">        <span class="keyword">if</span> isinstance(value, ToDictMixin):</span><br><span class="line">            <span class="keyword">return</span> value.to_dict()</span><br><span class="line">        <span class="keyword">elif</span> isinstance(value, dict):</span><br><span class="line">            <span class="keyword">return</span> self._traverse_dict(value)</span><br><span class="line">        <span class="keyword">elif</span> isinstance(value, list):</span><br><span class="line">            <span class="keyword">return</span> [self._traverse(key, i) <span class="keyword">for</span> i <span class="keyword">in</span> value]</span><br><span class="line">        <span class="keyword">elif</span> hasattr(value, <span class="string">'__dict__'</span>):</span><br><span class="line">            <span class="keyword">return</span> self._traverse_dict(value.__dict__)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="keyword">return</span> value</span><br><span class="line">        </span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">BinaryTree</span><span class="params">(ToDictMixin)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, value, left=None, right=None)</span>:</span></span><br><span class="line">        self.value = value</span><br><span class="line">        self.left = left</span><br><span class="line">        self.right = right</span><br><span class="line"></span><br><span class="line"><span class="comment"># 这下把大量的Python对象转换到一个字典中变得容易多了。</span></span><br><span class="line">tree = BinaryTree(<span class="number">10</span>, left=BinaryTree(<span class="number">7</span>, right=BinaryTree(<span class="number">9</span>)),</span><br><span class="line">    right=BinaryTree(<span class="number">13</span>, left=BinaryTree(<span class="number">11</span>)))</span><br><span class="line">print(tree.to_dict())</span><br></pre></td></tr></table></figure>
+<pre><code>{&#39;value&#39;: 10, &#39;left&#39;: {&#39;value&#39;: 7, &#39;left&#39;: None, &#39;right&#39;: {&#39;value&#39;: 9, &#39;left&#39;: None, &#39;right&#39;: None}}, &#39;right&#39;: {&#39;value&#39;: 13, &#39;left&#39;: {&#39;value&#39;: 11, &#39;left&#39;: None, &#39;right&#39;: None}, &#39;right&#39;: None}}
+</code></pre><h2 id="多用public属性，少用private属性"><a href="#多用public属性，少用private属性" class="headerlink" title="多用public属性，少用private属性"></a>多用<code>public</code>属性，少用<code>private</code>属性</h2><ol>
+<li>对Python来说，其属性的可见度只有两种，<code>public</code>和<code>private</code>。以两个下划线<code>__</code>开头的属性，是<code>private</code>字段，本类的方法可以访问它们，类外直接访问会引发异常。</li>
+<li>子类无法访问父类的<code>private</code>字段。</li>
+<li>Python会对私有属性做一些简单的变换，以保证<code>private</code>字段的私密性，例如：在<code>MyObject</code>中定义<code>self.__privated_file</code>，Python会以变换后的<code>_MyObject__privated_file</code>保存，以保证私密性。所以如果我们以这种方式在类外访问私有属性，也可以访问到。Python为什么不从语法上对于私有属性严格保证呢？最简单的原因就是”We are all consenting adults here”。Python程序员相信开放要比封闭好。</li>
+<li>为了尽量减少无意间访问内部属性所带来的意外，Python程序员应该遵守《Python风格指南》中建议，用一种习惯性的命名方式来表示这种字段：以单下划线开头的字段应该视为<code>protected</code>字段，本类之外的那些代码在使用这种字段的时候要多加小心。</li>
+<li>由于在开发中，以后的代码可能需要从这个类上继承子类，并在子类中添加新的行为，假设超类使用了private属性，那么在覆写子类的时候就会遇到麻烦。虽然此时仍然可以通过第3条中所述的方式访问超类私有属性，但如果继承体系发生变化，<code>private</code>字段很可能失效，导致子类出现错误。</li>
+<li>一般来说，宁可叫子类更多地访问超类的<code>protected</code>属性，也别把这些属性设为<code>private</code>，我们应该在文档中说明每个<code>protected</code>字段的含义，解释哪些字段是可供子类使用的内部api，哪些是不应该完全触碰的数据。</li>
+</ol>
+<h2 id="继承collections-abc以实现自定义的容器类"><a href="#继承collections-abc以实现自定义的容器类" class="headerlink" title="继承collections.abc以实现自定义的容器类"></a>继承<code>collections.abc</code>以实现自定义的容器类</h2><ol>
+<li>如果要定制一个实现<code>list</code>等功能的简单子类，那就可以直接从Python的容器类型（如<code>list</code>或<code>dict</code>）继承。</li>
+<li>想正确实现自定义的容器类型，可能需要编写大量的特殊方法。</li>
+<li>编写自制的容器类型时，可以从<code>collections.abc</code>模块的抽象基类中继承，那些基类能够确保我们的子类具备适当的接口及行为。</li>
+</ol>
+<p>如果要设计比较简单的序列，我们自然会想到继承Python的内置<code>List</code>类型，如下我们要定义一种自定义的列表类型，并提供统计各元素出现频率的功能。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">FrequencyList</span><span class="params">(list)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, members)</span>:</span></span><br><span class="line">        super().__init__(members)</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">frequency</span><span class="params">(self)</span>:</span></span><br><span class="line">        counts = &#123;&#125;</span><br><span class="line">        <span class="keyword">for</span> item <span class="keyword">in</span> self:</span><br><span class="line">            counts.setdefault(item, <span class="number">0</span>)</span><br><span class="line">            counts[item] += <span class="number">1</span></span><br><span class="line">        <span class="keyword">return</span> counts</span><br><span class="line">    </span><br><span class="line">foo = FrequencyList([<span class="string">'a'</span>, <span class="string">'b'</span>, <span class="string">'c'</span>, <span class="string">'b'</span>, <span class="string">'c'</span>, <span class="string">'f'</span>])</span><br><span class="line">print(<span class="string">'Length is: '</span>, len(foo))</span><br><span class="line">foo.pop()</span><br><span class="line">print(<span class="string">'after pop: '</span>, repr(foo))</span><br><span class="line">print(foo.frequency())</span><br></pre></td></tr></table></figure>
+<pre><code>Length is:  6
+after pop:  [&#39;a&#39;, &#39;b&#39;, &#39;c&#39;, &#39;b&#39;, &#39;c&#39;]
+{&#39;a&#39;: 1, &#39;b&#39;: 2, &#39;c&#39;: 2}
+</code></pre><p>现在要编写一个本身不属于<code>list</code>子类，但是可以像<code>list</code>一样通过下标来访问，并且可以使用<code>len</code>来获取长度。  </p>
+<ol>
+<li>Python用下标访问序列中的元素时，会把访问代码转译为：<code>xx.__getitem__(index)</code>，所以我们要想一个类可以用下标访问，只需在类中实现特殊方法<code>__getitem__</code>方法即可。</li>
+<li>想要是内置的<code>len</code>函数正常工作，就必须在自己定制的序列类型中实现一个名叫<code>__len__</code>的特殊方法……</li>
+</ol>
+<p>例如要令表示二叉树节点的类，也能通过下标访问节点，并且用<code>len</code>能够得到长度信息。  </p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">BinaryNode</span><span class="params">(object)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, value, left=None, right=None)</span>:</span></span><br><span class="line">        self.value = value</span><br><span class="line">        self.left = left</span><br><span class="line">        self.right = right</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">IndexableNode</span><span class="params">(BinaryNode)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">_search</span><span class="params">(self, count, index)</span>:</span></span><br><span class="line">        <span class="keyword">pass</span></span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__getitem__</span><span class="params">(self, index)</span>:</span></span><br><span class="line">        found, _ = self._search(<span class="number">0</span>, index)</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> found:</span><br><span class="line">            <span class="keyword">raise</span> IndentationError(<span class="string">'Index out of range'</span>)</span><br><span class="line">        <span class="keyword">return</span> found.value</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__len__</span><span class="params">(self)</span>:</span></span><br><span class="line">        _, count = self._search(<span class="number">0</span>, <span class="keyword">None</span>)</span><br><span class="line">        <span class="keyword">return</span> count</span><br></pre></td></tr></table></figure>
+<p>如果还要实现其他功能，那会是一件很麻烦的事。为了避免这些麻烦，我们可以使用内置的<code>collections.abc</code>模块，该模块定义了一系列的抽象基类，它们提供了每一种容器所应当具备的常用方法。从这样的基类继承子类之后，如果忘记实现某个方法，那么<code>collections.abc</code>模块就会指出这个错误。如果子类实现了抽象基类所要求的每个方法，那么基类就会自动提供剩下的那些方法。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> collections.abc <span class="keyword">import</span> Sequence</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">BadType</span><span class="params">(Sequence)</span>:</span></span><br><span class="line">    <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line">foo = BadType()</span><br></pre></td></tr></table></figure>
+<pre><code>---------------------------------------------------------------------------
+
+TypeError                                 Traceback (most recent call last)
+
+&lt;ipython-input-10-997f61651b50&gt; in &lt;module&gt;()
+      4     pass
+      5 
+----&gt; 6 foo = BadType()
+
+
+TypeError: Can&#39;t instantiate abstract class BadType with abstract methods __getitem__, __len__
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">IndexableNode</span><span class="params">(BinaryNode, Sequence)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">_search</span><span class="params">(self, count, index)</span>:</span></span><br><span class="line">        <span class="keyword">pass</span></span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__getitem__</span><span class="params">(self, index)</span>:</span></span><br><span class="line">        found, _ = self._search(<span class="number">0</span>, index)</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> found:</span><br><span class="line">            <span class="keyword">raise</span> IndentationError(<span class="string">'Index out of range'</span>)</span><br><span class="line">        <span class="keyword">return</span> found.value</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__len__</span><span class="params">(self)</span>:</span></span><br><span class="line">        _, count = self._search(<span class="number">0</span>, <span class="keyword">None</span>)</span><br><span class="line">        <span class="keyword">return</span> count</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>持续技术分享，您的支持将鼓励我继续创作！</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.jpg" alt="乡间小路 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Python/" rel="tag"># Python</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/06/01/正向传播与反向传播/" rel="next" title="反向传播算法">
+                <i class="fa fa-chevron-left"></i> 反向传播算法
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/06/03/决策树/" rel="prev" title="决策树">
+                决策树 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zNjg4MS8xMzQxNw=="></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.jpg"
+                alt="乡间小路" />
+            
+              <p class="site-author-name" itemprop="name">乡间小路</p>
+              <p class="site-description motion-element" itemprop="description">把知道的东西讲清楚</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">33</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-name">分类</span>
+                
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">62</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-globe"></i>
+                推荐博客
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://www.flickering.cn/" title="火光摇曳" target="_blank">火光摇曳</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://www.wulc.me/" title="吴良超的学习笔记" target="_blank">吴良超的学习笔记</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://www.cnblogs.com/pinard/" title="刘建平Pinard" target="_blank">刘建平Pinard</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://mlnote.com/" title="水滴石穿" target="_blank">水滴石穿</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://www.cnblogs.com/makefile/" title="明也无涯" target="_blank">明也无涯</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://noahsnail.com/" title="SnailTyan" target="_blank">SnailTyan</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://lanbing510.info/" title="求知若饥，知行合一" target="_blank">求知若饥，知行合一</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://saicoco.github.io/" title="Fix you" target="_blank">Fix you</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://qiankun214.github.io/" title="月见樽" target="_blank">月见樽</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://jacobkong.github.io/" title="Jacob Kong" target="_blank">Jacob Kong</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://www.cnblogs.com/xuanyuyt/" title="xuanyuyt" target="_blank">xuanyuyt</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://blog.csdn.net/sinat_26917383" title="悟乙己" target="_blank">悟乙己</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://blog.csdn.net/julialove102123" title="女王的宫殿" target="_blank">女王的宫殿</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#用Pythonic方式来思考"><span class="nav-number">1.</span> <span class="nav-text">用Pythonic方式来思考</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#bytes、str与unicode的区别"><span class="nav-number">1.1.</span> <span class="nav-text">bytes、str与unicode的区别</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#用生成器表达式来改写数据量较大的列表推导"><span class="nav-number">1.2.</span> <span class="nav-text">用生成器表达式来改写数据量较大的列表推导</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#尽量用enumerate代替range"><span class="nav-number">1.3.</span> <span class="nav-text">尽量用enumerate代替range</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#用zip函数同时遍历两个迭代器"><span class="nav-number">1.4.</span> <span class="nav-text">用zip函数同时遍历两个迭代器</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#不要在for和while循环后面写else块"><span class="nav-number">1.5.</span> <span class="nav-text">不要在for和while循环后面写else块</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#合理利用-try-except-else-finally-结构中的每个代码块"><span class="nav-number">1.6.</span> <span class="nav-text">合理利用 try/except/else/finally 结构中的每个代码块</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#函数"><span class="nav-number">2.</span> <span class="nav-text">函数</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#尽量用异常来表示特殊情况，而不要返回None"><span class="nav-number">2.1.</span> <span class="nav-text">尽量用异常来表示特殊情况，而不要返回None</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#了解如何在闭包里使用外围作用域中的变量"><span class="nav-number">2.2.</span> <span class="nav-text">了解如何在闭包里使用外围作用域中的变量</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#考虑用生成器来改写直接返回列表的函数"><span class="nav-number">2.3.</span> <span class="nav-text">考虑用生成器来改写直接返回列表的函数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#在参数上迭代时，要多加小心"><span class="nav-number">2.4.</span> <span class="nav-text">在参数上迭代时，要多加小心</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#用数量可变的位置参数减少视觉杂讯"><span class="nav-number">2.5.</span> <span class="nav-text">用数量可变的位置参数减少视觉杂讯</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#用关键字参数表达可选的行为"><span class="nav-number">2.6.</span> <span class="nav-text">用关键字参数表达可选的行为</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#用None和文档字符串来描述具有动态默认值的参数"><span class="nav-number">2.7.</span> <span class="nav-text">用None和文档字符串来描述具有动态默认值的参数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#用只能以关键字形式指定的参数来确保代码明确清晰"><span class="nav-number">2.8.</span> <span class="nav-text">用只能以关键字形式指定的参数来确保代码明确清晰</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#类与继承"><span class="nav-number">3.</span> <span class="nav-text">类与继承</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#尽量用辅助类来维护程序的状态，而不是字典和元组"><span class="nav-number">3.1.</span> <span class="nav-text">尽量用辅助类来维护程序的状态，而不是字典和元组</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#简单的接口应该接受函数，而不是类的实例"><span class="nav-number">3.2.</span> <span class="nav-text">简单的接口应该接受函数，而不是类的实例</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#用-classmethod形式的多态去通用地构建对象"><span class="nav-number">3.3.</span> <span class="nav-text">用@classmethod形式的多态去通用地构建对象</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#用super初始化父类"><span class="nav-number">3.4.</span> <span class="nav-text">用super初始化父类</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#只在使用Mix-in组件制作工具类时进行多重继承"><span class="nav-number">3.5.</span> <span class="nav-text">只在使用Mix-in组件制作工具类时进行多重继承</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#多用public属性，少用private属性"><span class="nav-number">3.6.</span> <span class="nav-text">多用public属性，少用private属性</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#继承collections-abc以实现自定义的容器类"><span class="nav-number">3.7.</span> <span class="nav-text">继承collections.abc以实现自定义的容器类</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">乡间小路</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+
+  
+
+  
+
+</body>
+</html>
