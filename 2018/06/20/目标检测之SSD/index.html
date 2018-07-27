@@ -90,7 +90,7 @@
 <meta property="og:image" content="/images/SSD_1.svg">
 <meta property="og:image" content="/images/SSD_3.png">
 <meta property="og:image" content="/images/SSD_2.png">
-<meta property="og:updated_time" content="2018-07-14T01:14:33.263Z">
+<meta property="og:updated_time" content="2018-07-27T15:03:26.072Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="目标检测之SSD">
 <meta name="twitter:description" content="SSD：Single Shot MultiBox Detector，ECCV 2016 的一篇文章，作者是UNC Chapel Hill（北卡罗来纳大学教堂山分校）的Wei Liu大神。是截至目前是主要的检测框架之一。相比Faster RCNN有明显的速度优势，相比YOLO又有明显的mAP优势。">
@@ -373,19 +373,22 @@
 <h1 id="网络结构"><a href="#网络结构" class="headerlink" title="网络结构"></a>网络结构</h1><p>主体网络用来从原始图像抽取特征，一般会选择常用的深度卷积神经网络。论文中使用了VGG16。在<code>conv5_3</code>的<code>38*38*512</code>feature map之后，经过<code>3*3*1024</code>的卷积，再经过<code>1*1*1024</code>的卷积得到<code>19*19*1024</code>的卷积，后续网络也是这样。最终做分类预测，非极大值抑制。网络结构中Classifer有两个并列的<code>3*3</code>的卷积核，一个是用来做分类一个用来做回归。</p>
 <p><img src="/images/SSD_3.png" alt="图片"></p>
 <h2 id="金字塔模型"><a href="#金字塔模型" class="headerlink" title="金字塔模型"></a>金字塔模型</h2><p>YOLO和SSD都使用基础网络（如 VGG-16）提取feature map。但YOLO只对一个feature map获取信息，而SSD对基础网络产生的feature map后接继续卷积层，产生另外一个feature map，后面再加卷积层又有一个feature map，这样每个feature map都可以产生预测值，由此加入了多尺度的概念。所以上图中SSD结构的倒数第二列的数字8732综合了各个feature map上所有的prior box，是这么来的<code>38*38*4+19*19*6+10*10*6+5*5*6+3*3*4+1*1*4=8732</code></p>
-<h1 id="训练"><a href="#训练" class="headerlink" title="训练"></a>训练</h1><h2 id="卷积预测"><a href="#卷积预测" class="headerlink" title="卷积预测"></a>卷积预测</h2><p>YOLO中对feature map产生预测使用的是全连接层，参数较多，本文改为使用卷积产生预测，卷积核一般是$3\times3\times p$，其中 $p=k\times (Classes+1)$ 或$p=k\times4$，k是anchors的个数。$3\times3$是经验值，它可能不能覆盖锚框定义的区域。所以我们需要保证前面的卷积层能有效的将较大的锚框区域的特征浓缩到一个$3\times3$的窗口里。</p>
+<h1 id="训练"><a href="#训练" class="headerlink" title="训练"></a>训练</h1><p>训练主要涉及匹配策略、难例挖掘和数据曾广。</p>
+<h2 id="匹配策略"><a href="#匹配策略" class="headerlink" title="匹配策略"></a>匹配策略</h2><p>在训练过程中，需要确定哪些默认边界框对应实际边界框的检测，并相应地训练网络。我们首先将每个实际边界框与具有最高的IOU的边界框相匹配。与MultiBox不同的是，我们将默认边界框匹配到重叠高于阈值（0.5）的任何实际边界框，当做正例，否则为负例。这简化了学习问题，允许网络为多个重叠的默认边界框预测高分，而不是要求它只挑选具有最大重叠的一个边界框。</p>
+<h2 id="卷积预测"><a href="#卷积预测" class="headerlink" title="卷积预测"></a>卷积预测</h2><p>YOLO中对feature map产生预测使用的是全连接层，参数较多，SSD改为使用卷积产生预测，卷积核一般是$3\times3\times p$，其中 $p=k\times (Classes+1)$ 或$p=k\times4$，k是anchors的个数。$3\times3$是经验值，它可能不能覆盖锚框定义的区域。所以我们需要保证前面的卷积层能有效的将较大的锚框区域的特征浓缩到一个$3\times3$的窗口里。</p>
 <ul>
 <li>使用一个保持宽高比的$3\times3$的卷积层预测类别，每个pixel上生成<code>num_anchors*(num_classes+1)</code>个值。</li>
 <li>对每个锚框我们需要预测如何将其变换到真实的物体边界框。变换由一个长为4的向量来描述，分别表示左下和右上的x、y轴坐标偏移。与类别预测类似，这里我们同样使用一个保持高宽的$3\times3$卷积层来输出偏移预测。</li>
 </ul>
 <h2 id="损失函数"><a href="#损失函数" class="headerlink" title="损失函数"></a>损失函数</h2><p>和Faster RCNN的基本一样，由分类和回归两部分组成，可以参考Faster RCNN。回归部分的loss是希望预测的box和prior box的差距尽可能跟ground truth和prior box的差距接近，这样预测的box就能尽量和ground truth一样。</p>
-<p>SSD训练目标函数来自于MultiBox目标，但扩展到处理多个目标类别。设$x_{ij}^p = \lbrace 1,0 \rbrace$是第$i$个默认边界框匹配到类别$p$的第$j$个实际边界框的指示器。在上面的匹配策略中，我们有$\sum_i x_{ij}^p \geq 1$。总体目标损失函数是定位损失（loc）和置信度损失（conf）的加权和：</p>
+<p>SSD训练目标函数来自于MultiBox目标，但扩展到处理多个目标类别。设$x_{ij}^p = \lbrace 1,0 \rbrace$是第$i$个默认边界框匹配到类别 $p$ 的第$j$个实际边界框的指示器，即只有正例进行惩罚。在上面的匹配策略中，我们有$\sum_i x_{ij}^p \geq 1$。总体目标损失函数是定位损失（loc）和置信度损失（conf）的加权和：</p>
 <script type="math/tex; mode=display">
 L(x, c, l, g) = \frac{1}{N}(L_{conf}(x, c) + \alpha L_{loc}(x, l, g))</script><p>其中$N$是匹配的默认边界框的数量。如果$N=0$，则将损失设为0。定位损失是预测框(l)与真实框(g)参数之间的Smooth L1损失。类似于Faster RCNN，我们回归默认边界框$(d)$的中心偏移量$(cx, cy)$和其宽度$(w)$、高度$(h)$的偏移量。</p>
 <script type="math/tex; mode=display">
 L_{loc}(x,l,g) = \sum_{i \in Pos}^N \sum_{m \in \lbrace cx, cy, w, h \rbrace} x_{ij}^k \mathtt{smooth}_{L1}(l_{i}^m - \hat{g}_j^m) \\ \hat{g}_j^{cx} = (g_j^{cx} - d_i^{cx}) / d_i^w \quad \quad \hat{g}_j^{cy} = (g_j^{cy} - d_i^{cy}) / d_i^h \\ \hat{g}_j^{w} = \log\Big(\frac{g_j^{w}}{d_i^w}\Big) \quad \quad \hat{g}_j^{h} = \log\Big(\frac{g_j^{h}}{d_i^h}\Big)</script><p>置信度损失是在多类别置信度$(c)$上的softmax损失。</p>
 <script type="math/tex; mode=display">
-L_{conf}(x, c) = - \sum_{i\in Pos}^N x_{ij}^p log(\hat{c}_i^p) - \sum_{i\in Neg} log(\hat{c}_i^0)\quad \mathtt{where}\quad\hat{c}_i^p = \frac{\exp(c_i^p)}{\sum_p \exp(c_i^p)}</script><p>通过交叉验证权重项$\alpha$设为1。</p>
+L_{conf}(x, c) = - \sum_{i\in Pos}^N x_{ij}^p log(\hat{c}_i^p) - \sum_{i\in Neg} log(\hat{c}_i^0)\quad \mathtt{where}\quad\hat{c}_i^p = \frac{\exp(c_i^p)}{\sum_p \exp(c_i^p)}</script><p>置信度损失是分类预测损失。对于每个正例预测，我们根据相应类的置信度得分来惩罚损失。对于负匹配预测，我们根据类“0”的置信度得分来惩罚损失：类“0”表示没有检测到对象。通过交叉验证权重项$\alpha$设为1。</p>
+<h2 id="难例挖掘"><a href="#难例挖掘" class="headerlink" title="难例挖掘"></a>难例挖掘</h2><p>在匹配步骤之后，大多数默认边界框为负例。这在正例和负例之间引入了显著的不平衡。我们不使用所有负例，而是按照每个默认边界框的最高置信度损失来排序，并挑选损失最高的负例，以便负例和正例之间的比例最多为3:1。这会带来更快的优化和更稳定的训练。</p>
 <h2 id="默认anchors与正负样本"><a href="#默认anchors与正负样本" class="headerlink" title="默认anchors与正负样本"></a>默认anchors与正负样本</h2><p>在金字塔模型中，每个feature map有不同的尺寸，假设有m层金字塔。Default box与输入图片比例为 $s_k$：</p>
 <script type="math/tex; mode=display">
 s_k=s_{min}+\frac{s_{max}-s_{min}}{m-1}(k-1),\qquad k\in[1,m]</script><p>其中 $s_{min}=0.2,s_{max}=0.95$ 表示 default box 的边长最小占整幅图片的20%，最大占95%。Default box边长的长款比例为 $a_r\in\{1,2,3,\frac{1}{2},\frac{1}{3}\}$，并且对长宽比是 1 的增加一个 $s_k’=\sqrt{s_ks_{k+1}}$。所以每个网格对应 6 个 default boxes。于是我们有</p>
@@ -559,7 +562,7 @@ s_k=s_{min}+\frac{s_{max}-s_{min}}{m-1}(k-1),\qquad k\in[1,m]</script><p>其中 
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">33</span>
+                  <span class="site-state-item-count">36</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -581,7 +584,7 @@ s_k=s_{min}+\frac{s_{max}-s_{min}}{m-1}(k-1),\qquad k\in[1,m]</script><p>其中 
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">62</span>
+                  <span class="site-state-item-count">63</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -657,6 +660,10 @@ s_k=s_{min}+\frac{s_{max}-s_{min}}{m-1}(k-1),\qquad k\in[1,m]</script><p>其中 
                     <a href="https://blog.csdn.net/julialove102123" title="女王的宫殿" target="_blank">女王的宫殿</a>
                   </li>
                 
+                  <li class="links-of-blogroll-item">
+                    <a href="http://frankchen.xyz/" title="不正经数据科学家" target="_blank">不正经数据科学家</a>
+                  </li>
+                
               </ul>
             </div>
           
@@ -676,7 +683,7 @@ s_k=s_{min}+\frac{s_{max}-s_{min}}{m-1}(k-1),\qquad k\in[1,m]</script><p>其中 
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#总体概述"><span class="nav-number">1.</span> <span class="nav-text">总体概述</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#网络结构"><span class="nav-number">2.</span> <span class="nav-text">网络结构</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#金字塔模型"><span class="nav-number">2.1.</span> <span class="nav-text">金字塔模型</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#训练"><span class="nav-number">3.</span> <span class="nav-text">训练</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#卷积预测"><span class="nav-number">3.1.</span> <span class="nav-text">卷积预测</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#损失函数"><span class="nav-number">3.2.</span> <span class="nav-text">损失函数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#默认anchors与正负样本"><span class="nav-number">3.3.</span> <span class="nav-text">默认anchors与正负样本</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#数据增广"><span class="nav-number">3.4.</span> <span class="nav-text">数据增广</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考文献"><span class="nav-number">4.</span> <span class="nav-text">参考文献</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#总体概述"><span class="nav-number">1.</span> <span class="nav-text">总体概述</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#网络结构"><span class="nav-number">2.</span> <span class="nav-text">网络结构</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#金字塔模型"><span class="nav-number">2.1.</span> <span class="nav-text">金字塔模型</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#训练"><span class="nav-number">3.</span> <span class="nav-text">训练</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#匹配策略"><span class="nav-number">3.1.</span> <span class="nav-text">匹配策略</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#卷积预测"><span class="nav-number">3.2.</span> <span class="nav-text">卷积预测</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#损失函数"><span class="nav-number">3.3.</span> <span class="nav-text">损失函数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#难例挖掘"><span class="nav-number">3.4.</span> <span class="nav-text">难例挖掘</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#默认anchors与正负样本"><span class="nav-number">3.5.</span> <span class="nav-text">默认anchors与正负样本</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#数据增广"><span class="nav-number">3.6.</span> <span class="nav-text">数据增广</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考文献"><span class="nav-number">4.</span> <span class="nav-text">参考文献</span></a></li></ol></div>
             
 
           </div>
