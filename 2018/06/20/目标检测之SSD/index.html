@@ -90,7 +90,7 @@
 <meta property="og:image" content="/images/SSD_1.svg">
 <meta property="og:image" content="/images/SSD_3.png">
 <meta property="og:image" content="/images/SSD_2.png">
-<meta property="og:updated_time" content="2018-07-27T15:03:26.072Z">
+<meta property="og:updated_time" content="2018-07-27T15:13:52.191Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="目标检测之SSD">
 <meta name="twitter:description" content="SSD：Single Shot MultiBox Detector，ECCV 2016 的一篇文章，作者是UNC Chapel Hill（北卡罗来纳大学教堂山分校）的Wei Liu大神。是截至目前是主要的检测框架之一。相比Faster RCNN有明显的速度优势，相比YOLO又有明显的mAP优势。">
@@ -407,7 +407,7 @@ s_k=s_{min}+\frac{s_{max}-s_{min}}{m-1}(k-1),\qquad k\in[1,m]</script><p>其中 
 </ul>
 <p>每个采样图像块的大小是原始图像大小的$[0.1，1]$，长宽比在$\frac {1} {2}$和2之间。如果实际边界框的中心在采用的图像块中，就保留实际边界框与采样图像块的重叠部分。在上述采样步骤之后，将每个采样图像块resize到固定尺寸并以0.5的概率进行水平翻转。</p>
 <p>这样一个样本被诸多batch_sampler采样器采样后会生成多个候选样本，然后从中随机选一个样本送人网络训练。</p>
-<h1 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h1><p>[1]. <a href="http://zh.gluon.ai/chapter_recurrent-neural-networks/bptt.html" target="_blank" rel="noopener">动手深度学习</a><br>[2]. <a href="https://www.cnblogs.com/pinard/p/6494810.html" target="_blank" rel="noopener">卷积神经网络(CNN)反向传播算法</a><br>[3]. <a href="https://arxiv.org/abs/1512.02325" target="_blank" rel="noopener">SSD: Single Shot MultiBox Detector</a><br>[4]. <a href="http://noahsnail.com/2017/12/11/2017-12-11-Single%20Shot%20MultiBox%20Detector%E8%AE%BA%E6%96%87%E7%BF%BB%E8%AF%91%E2%80%94%E2%80%94%E4%B8%AD%E6%96%87%E7%89%88/" target="_blank" rel="noopener">SSD论文翻译</a><br>[5]. <a href="https://www.cnblogs.com/xuanyuyt/p/7447111.html" target="_blank" rel="noopener">SSD论文笔记</a></p>
+<h1 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h1><p>[1]. <a href="http://zh.gluon.ai/chapter_recurrent-neural-networks/bptt.html" target="_blank" rel="noopener">动手深度学习</a><br>[2]. <a href="https://www.cnblogs.com/pinard/p/6494810.html" target="_blank" rel="noopener">卷积神经网络(CNN)反向传播算法</a><br>[3]. <a href="https://arxiv.org/abs/1512.02325" target="_blank" rel="noopener">SSD: Single Shot MultiBox Detector</a><br>[4]. <a href="http://noahsnail.com/2017/12/11/2017-12-11-Single%20Shot%20MultiBox%20Detector%E8%AE%BA%E6%96%87%E7%BF%BB%E8%AF%91%E2%80%94%E2%80%94%E4%B8%AD%E6%96%87%E7%89%88/" target="_blank" rel="noopener">SSD论文翻译</a><br>[5]. <a href="https://www.cnblogs.com/xuanyuyt/p/7447111.html" target="_blank" rel="noopener">SSD论文笔记</a><br>[6]. <a href="https://medium.com/@jonathan_hui/ssd-object-detection-single-shot-multibox-detector-for-real-time-processing-9bd8deac0e06" target="_blank" rel="noopener">SSD object detection: Single Shot MultiBox Detector for real-time processing</a></p>
 
       
     </div>
@@ -562,7 +562,7 @@ s_k=s_{min}+\frac{s_{max}-s_{min}}{m-1}(k-1),\qquad k\in[1,m]</script><p>其中 
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">36</span>
+                  <span class="site-state-item-count">39</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -573,7 +573,7 @@ s_k=s_{min}+\frac{s_{max}-s_{min}}{m-1}(k-1),\qquad k\in[1,m]</script><p>其中 
               
               <div class="site-state-item site-state-categories">
                 
-                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-count">11</span>
                   <span class="site-state-item-name">分类</span>
                 
               </div>
@@ -584,7 +584,7 @@ s_k=s_{min}+\frac{s_{max}-s_{min}}{m-1}(k-1),\qquad k\in[1,m]</script><p>其中 
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">63</span>
+                  <span class="site-state-item-count">70</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -601,7 +601,7 @@ s_k=s_{min}+\frac{s_{max}-s_{min}}{m-1}(k-1),\qquad k\in[1,m]</script><p>其中 
 
           
           
-            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+            <div class="links-of-blogroll motion-element links-of-blogroll-inline">
               <div class="links-of-blogroll-title">
                 <i class="fa  fa-fw fa-globe"></i>
                 推荐博客
@@ -662,6 +662,10 @@ s_k=s_{min}+\frac{s_{max}-s_{min}}{m-1}(k-1),\qquad k\in[1,m]</script><p>其中 
                 
                   <li class="links-of-blogroll-item">
                     <a href="http://frankchen.xyz/" title="不正经数据科学家" target="_blank">不正经数据科学家</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://blog.csdn.net/victoriaw" title="CodeTutor" target="_blank">CodeTutor</a>
                   </li>
                 
               </ul>

@@ -79,18 +79,20 @@
 
 
 
-<meta name="description" content="参考文献[]. 图像风格迁移(Neural Style)简史">
+<meta name="description" content="基于神经网络的图像风格迁移在2015年由Gatys et al. 在两篇论文中提出：Gatys et al., 2015a和Gatys et al., 2015b。">
 <meta name="keywords" content="风格迁移">
 <meta property="og:type" content="article">
 <meta property="og:title" content="图像风格迁移">
 <meta property="og:url" content="flyrie.top/2018/06/24/图像风格迁移/index.html">
 <meta property="og:site_name" content="乡间小路">
-<meta property="og:description" content="参考文献[]. 图像风格迁移(Neural Style)简史">
+<meta property="og:description" content="基于神经网络的图像风格迁移在2015年由Gatys et al. 在两篇论文中提出：Gatys et al., 2015a和Gatys et al., 2015b。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-07-22T11:58:02.774Z">
+<meta property="og:image" content="/images/图像风格迁移_1.svg">
+<meta property="og:updated_time" content="2018-07-30T16:19:07.013Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="图像风格迁移">
-<meta name="twitter:description" content="参考文献[]. 图像风格迁移(Neural Style)简史">
+<meta name="twitter:description" content="基于神经网络的图像风格迁移在2015年由Gatys et al. 在两篇论文中提出：Gatys et al., 2015a和Gatys et al., 2015b。">
+<meta name="twitter:image" content="/images/图像风格迁移_1.svg">
 
 
 
@@ -352,8 +354,18 @@
       
 
       
-        <a id="more"></a>
-<h1 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h1><p>[]. <a href="https://zhuanlan.zhihu.com/p/26746283" target="_blank" rel="noopener">图像风格迁移(Neural Style)简史</a></p>
+        <p>基于神经网络的图像风格迁移在2015年由Gatys et al. 在两篇论文中提出：Gatys et al., 2015a和Gatys et al., 2015b。<br><a id="more"></a></p>
+<p>使用神经网络进行样式迁移的过程如下图所示。在图中我们选取一个有三个卷积层的神经网络为例，来提取特征。对于样式图片，我们选取第一和第三层输出作为样式特征。对于内容图片则选取第二层输出作为内容特征。给定一个合成图片的初始值，我们通过不断的迭代直到其与样式图片输入到同一神经网络时，第一和第三层输出能很好地匹配样式特征，并且合成图片与初始内容图片输入到神经网络时在第二层输出能匹配到内容特征。</p>
+<p><img src="/images/图像风格迁移_1.svg" alt="图片"></p>
+<h1 id="抽取特征"><a href="#抽取特征" class="headerlink" title="抽取特征"></a>抽取特征</h1><p>论文使用的 VGG 19 模型来抽取特征。VGG 使用了五个卷积块来构建网络，块之间使用最大池化层来做间隔。论文中使用每个卷积块的第一个卷积层输出来匹配样式（称之为样式层），和第四块中的最后一个卷积层来匹配内容（称之为内容层）。</p>
+<p>样式层和内容层有多种选取方法。通常越靠近输入层越容易匹配内容和样式的细节信息，越靠近输出则越倾向于语义的内容和全局的样式。选取比较靠后的内容层的目的是避免合成图片过于保留内容图片细节。使用多个位置的样式层来匹配局部和全局样式。</p>
+<h1 id="损失函数"><a href="#损失函数" class="headerlink" title="损失函数"></a>损失函数</h1><p>在训练时，我们需要定义如何比较合成图片和内容图片的内容层输出（内容损失函数），以及比较和样式图片的样式层输出（样式损失函数）。内容损失函数可以使用回归用的均方误差。</p>
+<p>对于样式，我们可以简单将它看成是像素点在每个通道的统计分布。例如要匹配两张图片的样式，我们可以匹配这两张图片在 RGB 这三个通道上的直方图。更一般的，假设卷积层的输出格式是$c×h×w$，即（通道，高，宽）。那么我们可以把它变形成$c×hw$的二维数组，并将它看成是一个维度为 c 的随机变量采样到的 hw 个点。所谓的样式匹配就是使得两个 c 维随机变量统计分布一致。匹配统计分布常用的做法是冲量匹配，就是说使得他们有一样的均值，协方差，和其他高维的冲量。例如匹配二阶信息就是匹配协方差。</p>
+<p>当使用靠近输出层的神经层输出来匹配时，经常可以观察到学到的合成图片里面有大量高频噪音，即有特别亮或者暗的颗粒像素。一种常用的降噪方法是总变差降噪（total variation denoising）。假设 $x_{i,j}$ 表示像素 $(i,j)$ 的值，总变差损失使得邻近的像素值相似：</p>
+<script type="math/tex; mode=display">
+\sum_{i,j} \left|x_{i,j} - x_{i+1,j}\right| + \left|x_{i,j} - x_{i,j+1}\right|</script><p>训练中将上述三个损失函数加权求和。通过调整权重值可以控制学到的图片是否保留更多样式，更多内容，还是更加干净。此外注意到样式层里有五个神经层，我们对靠近输入的有较少的通道数的层给予比较大的权重。</p>
+<h1 id="训练"><a href="#训练" class="headerlink" title="训练"></a>训练</h1><p>训练的主要不同在于我们只对输入x进行更新。此外我们将x的梯度除以了它的绝对平均值来降低对学习率的敏感度，而且每隔一定的批量我们减小一次学习率。</p>
+<h1 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h1><p>[1]. <a href="https://zhuanlan.zhihu.com/p/26746283" target="_blank" rel="noopener">图像风格迁移(Neural Style)简史</a><br>[2]. <a href="http://zh.gluon.ai/chapter_computer-vision/neural-style.html" target="_blank" rel="noopener">样式迁移</a></p>
 
       
     </div>
@@ -506,7 +518,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">36</span>
+                  <span class="site-state-item-count">39</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -517,7 +529,7 @@
               
               <div class="site-state-item site-state-categories">
                 
-                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-count">11</span>
                   <span class="site-state-item-name">分类</span>
                 
               </div>
@@ -528,7 +540,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">63</span>
+                  <span class="site-state-item-count">70</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -545,7 +557,7 @@
 
           
           
-            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+            <div class="links-of-blogroll motion-element links-of-blogroll-inline">
               <div class="links-of-blogroll-title">
                 <i class="fa  fa-fw fa-globe"></i>
                 推荐博客
@@ -608,6 +620,10 @@
                     <a href="http://frankchen.xyz/" title="不正经数据科学家" target="_blank">不正经数据科学家</a>
                   </li>
                 
+                  <li class="links-of-blogroll-item">
+                    <a href="https://blog.csdn.net/victoriaw" title="CodeTutor" target="_blank">CodeTutor</a>
+                  </li>
+                
               </ul>
             </div>
           
@@ -627,7 +643,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#参考文献"><span class="nav-number">1.</span> <span class="nav-text">参考文献</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#抽取特征"><span class="nav-number">1.</span> <span class="nav-text">抽取特征</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#损失函数"><span class="nav-number">2.</span> <span class="nav-text">损失函数</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#训练"><span class="nav-number">3.</span> <span class="nav-text">训练</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考文献"><span class="nav-number">4.</span> <span class="nav-text">参考文献</span></a></li></ol></div>
             
 
           </div>
