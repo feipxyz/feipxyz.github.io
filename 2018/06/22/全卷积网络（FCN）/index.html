@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="FCN," />
 
 
 
@@ -79,17 +79,28 @@
 
 
 
-<meta name="description" content="把知道的东西讲清楚">
+<meta name="description" content="CNN能够对图片进行分类，可是怎么样才能识别图片中特定部分的物体，在2015年之前还是一个未解难题。Jonathan Long发表了《Fully Convolutional Networks for Semantic Segmentation》为图像语义分割指明了方向。">
+<meta name="keywords" content="FCN">
 <meta property="og:type" content="article">
-<meta property="og:title" content="乡间小路">
-<meta property="og:url" content="flyrie.top/2018/07/27/语义分割/index.html">
+<meta property="og:title" content="全卷积网络(FCN)">
+<meta property="og:url" content="flyrie.top/2018/06/22/全卷积网络（FCN）/index.html">
 <meta property="og:site_name" content="乡间小路">
-<meta property="og:description" content="把知道的东西讲清楚">
+<meta property="og:description" content="CNN能够对图片进行分类，可是怎么样才能识别图片中特定部分的物体，在2015年之前还是一个未解难题。Jonathan Long发表了《Fully Convolutional Networks for Semantic Segmentation》为图像语义分割指明了方向。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-07-27T15:54:44.486Z">
+<meta property="og:image" content="/images/fcn_1.png">
+<meta property="og:image" content="/images/fcn_2.png">
+<meta property="og:image" content="/images/fcn_3.gif">
+<meta property="og:image" content="/images/fcn_4.gif">
+<meta property="og:image" content="/images/fcn_5.png">
+<meta property="og:image" content="/images/fcn_6.png">
+<meta property="og:image" content="/images/fcn_7.png">
+<meta property="og:image" content="/images/fcn_8.png">
+<meta property="og:image" content="/images/fcn_9.png">
+<meta property="og:updated_time" content="2018-08-01T02:23:21.704Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="乡间小路">
-<meta name="twitter:description" content="把知道的东西讲清楚">
+<meta name="twitter:title" content="全卷积网络(FCN)">
+<meta name="twitter:description" content="CNN能够对图片进行分类，可是怎么样才能识别图片中特定部分的物体，在2015年之前还是一个未解难题。Jonathan Long发表了《Fully Convolutional Networks for Semantic Segmentation》为图像语义分割指明了方向。">
+<meta name="twitter:image" content="/images/fcn_1.png">
 
 
 
@@ -119,13 +130,13 @@
 
 
 
-  <link rel="canonical" href="flyrie.top/2018/07/27/语义分割/"/>
+  <link rel="canonical" href="flyrie.top/2018/06/22/全卷积网络（FCN）/"/>
 
 
 
 
 
-  <title> | 乡间小路</title>
+  <title>全卷积网络(FCN) | 乡间小路</title>
   
 
 
@@ -262,7 +273,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="flyrie.top/2018/07/27/语义分割/">
+    <link itemprop="mainEntityOfPage" href="flyrie.top/2018/06/22/全卷积网络（FCN）/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="乡间小路">
@@ -279,7 +290,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline"></h1>
+          <h1 class="post-title" itemprop="name headline">全卷积网络(FCN)</h1>
         
 
         <div class="post-meta">
@@ -291,8 +302,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-07-27T23:54:44+08:00">
-                2018-07-27
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-06-22T01:46:14+08:00">
+                2018-06-22
               </time>
             
 
@@ -301,6 +312,28 @@
             
           </span>
 
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/深度学习/" itemprop="url" rel="index">
+                    <span itemprop="name">深度学习</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
           
 
           
@@ -329,7 +362,34 @@
       
 
       
-        
+        <p>CNN能够对图片进行分类，可是怎么样才能识别图片中特定部分的物体，在2015年之前还是一个未解难题。Jonathan Long发表了《Fully Convolutional Networks for Semantic Segmentation》为图像语义分割指明了方向。<br><a id="more"></a></p>
+<h1 id="核心思想"><a href="#核心思想" class="headerlink" title="核心思想"></a>核心思想</h1><p>FCN包含三个核心思想：</p>
+<ol>
+<li>不含全连接层(fc)的全卷积(fully conv)网络。可适应任意尺寸输入。</li>
+<li>增大数据尺寸的反卷积(deconv)层。能够输出精细的结果。</li>
+<li>结合不同深度层结果的跳级(skip)结构。同时确保鲁棒性和精确性。 </li>
+</ol>
+<h1 id="网络结构"><a href="#网络结构" class="headerlink" title="网络结构"></a>网络结构</h1><p>主体网络可以使用AlexNet、VGG、ResNet等，以往分类的网络通常会在最后使用全连接层，将原来二维特征图转换成一维的固定长度的特征向量，最后输出一个特定长度的向量，表示输入图像属于每一类的概率，以此作为分类的标签。但这样会丢失关键的空间信息，无法应用在像素级别的分类上。</p>
+<p><img src="/images/fcn_1.png" alt="图片"><br><img src="/images/fcn_2.png" alt="图片">  </p>
+<p>与传统CNN在卷积层之后使用全连接层得到固定长度的特征向量进行分类（全连接层＋softmax）不同，FCN可以接受任意尺寸的输入图像，然后通过卷积转置层对最后一个卷积层的feature map进行上采样, 使它恢复到输入图像相同的尺寸，从而可以对每个像素都产生了一个预测, 同时保留了原始输入图像中的空间信息, 最后在与输入图等大小的特征图上对每个像素进行分类，逐像素地用softmax分类计算损失,相当于每个像素对应一个训练样本。</p>
+<h1 id="转置卷积层"><a href="#转置卷积层" class="headerlink" title="转置卷积层"></a>转置卷积层</h1><p>此处的转置卷积即是上采样（upsample）。当然关于这个名字不同框架不同，Caffe和Kera里叫Deconvolution，而tensorflow里叫conv_transpose。CS231n这门课中说，叫conv_transpose更为合适。</p>
+<p>众所诸知，普通的池化会缩小图片的尺寸，比如VGG16 五次池化后图片被缩小了32倍。为了得到和原图等大的分割图，我们需要上采样。</p>
+<p>上采样和卷积类似，都是相乘相加的运算。只不过后者是多对一，前者是一对多。而反卷积的前向和后向传播，只用颠倒卷积的前后向传播即可。所以无论优化还是后向传播算法都是没有问题。图解如下：</p>
+<p><img src="/images/fcn_3.gif" alt="图片"><br><img src="/images/fcn_4.gif" alt="图片"><br>可以理解upsample就是使大小比原图像小得多的特征图变大，使其大小为原图像大小。</p>
+<h1 id="跳级结构"><a href="#跳级结构" class="headerlink" title="跳级结构"></a>跳级结构</h1><p>对网络最后一层（第5层）的输出（32倍缩小）上采样到原图大小，得到的结果还是不够精确，一些细节无法恢复。于是Jonathan将第4层的输出和第3层的输出也依次反卷积，分别需要16倍和8倍上采样，结果就精细一些了。</p>
+<p><img src="/images/fcn_5.png" alt="图片">  </p>
+<h1 id="训练"><a href="#训练" class="headerlink" title="训练"></a>训练</h1><ol>
+<li><p>第一阶段，训练一个完整的分类网络。<br><img src="/images/fcn_6.png" alt="图片"></p>
+</li>
+<li><p>从特征小图（<code>16*16*4096</code>）预测分割小图（<code>16*16*21</code>），之后直接上采样到原图尺寸。上采样（橙色）的步长为32，这个网络称为FCN-32s。<br><img src="/images/fcn_7.png" alt="图片"></p>
+</li>
+<li><p>在第二次升采样前，把第4个pooling层（绿色）的预测结果（蓝色）融合进来。使用跳级结构提升精确性。第二次上采样步长为16，这个网络称为FCN-16s。<br><img src="/images/fcn_8.png" alt="图片"></p>
+</li>
+<li><p>进一步融合了第3个pooling层的预测结果。第三次上采样步长为8，记为FCN-8s。<br><img src="/images/fcn_9.png" alt="图片"></p>
+</li>
+</ol>
+<h1 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h1><p>[1]. <a href="https://blog.csdn.net/xg123321123/article/details/53092154" target="_blank" rel="noopener">FCN 简单梳理</a><br>[2]. <a href="https://blog.csdn.net/shenxiaolu1984/article/details/51348149" target="_blank" rel="noopener">图像分割</a><br>[3]. <a href="https://arxiv.org/abs/1411.4038" target="_blank" rel="noopener">Fully Convolutional Networks for Semantic Segmentation</a><br>[4]. <a href="https://github.com/vdumoulin/conv_arithmetic" target="_blank" rel="noopener">Convolution arithmetic</a></p>
+
       
     </div>
     
@@ -368,6 +428,12 @@
 
     <footer class="post-footer">
       
+        <div class="post-tags">
+          
+            <a href="/tags/FCN/" rel="tag"># FCN</a>
+          
+        </div>
+      
 
       
       
@@ -377,8 +443,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/06/24/目标检测之YOLO9000/" rel="next" title="目标检测之YOLO V2">
-                <i class="fa fa-chevron-left"></i> 目标检测之YOLO V2
+              <a href="/2018/06/22/Gluon源码解读之DataLoader/" rel="next" title="Mxnet源码解读之Dataset与DataLoader">
+                <i class="fa fa-chevron-left"></i> Mxnet源码解读之Dataset与DataLoader
               </a>
             
           </div>
@@ -386,6 +452,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/06/23/常用的LossFunction总结/" rel="prev" title="深度学习常用的LossFunction小结">
+                深度学习常用的LossFunction小结 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -442,8 +512,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -484,7 +563,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">70</span>
+                  <span class="site-state-item-count">71</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -577,6 +656,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#核心思想"><span class="nav-number">1.</span> <span class="nav-text">核心思想</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#网络结构"><span class="nav-number">2.</span> <span class="nav-text">网络结构</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#转置卷积层"><span class="nav-number">3.</span> <span class="nav-text">转置卷积层</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#跳级结构"><span class="nav-number">4.</span> <span class="nav-text">跳级结构</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#训练"><span class="nav-number">5.</span> <span class="nav-text">训练</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考文献"><span class="nav-number">6.</span> <span class="nav-text">参考文献</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
