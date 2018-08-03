@@ -262,6 +262,163 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="flyrie.top/2018/07/29/注意力机制/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="乡间小路">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="乡间小路">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/07/29/注意力机制/" itemprop="url">注意力机制</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-07-29T01:46:15+08:00">
+                2018-07-29
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/深度学习/" itemprop="url" rel="index">
+                    <span itemprop="name">深度学习</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/深度学习/自然语言处理/" itemprop="url" rel="index">
+                    <span itemprop="name">自然语言处理</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <p>以英语 - 法语翻译为例，给定一对英语输入序列“They”、“are”、“watching”、“.”和法语输出序列“Ils”、“regardent”、“.”。解码器可以在输出序列的时间步 1 使用更集中编码了“They”、“are”信息的背景变量来生成“Ils”，在时间步 2 使用更集中编码了“watching”信息的背景变量来生成“regardent”，在时间步 3 使用更集中编码了“.”信息的背景变量来生成“.”。这看上去就像是在解码器的每一时间步对输入序列中不同时间步编码的信息分配不同的注意力。这也是注意力机制的由来。它最早由 Bahanau 等提出。<br>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/07/29/注意力机制/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="flyrie.top/2018/07/28/seq2seq/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -546,63 +703,14 @@
 
       
         
-          
-            <p>在 word2vec 被提出以后，很多其他词嵌入模型也陆续发表。本文介绍其中比较有代表性的两个模型。它们分别是由斯坦福团队发表的 GloVe 和由 Facebook 团队发表的 fastText。</p>
-<h1 id="GloVe"><a href="#GloVe" class="headerlink" title="GloVe"></a>GloVe</h1><p>GloVe 使用了词与词之间的共现（co-occurrence）信息。定义 $\boldsymbol{X}$ 为共现词频矩阵，其中元素 $x_{ij}$ 为词 $j$ 出现在词 $i$ 的背景的次数。这里的“背景”有多种可能的定义。举个例子，在一段文本序列中，如果词 $j$ 出现在词 $i$ 左边或者右边不超过 10 个词的距离，我们可以认为词 $j$ 出现在词 $i$ 的背景一次。令 $x_i = \sum_k x_{ik}$ 为任意词出现在词 $i$ 的背景的次数。那么，</p>
-<script type="math/tex; mode=display">
-p_{ij} = \mathbb{P}(j \mid i) = \frac{x_{ij}}{x_i}</script><p>为词 $j$ 在词 $i$ 的背景中出现的条件概率。这一条件概率也称词 $i$ 和词 $j$ 的共现概率。</p>
-<h2 id="共现概率比值"><a href="#共现概率比值" class="headerlink" title="共现概率比值"></a>共现概率比值</h2><p>GloVe 论文里展示了以下词对的共现概率与比值：</p>
-<ul>
-<li>$\mathbb{P}(k \mid \text{ice})：0.00019（k= solid），0.000066（k= gas），0.003（k= water），0.000017（k= fashion）$</li>
-<li>$\mathbb{P}(k \mid \text{steam})：0.000022（k= solid），0.00078（k= gas），0.0022（k= water），0.000018（k= fashion）$</li>
-<li>$\mathbb{P}(k \mid \text{ice}) / \mathbb{P}(k \mid \text{steam})：8.9（k= solid），0.085（k= gas），1.36（k= water），0.96（k= fashion）$</li>
-</ul>
-<p>我们可以观察到以下现象：</p>
-<ul>
-<li>对于与 ice（冰）相关而与 steam（蒸汽）不相关的词 k，例如 k=solid（固体），我们期望共现概率比值 $p_{ik}/p_{jk}$ 较大，例如上面最后一行结果中的值 8.9。</li>
-<li>对于与 ice 不相关而与 steam 相关的词 k，例如 k=gas（气体），我们期望共现概率比值 $p_{ik}/p_{jk}$ 较小，例如上面最后一行结果中的值 0.085。</li>
-<li>对于与 ice 和 steam 都相关的词 k，例如 k=water（水），我们期望共现概率比值 $p_{ik}/p_{jk}$ 接近 1，例如上面最后一行结果中的值 1.36。</li>
-<li>对于与 ice 和 steam 都不相关的词 k，例如 k=fashion（时尚），我们期望共现概率比值 $p_{ik}/p_{jk}$ 接近 1，例如上面最后一行结果中的值 0.96。</li>
-</ul>
-<p>由此可见，共现概率比值能比较直观地表达词与词之间的关系。GloVe 试图用有关词向量的函数来表达共现概率比值。</p>
-<h2 id="用词向量表达共现概率比值"><a href="#用词向量表达共现概率比值" class="headerlink" title="用词向量表达共现概率比值"></a>用词向量表达共现概率比值</h2><p>GloVe 的核心思想在于使用词向量表达共现概率比值。而任意一个这样的比值需要三个词 $i、j$ 和 $k$ 的词向量。对于共现概率 $p_{ij} = \mathbb{P}(j \mid i)$，我们称词 $i$ 和词 $j$ 分别为中心词和背景词。我们使用 $\boldsymbol{v}_i 和 \tilde{\boldsymbol{v}}_i$ 分别表示词 $i$ 作为中心词和背景词的词向量。</p>
-<p>我们可以用有关词向量的函数 $f$ 来表达共现概率比值：</p>
-<script type="math/tex; mode=display">
-f(\boldsymbol{v}_i, \boldsymbol{v}_j, \tilde{\boldsymbol{v}}_k) = \frac{p_{ik}}{p_{jk}}</script><p>需要注意的是，函数 $f$ 可能的设计并不唯一。下面我们考虑一种较为合理的可能性。</p>
-<p>首先，用向量之差来表达共现概率的比值，并将上式改写成</p>
-<script type="math/tex; mode=display">
-f(\boldsymbol{v}_i - \boldsymbol{v}_j, \tilde{\boldsymbol{v}}_k) = \frac{p_{ik}}{p_{jk}}</script><p>由于共现概率比值是一个标量，我们可以使用向量之间的内积把函数 $f$ 的自变量进一步改写，得到</p>
-<script type="math/tex; mode=display">
-f((\boldsymbol{v}_i - \boldsymbol{v}_j)^\top \tilde{\boldsymbol{v}}_k) = \frac{p_{ik}}{p_{jk}}</script><p>由于任意一对词共现的对称性，我们希望以下两个性质可以同时被满足：</p>
-<ul>
-<li>任意词作为中心词和背景词的词向量应该相等：对任意词 $i$，$\boldsymbol{v}_i = \tilde{\boldsymbol{v}}_i$。</li>
-<li>词与词之间共现词频矩阵 $\boldsymbol{X}$ 应该对称：对任意词 $i$ 和 $j$，$x_{ij} = x_{ji}$。</li>
-</ul>
-<p>为了满足以上两个性质，一方面，我们令</p>
-<script type="math/tex; mode=display">
-f((\boldsymbol{v}_i - \boldsymbol{v}_j)^\top \tilde{\boldsymbol{v}}_k) = \frac{f(\boldsymbol{v}_i^\top \tilde{\boldsymbol{v}}_k)}{f(\boldsymbol{v}_j^\top \tilde{\boldsymbol{v}}_k)}</script><p>并得到 $f(x) = \text{exp}(x)$。以上两式的右边联立</p>
-<script type="math/tex; mode=display">
-f(\boldsymbol{v}_i^\top \tilde{\boldsymbol{v}}_k) = \exp(\boldsymbol{v}_i^\top \tilde{\boldsymbol{v}}_k) = p_{ik} = \frac{x_{ik}}{x_i}</script><p>由上式可得</p>
-<script type="math/tex; mode=display">
-\boldsymbol{v}_i^\top \tilde{\boldsymbol{v}}_k = \log(p_{ik}) = \log(x_{ik}) - \log(x_i)</script><p>另一方面，我们可以把上式中 $\log(x_i)$ 替换成两个偏差项之和 $b_i + \tilde{b}_k$，得到</p>
-<script type="math/tex; mode=display">
-\boldsymbol{v}_i^\top \tilde{\boldsymbol{v}}_k = \log(x_{ik}) - b_i - \tilde{b}_k</script><p>因此，对于任意一对词 $i$ 和 $j$，我们可以用它们的词向量表达共现词频的对数：</p>
-<script type="math/tex; mode=display">
-\boldsymbol{v}_i^\top \tilde{\boldsymbol{v}}_j + b_i + \tilde{b}_j = \log(x_{ij})</script><h2 id="损失函数"><a href="#损失函数" class="headerlink" title="损失函数"></a>损失函数</h2><p>GloVe 中的共现词频是直接在训练数据上统计得到的。为了学习词向量和相应的偏差项，我们希望上式中的左边与右边尽可能接近。给定词典 $\mathcal{V}$ 和权重函数 $h(x_{ij})$，GloVe 的损失函数为</p>
-<script type="math/tex; mode=display">
-\sum_{i \in \mathcal{V}, j \in \mathcal{V}} h(x_{ij}) \left(\boldsymbol{v}_i^\top \tilde{\boldsymbol{v}}_j + b_i + \tilde{b}_j - \log(x_{ij})\right)^2</script><p>其中权重函数 $h(x)$ 的一个建议选择是，当 $x &lt; c$（例如 c = 100），令 $h(x) = (x/c)^\alpha$（例如 $\alpha = 0.75$），反之令 $h(x) = 1$。由于权重函数的存在，损失函数的计算复杂度与共现词频矩阵 $\boldsymbol{X}$ 中非零元素的数目呈正相关。我们可以从 $\boldsymbol{X}$ 中随机采样小批量非零元素，并使用优化算法迭代共现词频相关词的向量和偏差项。</p>
-<p>我们提到过，任意词的中心词向量和背景词向量是等价的。但由于初始化值的不同，同一个词最终学习到的两组词向量可能不同。当学习得到所有词向量以后，GloVe 使用一个词的中心词向量与背景词向量之和作为该词的最终词向量。</p>
-<h1 id="fastText"><a href="#fastText" class="headerlink" title="fastText"></a>fastText</h1><p>之前介绍了 word2vec 的跳字模型和负采样。fastText 以跳字模型为基础，将每个中心词视为子词（subword）的集合，并使用负采样学习子词的词向量。因此，fastText 是一个子词嵌入模型。</p>
-<p>举个例子，设子词长度为 3 个字符，<code>where</code>的子词包括<code>&lt;wh</code>、<code>whe</code>、<code>her</code>、<code>ere</code>、<code>re&gt;</code>和特殊子词（整词）<code>&lt;where&gt;</code>。这些子词中的<code>&lt;</code>和<code>&gt;</code>符号是为了将作为前后缀的子词区分出来。并且，这里的子词<code>her</code>与整词<code>&lt;her&gt;</code>也可被区分开。给定一个词 w，我们通常可以把字符长度在 3 到 6 之间的所有子词和特殊子词的并集 $\mathcal{G}_w$ 取出。假设词典中任意子词 $g$ 的子词向量为 $\boldsymbol{z}_g$，我们可以把使用负采样的跳字模型的损失函数</p>
-<script type="math/tex; mode=display">
-- \text{log} \mathbb{P} (w_o \mid w_c) = -\text{log} \frac{1}{1+\text{exp}(-\boldsymbol{u}_o^\top \boldsymbol{v}_c)}  - \sum_{k=1, w_k \sim \mathbb{P}(w)}^K \text{log} \frac{1}{1+\text{exp}(\boldsymbol{u}_{i_k}^\top \boldsymbol{v}_c)}</script><p>直接替换成</p>
-<script type="math/tex; mode=display">
-- \text{log} \mathbb{P} (w_o \mid w_c) = -\text{log} \frac{1}{1+\text{exp}(-\boldsymbol{u}_o^\top \sum_{g \in \mathcal{G}_{w_c}} \boldsymbol{z}_g)}  - \sum_{k=1, w_k \sim \mathbb{P}(w)}^K \text{log} \frac{1}{1+\text{exp}(\boldsymbol{u}_{i_k}^\top \sum_{g \in \mathcal{G}_{w_c}} \boldsymbol{z}_g)}</script><p>可以看到，原中心词向量被替换成了中心词的子词向量之和。与 word2vec 和 GloVe 不同，词典以外的新词的词向量可以使用 fastText 中相应的子词向量之和。</p>
-<p>fastText 对于一些语言较重要，例如阿拉伯语、德语和俄语。例如，德语中有很多复合词，例如乒乓球（英文 table tennis）在德语中叫“Tischtennis”。fastText 可以通过子词表达两个词的相关性，例如“Tischtennis”和“Tennis”。</p>
-<p>由于词是自然语言的基本表义单元，词向量广泛应用于各类自然语言处理的场景中。例如，我们可以在之前介绍的语言模型中使用在更大规模语料上预训练的词向量，从而提升语言模型的准确性。</p>
-<h1 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h1><p>[1]. <a href="http://zh.gluon.ai/chapter_natural-language-processing/glove-fasttext.html" target="_blank" rel="noopener">词嵌入：GloVe 和 fastText</a></p>
-
-          
+          <p>在 word2vec 被提出以后，很多其他词嵌入模型也陆续发表。本文介绍其中比较有代表性的两个模型。它们分别是由斯坦福团队发表的 GloVe 和由 Facebook 团队发表的 fastText。<br>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/07/25/Glove和fastText/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -756,152 +864,6 @@ f(\boldsymbol{v}_i^\top \tilde{\boldsymbol{v}}_k) = \exp(\boldsymbol{v}_i^\top \
           <!--noindex-->
           <div class="post-button text-center">
             <a class="btn" href="/2018/07/23/word2vec/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="flyrie.top/2018/06/24/图像风格迁移/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="乡间小路">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="乡间小路">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/06/24/图像风格迁移/" itemprop="url">图像风格迁移</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-06-24T02:46:14+08:00">
-                2018-06-24
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/深度学习/" itemprop="url" rel="index">
-                    <span itemprop="name">深度学习</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <p>基于神经网络的图像风格迁移在2015年由Gatys et al. 在两篇论文中提出：Gatys et al., 2015a和Gatys et al., 2015b。<br>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2018/06/24/图像风格迁移/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1113,6 +1075,152 @@ f(\boldsymbol{v}_i^\top \tilde{\boldsymbol{v}}_k) = \exp(\boldsymbol{v}_i^\top \
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="flyrie.top/2018/06/24/图像风格迁移/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="乡间小路">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="乡间小路">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/06/24/图像风格迁移/" itemprop="url">图像风格迁移</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-06-24T02:46:14+08:00">
+                2018-06-24
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/深度学习/" itemprop="url" rel="index">
+                    <span itemprop="name">深度学习</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <p>基于神经网络的图像风格迁移在2015年由Gatys et al. 在两篇论文中提出：Gatys et al., 2015a和Gatys et al., 2015b。<br>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/06/24/图像风格迁移/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="flyrie.top/2018/06/24/目标检测之YOLO/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1220,152 +1328,6 @@ f(\boldsymbol{v}_i^\top \tilde{\boldsymbol{v}}_k) = \exp(\boldsymbol{v}_i^\top \
           <!--noindex-->
           <div class="post-button text-center">
             <a class="btn" href="/2018/06/24/目标检测之YOLO/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="flyrie.top/2018/06/23/常用的LossFunction总结/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="乡间小路">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="乡间小路">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/06/23/常用的LossFunction总结/" itemprop="url">深度学习常用的LossFunction小结</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-06-23T01:46:14+08:00">
-                2018-06-23
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/深度学习/" itemprop="url" rel="index">
-                    <span itemprop="name">深度学习</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <p>本文介绍深度学习中常用的损失函数。会不断更新。
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2018/06/23/常用的LossFunction总结/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1562,6 +1524,152 @@ f(\boldsymbol{v}_i^\top \tilde{\boldsymbol{v}}_k) = \exp(\boldsymbol{v}_i^\top \
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="flyrie.top/2018/06/23/常用的LossFunction总结/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="乡间小路">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="乡间小路">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/06/23/常用的LossFunction总结/" itemprop="url">深度学习常用的LossFunction小结</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-06-23T01:46:14+08:00">
+                2018-06-23
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/深度学习/" itemprop="url" rel="index">
+                    <span itemprop="name">深度学习</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <p>本文介绍深度学习中常用的损失函数。会不断更新。
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/06/23/常用的LossFunction总结/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="flyrie.top/2018/06/22/全卷积网络（FCN）/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1695,163 +1803,6 @@ f(\boldsymbol{v}_i^\top \tilde{\boldsymbol{v}}_k) = \exp(\boldsymbol{v}_i^\top \
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="flyrie.top/2018/06/22/Gluon源码解读之DataLoader/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="乡间小路">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="乡间小路">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/06/22/Gluon源码解读之DataLoader/" itemprop="url">Mxnet源码解读之Dataset与DataLoader</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-06-22T00:46:14+08:00">
-                2018-06-22
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/深度学习/" itemprop="url" rel="index">
-                    <span itemprop="name">深度学习</span>
-                  </a>
-                </span>
-
-                
-                
-                  ， 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/深度学习/mxnet/" itemprop="url" rel="index">
-                    <span itemprop="name">mxnet</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <p>本文介绍mxnet中数据加载的两个类<code>Dataset</code>与<code>DataLoader</code>。
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2018/06/22/Gluon源码解读之DataLoader/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -1906,7 +1857,7 @@ f(\boldsymbol{v}_i^\top \tilde{\boldsymbol{v}}_k) = \exp(\boldsymbol{v}_i^\top \
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">42</span>
+                  <span class="site-state-item-count">43</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -1928,7 +1879,7 @@ f(\boldsymbol{v}_i^\top \tilde{\boldsymbol{v}}_k) = \exp(\boldsymbol{v}_i^\top \
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">75</span>
+                  <span class="site-state-item-count">76</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
