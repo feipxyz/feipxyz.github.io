@@ -79,19 +79,19 @@
 
 
 
-<meta name="description" content="在很多应用中，输入和输出都可以是不定长序列。以机器翻译为例，输入可以是一段不定长的英语文本序列，输出可以是一段不定长的法语文本序列，例如 英语输入：“They”、“are”、“watching”、“.” 法语输出：“Ils”、“regardent”、“.” 当输入输出都是不定长序列时，我们可以使用编码器—解码器（encoder-decoder） 或者 seq2seq 模型。这两个模型本质上都用到了">
+<meta name="description" content="在很多应用中，输入和输出都可以是不定长序列。以机器翻译为例，输入可以是一段不定长的英语文本序列，输出可以是一段不定长的法语文本序列，例如 英语输入：“They”、“are”、“watching”、“.” 法语输出：“Ils”、“regardent”、“.”">
 <meta name="keywords" content="seq2seq">
 <meta property="og:type" content="article">
 <meta property="og:title" content="seq2seq">
 <meta property="og:url" content="flyrie.top/2018/07/28/seq2seq/index.html">
 <meta property="og:site_name" content="乡间小路">
-<meta property="og:description" content="在很多应用中，输入和输出都可以是不定长序列。以机器翻译为例，输入可以是一段不定长的英语文本序列，输出可以是一段不定长的法语文本序列，例如 英语输入：“They”、“are”、“watching”、“.” 法语输出：“Ils”、“regardent”、“.” 当输入输出都是不定长序列时，我们可以使用编码器—解码器（encoder-decoder） 或者 seq2seq 模型。这两个模型本质上都用到了">
+<meta property="og:description" content="在很多应用中，输入和输出都可以是不定长序列。以机器翻译为例，输入可以是一段不定长的英语文本序列，输出可以是一段不定长的法语文本序列，例如 英语输入：“They”、“are”、“watching”、“.” 法语输出：“Ils”、“regardent”、“.”">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="/images/seq2seq_1.svg">
-<meta property="og:updated_time" content="2018-08-03T02:18:54.492Z">
+<meta property="og:updated_time" content="2018-08-03T02:42:21.280Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="seq2seq">
-<meta name="twitter:description" content="在很多应用中，输入和输出都可以是不定长序列。以机器翻译为例，输入可以是一段不定长的英语文本序列，输出可以是一段不定长的法语文本序列，例如 英语输入：“They”、“are”、“watching”、“.” 法语输出：“Ils”、“regardent”、“.” 当输入输出都是不定长序列时，我们可以使用编码器—解码器（encoder-decoder） 或者 seq2seq 模型。这两个模型本质上都用到了">
+<meta name="twitter:description" content="在很多应用中，输入和输出都可以是不定长序列。以机器翻译为例，输入可以是一段不定长的英语文本序列，输出可以是一段不定长的法语文本序列，例如 英语输入：“They”、“are”、“watching”、“.” 法语输出：“Ils”、“regardent”、“.”">
 <meta name="twitter:image" content="/images/seq2seq_1.svg">
 
 
@@ -368,7 +368,8 @@
         <p>在很多应用中，输入和输出都可以是不定长序列。以机器翻译为例，输入可以是一段不定长的英语文本序列，输出可以是一段不定长的法语文本序列，例如</p>
 <pre><code>英语输入：“They”、“are”、“watching”、“.”
 法语输出：“Ils”、“regardent”、“.”
-</code></pre><p>当输入输出都是不定长序列时，我们可以使用编码器—解码器（encoder-decoder） 或者 seq2seq 模型。这两个模型本质上都用到了两个循环神经网络，分别叫做编码器和解码器。编码器对应输入序列，解码器对应输出序列。</p>
+</code></pre><a id="more"></a>
+<p>当输入输出都是不定长序列时，我们可以使用编码器—解码器（encoder-decoder） 或者 seq2seq 模型。这两个模型本质上都用到了两个循环神经网络，分别叫做编码器和解码器。编码器对应输入序列，解码器对应输出序列。</p>
 <p>下图描述了使用编码器—解码器将上述英语句子翻译成法语句子的一种方法。在训练数据集中，我们可以在每个句子后附上特殊符号<code>&lt;eos&gt;</code>（end of sequence）表示序列的终止。编码器每个时间步的输入依次为英语句子中的单词、标点和特殊符号<code>&lt;eos&gt;</code>。下图使用了编码器在最终时间步的隐藏状态作为输入句子的编码信息。解码器在各个时间步中使用输入句子的编码信息和上个时间步的输出以及隐藏状态作为输入。 我们希望解码器在各个时间步能正确依次输出翻译后的法语单词、标点和特殊符号<code>&lt;eos&gt;</code>。 需要注意的是，解码器在最初时间步的输入用到了一个表示序列开始的特殊符号<code>&lt;bos&gt;</code>（beginning of sequence）。</p>
 <p><img src="/images/seq2seq_1.svg" alt="图片"></p>
 <p>使用编码器—解码器将句子由英语翻译成法语。编码器和解码器分别为循环神经网络。</p>
