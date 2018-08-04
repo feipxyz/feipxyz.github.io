@@ -82,7 +82,7 @@
 <meta name="description" content="现实生活中，有很多事件由序列的信息决定。如：语言，基因，时间序列等。如果我们试图从这类数据得到有用的输出，就需要一个这样的网络：能够访问一些关于数据的历史知识，以便完全理解这些数据。循环神经网络（RNN）正是解决这个问题。">
 <meta name="keywords" content="神经网络,RNN,GRU,LSTM">
 <meta property="og:type" content="article">
-<meta property="og:title" content="循环神经网络(RNN)">
+<meta property="og:title" content="【转】循环神经网络(RNN)">
 <meta property="og:url" content="flyrie.top/2018/06/23/循环神经网络(RNN)/index.html">
 <meta property="og:site_name" content="乡间小路">
 <meta property="og:description" content="现实生活中，有很多事件由序列的信息决定。如：语言，基因，时间序列等。如果我们试图从这类数据得到有用的输出，就需要一个这样的网络：能够访问一些关于数据的历史知识，以便完全理解这些数据。循环神经网络（RNN）正是解决这个问题。">
@@ -90,9 +90,9 @@
 <meta property="og:image" content="/images/循环神经网络_1.png">
 <meta property="og:image" content="/images/循环神经网络_2.png">
 <meta property="og:image" content="/images/循环神经网络_3.svg">
-<meta property="og:updated_time" content="2018-07-11T02:56:11.136Z">
+<meta property="og:updated_time" content="2018-08-04T13:07:24.495Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="循环神经网络(RNN)">
+<meta name="twitter:title" content="【转】循环神经网络(RNN)">
 <meta name="twitter:description" content="现实生活中，有很多事件由序列的信息决定。如：语言，基因，时间序列等。如果我们试图从这类数据得到有用的输出，就需要一个这样的网络：能够访问一些关于数据的历史知识，以便完全理解这些数据。循环神经网络（RNN）正是解决这个问题。">
 <meta name="twitter:image" content="/images/循环神经网络_1.png">
 
@@ -130,7 +130,7 @@
 
 
 
-  <title>循环神经网络(RNN) | 乡间小路</title>
+  <title>【转】循环神经网络(RNN) | 乡间小路</title>
   
 
 
@@ -284,7 +284,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">循环神经网络(RNN)</h1>
+          <h1 class="post-title" itemprop="name headline">【转】循环神经网络(RNN)</h1>
         
 
         <div class="post-meta">
@@ -443,7 +443,7 @@ L = \frac{1}{T} \sum_{t=1}^T \ell (\boldsymbol{o}_t, y_t)</script><p>我们将 $
 <script type="math/tex; mode=display">
 \boldsymbol{H}_t = \boldsymbol{O}_t \odot \text{tanh}(\boldsymbol{C}_t)</script><p>这里的tanh函数确保隐藏状态元素值在-1到1之间。需要注意的是，当输出门近似1，记忆细胞信息将传递到隐藏状态供输出层使用；当输出门近似0，记忆细胞信息只自己保留。<br>输出层</p>
 <p>在时间步$t$，长短期记忆的输出层计算和之前描述的循环神经网络输出层计算一样：我们只需将该时刻的隐藏状态$\boldsymbol{H}_t$传递进输出层，从而计算时间步$t$的输出。</p>
-<h1 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h1><p>[1]. <a href="http://zh.gluon.ai/chapter_recurrent-neural-networks/bptt.html" target="_blank" rel="noopener">动手深度学习</a><br>[2]. <a href="https://blog.csdn.net/qq_24375467/article/details/72957209?locationNum=14&amp;fps=1" target="_blank" rel="noopener">理解循环神经网络</a>   </p>
+<p>本文转自<a href="http://zh.gluon.ai/chapter_recurrent-neural-networks/bptt.html" target="_blank" rel="noopener">动手深度学习</a>并且参考<a href="https://blog.csdn.net/qq_24375467/article/details/72957209?locationNum=14&amp;fps=1" target="_blank" rel="noopener">理解循环神经网络</a>   </p>
 
       
     </div>
@@ -504,8 +504,8 @@ L = \frac{1}{T} \sum_{t=1}^T \ell (\boldsymbol{o}_t, y_t)</script><p>我们将 $
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/06/22/全卷积网络（FCN）/" rel="next" title="全卷积网络(FCN)">
-                <i class="fa fa-chevron-left"></i> 全卷积网络(FCN)
+              <a href="/2018/06/23/常用的LossFunction总结/" rel="next" title="深度学习常用的LossFunction小结">
+                <i class="fa fa-chevron-left"></i> 深度学习常用的LossFunction小结
               </a>
             
           </div>
@@ -514,8 +514,8 @@ L = \frac{1}{T} \sum_{t=1}^T \ell (\boldsymbol{o}_t, y_t)</script><p>我们将 $
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2018/06/23/常用的LossFunction总结/" rel="prev" title="深度学习常用的LossFunction小结">
-                深度学习常用的LossFunction小结 <i class="fa fa-chevron-right"></i>
+              <a href="/2018/06/24/目标检测之YOLO/" rel="prev" title="目标检测之YOLO">
+                目标检测之YOLO <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -727,7 +727,7 @@ L = \frac{1}{T} \sum_{t=1}^T \ell (\boldsymbol{o}_t, y_t)</script><p>我们将 $
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#基本模型"><span class="nav-number">1.</span> <span class="nav-text">基本模型</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#模型计算图"><span class="nav-number">2.</span> <span class="nav-text">模型计算图</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#梯度不稳定问题"><span class="nav-number">3.</span> <span class="nav-text">梯度不稳定问题</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#解决梯度爆炸问题"><span class="nav-number">3.1.</span> <span class="nav-text">解决梯度爆炸问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#深度循环网络"><span class="nav-number">3.2.</span> <span class="nav-text">深度循环网络</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#门控循环单元-GRU"><span class="nav-number">4.</span> <span class="nav-text">门控循环单元(GRU)</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#重置门和更新门"><span class="nav-number">4.1.</span> <span class="nav-text">重置门和更新门</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#候选隐藏状态"><span class="nav-number">4.2.</span> <span class="nav-text">候选隐藏状态</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#隐藏状态"><span class="nav-number">4.3.</span> <span class="nav-text">隐藏状态</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#长短期记忆-LSTM"><span class="nav-number">5.</span> <span class="nav-text">长短期记忆(LSTM)</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#输入门、遗忘门和输出门"><span class="nav-number">5.1.</span> <span class="nav-text">输入门、遗忘门和输出门</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#候选记忆细胞"><span class="nav-number">5.2.</span> <span class="nav-text">候选记忆细胞</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#记忆细胞"><span class="nav-number">5.3.</span> <span class="nav-text">记忆细胞</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#隐藏状态-1"><span class="nav-number">5.4.</span> <span class="nav-text">隐藏状态</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考文献"><span class="nav-number">6.</span> <span class="nav-text">参考文献</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#基本模型"><span class="nav-number">1.</span> <span class="nav-text">基本模型</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#模型计算图"><span class="nav-number">2.</span> <span class="nav-text">模型计算图</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#梯度不稳定问题"><span class="nav-number">3.</span> <span class="nav-text">梯度不稳定问题</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#解决梯度爆炸问题"><span class="nav-number">3.1.</span> <span class="nav-text">解决梯度爆炸问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#深度循环网络"><span class="nav-number">3.2.</span> <span class="nav-text">深度循环网络</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#门控循环单元-GRU"><span class="nav-number">4.</span> <span class="nav-text">门控循环单元(GRU)</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#重置门和更新门"><span class="nav-number">4.1.</span> <span class="nav-text">重置门和更新门</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#候选隐藏状态"><span class="nav-number">4.2.</span> <span class="nav-text">候选隐藏状态</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#隐藏状态"><span class="nav-number">4.3.</span> <span class="nav-text">隐藏状态</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#长短期记忆-LSTM"><span class="nav-number">5.</span> <span class="nav-text">长短期记忆(LSTM)</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#输入门、遗忘门和输出门"><span class="nav-number">5.1.</span> <span class="nav-text">输入门、遗忘门和输出门</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#候选记忆细胞"><span class="nav-number">5.2.</span> <span class="nav-text">候选记忆细胞</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#记忆细胞"><span class="nav-number">5.3.</span> <span class="nav-text">记忆细胞</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#隐藏状态-1"><span class="nav-number">5.4.</span> <span class="nav-text">隐藏状态</span></a></li></ol></li></ol></div>
             
 
           </div>
