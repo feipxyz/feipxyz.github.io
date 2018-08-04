@@ -82,14 +82,14 @@
 <meta name="description" content="以英语 - 法语翻译为例，给定一对英语输入序列“They”、“are”、“watching”、“.”和法语输出序列“Ils”、“regardent”、“.”。解码器可以在输出序列的时间步 1 使用更集中编码了“They”、“are”信息的背景变量来生成“Ils”，在时间步 2 使用更集中编码了“watching”信息的背景变量来生成“regardent”，在时间步 3 使用更集中编码了“.”信息的">
 <meta name="keywords" content="注意力机制">
 <meta property="og:type" content="article">
-<meta property="og:title" content="注意力机制">
+<meta property="og:title" content="【转】注意力机制">
 <meta property="og:url" content="flyrie.top/2018/07/29/注意力机制/index.html">
 <meta property="og:site_name" content="乡间小路">
 <meta property="og:description" content="以英语 - 法语翻译为例，给定一对英语输入序列“They”、“are”、“watching”、“.”和法语输出序列“Ils”、“regardent”、“.”。解码器可以在输出序列的时间步 1 使用更集中编码了“They”、“are”信息的背景变量来生成“Ils”，在时间步 2 使用更集中编码了“watching”信息的背景变量来生成“regardent”，在时间步 3 使用更集中编码了“.”信息的">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-08-03T02:40:01.042Z">
+<meta property="og:updated_time" content="2018-08-04T13:02:31.022Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="注意力机制">
+<meta name="twitter:title" content="【转】注意力机制">
 <meta name="twitter:description" content="以英语 - 法语翻译为例，给定一对英语输入序列“They”、“are”、“watching”、“.”和法语输出序列“Ils”、“regardent”、“.”。解码器可以在输出序列的时间步 1 使用更集中编码了“They”、“are”信息的背景变量来生成“Ils”，在时间步 2 使用更集中编码了“watching”信息的背景变量来生成“regardent”，在时间步 3 使用更集中编码了“.”信息的">
 
 
@@ -126,7 +126,7 @@
 
 
 
-  <title>注意力机制 | 乡间小路</title>
+  <title>【转】注意力机制 | 乡间小路</title>
   
 
 
@@ -280,7 +280,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">注意力机制</h1>
+          <h1 class="post-title" itemprop="name headline">【转】注意力机制</h1>
         
 
         <div class="post-meta">
@@ -383,7 +383,7 @@ e_{t' t} = \boldsymbol{v}^\top \tanh(\boldsymbol{W}_s \boldsymbol{s}_{t' - 1} + 
 \boldsymbol{r}_{t'} &= \sigma(\boldsymbol{W}_{yr} \boldsymbol{y}_{t'-1} + \boldsymbol{W}_{sr} \boldsymbol{s}_{t' - 1} + \boldsymbol{W}_{cr} \boldsymbol{c}_{t'} + \boldsymbol{b}_r),\\
 \boldsymbol{z}_{t'} &= \sigma(\boldsymbol{W}_{yz} \boldsymbol{y}_{t'-1} + \boldsymbol{W}_{sz} \boldsymbol{s}_{t' - 1} + \boldsymbol{W}_{cz} \boldsymbol{c}_{t'} + \boldsymbol{b}_z),\\
 \tilde{\boldsymbol{s}}_{t'} &= \text{tanh}(\boldsymbol{W}_{ys} \boldsymbol{y}_{t'-1} + \boldsymbol{W}_{ss} (\boldsymbol{s}_{t' - 1} \odot \boldsymbol{r}_{t'}) + \boldsymbol{W}_{cs} \boldsymbol{c}_{t'} + \boldsymbol{b}_s)
-\end{aligned}\end{split}</script><h1 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h1><p>[1]. <a href="http://zh.gluon.ai/chapter_natural-language-processing/attention.html" target="_blank" rel="noopener">注意力机制</a></p>
+\end{aligned}\end{split}</script><p>本文转自<a href="http://zh.gluon.ai/chapter_natural-language-processing/attention.html" target="_blank" rel="noopener">注意力机制</a></p>
 
       
     </div>
@@ -438,8 +438,8 @@ e_{t' t} = \boldsymbol{v}^\top \tanh(\boldsymbol{W}_s \boldsymbol{s}_{t' - 1} + 
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/07/28/seq2seq/" rel="next" title="seq2seq">
-                <i class="fa fa-chevron-left"></i> seq2seq
+              <a href="/2018/07/28/seq2seq/" rel="next" title="【转】seq2seq">
+                <i class="fa fa-chevron-left"></i> 【转】seq2seq
               </a>
             
           </div>
@@ -657,7 +657,7 @@ e_{t' t} = \boldsymbol{v}^\top \tanh(\boldsymbol{W}_s \boldsymbol{s}_{t' - 1} + 
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#设计"><span class="nav-number">1.</span> <span class="nav-text">设计</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考文献"><span class="nav-number">2.</span> <span class="nav-text">参考文献</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#设计"><span class="nav-number">1.</span> <span class="nav-text">设计</span></a></li></ol></div>
             
 
           </div>

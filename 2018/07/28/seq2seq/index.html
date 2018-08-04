@@ -82,15 +82,15 @@
 <meta name="description" content="在很多应用中，输入和输出都可以是不定长序列。以机器翻译为例，输入可以是一段不定长的英语文本序列，输出可以是一段不定长的法语文本序列，例如 英语输入：“They”、“are”、“watching”、“.” 法语输出：“Ils”、“regardent”、“.”">
 <meta name="keywords" content="seq2seq">
 <meta property="og:type" content="article">
-<meta property="og:title" content="seq2seq">
+<meta property="og:title" content="【转】seq2seq">
 <meta property="og:url" content="flyrie.top/2018/07/28/seq2seq/index.html">
 <meta property="og:site_name" content="乡间小路">
 <meta property="og:description" content="在很多应用中，输入和输出都可以是不定长序列。以机器翻译为例，输入可以是一段不定长的英语文本序列，输出可以是一段不定长的法语文本序列，例如 英语输入：“They”、“are”、“watching”、“.” 法语输出：“Ils”、“regardent”、“.”">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="/images/seq2seq_1.svg">
-<meta property="og:updated_time" content="2018-08-03T02:42:21.280Z">
+<meta property="og:updated_time" content="2018-08-04T13:00:29.894Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="seq2seq">
+<meta name="twitter:title" content="【转】seq2seq">
 <meta name="twitter:description" content="在很多应用中，输入和输出都可以是不定长序列。以机器翻译为例，输入可以是一段不定长的英语文本序列，输出可以是一段不定长的法语文本序列，例如 英语输入：“They”、“are”、“watching”、“.” 法语输出：“Ils”、“regardent”、“.”">
 <meta name="twitter:image" content="/images/seq2seq_1.svg">
 
@@ -128,7 +128,7 @@
 
 
 
-  <title>seq2seq | 乡间小路</title>
+  <title>【转】seq2seq | 乡间小路</title>
   
 
 
@@ -282,7 +282,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">seq2seq</h1>
+          <h1 class="post-title" itemprop="name headline">【转】seq2seq</h1>
         
 
         <div class="post-meta">
@@ -394,7 +394,7 @@
 \end{aligned}\end{split}</script><p>并得到该输出序列的损失</p>
 <script type="math/tex; mode=display">
 - \log\mathbb{P}(y_1, \ldots, y_{T'} \mid x_1, \ldots, x_T) = -\sum_{t'=1}^{T'} \log \mathbb{P}(y_{t'} \mid y_1, \ldots, y_{t'-1}, \boldsymbol{c})</script><p>在模型训练中，我们通过最小化这个损失函数来得到模型参数。</p>
-<h1 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h1><p>[1]. <a href="http://zh.gluon.ai/chapter_natural-language-processing/seq2seq.html#%E7%BC%96%E7%A0%81%E5%99%A8%E2%80%94%E8%A7%A3%E7%A0%81%E5%99%A8%EF%BC%88seq2seq%EF%BC%89" target="_blank" rel="noopener">编码器—解码器（seq2seq）</a></p>
+<p>本文转自：<a href="http://zh.gluon.ai/chapter_natural-language-processing/seq2seq.html#%E7%BC%96%E7%A0%81%E5%99%A8%E2%80%94%E8%A7%A3%E7%A0%81%E5%99%A8%EF%BC%88seq2seq%EF%BC%89" target="_blank" rel="noopener">编码器—解码器（seq2seq）</a></p>
 
       
     </div>
@@ -449,8 +449,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/07/25/Glove和fastText/" rel="next" title="Glove和fastText">
-                <i class="fa fa-chevron-left"></i> Glove和fastText
+              <a href="/2018/07/25/Glove和fastText/" rel="next" title="【转】Glove和fastText">
+                <i class="fa fa-chevron-left"></i> 【转】Glove和fastText
               </a>
             
           </div>
@@ -459,8 +459,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2018/07/29/注意力机制/" rel="prev" title="注意力机制">
-                注意力机制 <i class="fa fa-chevron-right"></i>
+              <a href="/2018/07/29/注意力机制/" rel="prev" title="【转】注意力机制">
+                【转】注意力机制 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -672,7 +672,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#编码器"><span class="nav-number">1.</span> <span class="nav-text">编码器</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#解码器"><span class="nav-number">2.</span> <span class="nav-text">解码器</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#模型训练"><span class="nav-number">3.</span> <span class="nav-text">模型训练</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考文献"><span class="nav-number">4.</span> <span class="nav-text">参考文献</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#编码器"><span class="nav-number">1.</span> <span class="nav-text">编码器</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#解码器"><span class="nav-number">2.</span> <span class="nav-text">解码器</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#模型训练"><span class="nav-number">3.</span> <span class="nav-text">模型训练</span></a></li></ol></div>
             
 
           </div>
