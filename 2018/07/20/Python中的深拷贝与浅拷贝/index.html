@@ -79,23 +79,23 @@
 
 
 
-<meta name="description" content="构造方法或[:]做的是浅复制（即复制了最外层容器），如果所有元素都是不可变的，那么这样没有问题，还能节省内存。但是，如果有可变的元素，可能就会导致意想不到的问题。 copy模块提供的deepcopy和copy函数能为任意对象做深复制和浅复制。  深复制有时可能太深了。例如，对象可能会引用不该复制的外部资源或单例值。我们可以实现特殊方法 __copy__() 和 __deepcopy__()，控制">
+<meta name="description" content="构造方法或[:]做的是浅复制（即复制了最外层容器），如果所有元素都是不可变的，那么这样没有问题，还能节省内存。但是，如果有可变的元素，可能就会导致意想不到的问题。">
 <meta name="keywords" content="Python">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Python中的深拷贝与浅拷贝">
 <meta property="og:url" content="flyrie.top/2018/07/20/Python中的深拷贝与浅拷贝/index.html">
 <meta property="og:site_name" content="乡间小路">
-<meta property="og:description" content="构造方法或[:]做的是浅复制（即复制了最外层容器），如果所有元素都是不可变的，那么这样没有问题，还能节省内存。但是，如果有可变的元素，可能就会导致意想不到的问题。 copy模块提供的deepcopy和copy函数能为任意对象做深复制和浅复制。  深复制有时可能太深了。例如，对象可能会引用不该复制的外部资源或单例值。我们可以实现特殊方法 __copy__() 和 __deepcopy__()，控制">
+<meta property="og:description" content="构造方法或[:]做的是浅复制（即复制了最外层容器），如果所有元素都是不可变的，那么这样没有问题，还能节省内存。但是，如果有可变的元素，可能就会导致意想不到的问题。">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="/images/Python基础积累_1.png">
 <meta property="og:image" content="/images/Python基础积累_2.png">
 <meta property="og:image" content="/images/Python基础积累_3.png">
 <meta property="og:image" content="/images/Python基础积累_4.png">
 <meta property="og:image" content="/images/Python基础积累_5.png">
-<meta property="og:updated_time" content="2018-08-13T03:03:50.434Z">
+<meta property="og:updated_time" content="2018-08-13T03:07:35.912Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Python中的深拷贝与浅拷贝">
-<meta name="twitter:description" content="构造方法或[:]做的是浅复制（即复制了最外层容器），如果所有元素都是不可变的，那么这样没有问题，还能节省内存。但是，如果有可变的元素，可能就会导致意想不到的问题。 copy模块提供的deepcopy和copy函数能为任意对象做深复制和浅复制。  深复制有时可能太深了。例如，对象可能会引用不该复制的外部资源或单例值。我们可以实现特殊方法 __copy__() 和 __deepcopy__()，控制">
+<meta name="twitter:description" content="构造方法或[:]做的是浅复制（即复制了最外层容器），如果所有元素都是不可变的，那么这样没有问题，还能节省内存。但是，如果有可变的元素，可能就会导致意想不到的问题。">
 <meta name="twitter:image" content="/images/Python基础积累_1.png">
 
 
@@ -359,7 +359,8 @@
 
       
         <ol>
-<li>构造方法或<code>[:]</code>做的是浅复制（即复制了最外层容器），如果所有元素都是不可变的，那么这样没有问题，还能节省内存。但是，如果有可变的元素，可能就会导致意想不到的问题。<more></more></li>
+<li><p>构造方法或<code>[:]</code>做的是浅复制（即复制了最外层容器），如果所有元素都是不可变的，那么这样没有问题，还能节省内存。但是，如果有可变的元素，可能就会导致意想不到的问题。<a id="more"></a></p>
+</li>
 <li><p><code>copy</code>模块提供的<code>deepcopy</code>和<code>copy</code>函数能为任意对象做深复制和浅复制。</p>
 </li>
 <li><p>深复制有时可能太深了。例如，对象可能会引用不该复制的外部资源或单例值。我们可以实现特殊方法 <code>__copy__()</code> 和 <code>__deepcopy__()</code>，控制 <code>copy</code> 和 <code>deepcopy</code> 的行为。</p>
@@ -439,8 +440,8 @@ l2: [3, [66, 44, 33, 22], (7, 8, 9, 10, 11)]
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/07/20/Python序列化/" rel="next" title="Python序列化">
-                <i class="fa fa-chevron-left"></i> Python序列化
+              <a href="/2018/06/24/图像风格迁移/" rel="next" title="图像风格迁移">
+                <i class="fa fa-chevron-left"></i> 图像风格迁移
               </a>
             
           </div>
@@ -449,8 +450,8 @@ l2: [3, [66, 44, 33, 22], (7, 8, 9, 10, 11)]
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2018/07/23/word2vec/" rel="prev" title="【转】word2vec">
-                【转】word2vec <i class="fa fa-chevron-right"></i>
+              <a href="/2018/07/20/Python序列化/" rel="prev" title="Python序列化">
+                Python序列化 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
