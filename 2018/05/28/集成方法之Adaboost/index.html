@@ -87,7 +87,7 @@
 <meta property="og:site_name" content="乡间小路">
 <meta property="og:description" content="本文介绍集成方法中的Adaboost。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-08-14T03:19:06.161Z">
+<meta property="og:updated_time" content="2018-08-14T04:20:56.105Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="集成方法之Adaboost">
 <meta name="twitter:description" content="本文介绍集成方法中的Adaboost。">
@@ -392,7 +392,8 @@ f_m(x) = f_{m-1}(x) + \beta_m b(x;\gamma_m)</script></li>
 <li>得到加法模型<script type="math/tex; mode=display">
 f(x) = f_M(x) =  \sum_{m=1}^M \beta_m b(x;\gamma_m)</script></li>
 </ol>
-<h1 id="Adaboost的前向分步算法"><a href="#Adaboost的前向分步算法" class="headerlink" title="Adaboost的前向分步算法"></a>Adaboost的前向分步算法</h1><ol>
+<h1 id="Adaboost的前向分步算法"><a href="#Adaboost的前向分步算法" class="headerlink" title="Adaboost的前向分步算法"></a>Adaboost的前向分步算法</h1><p>AdaBoost算法是前方分步算法的特例，这时，模型是由基本分类器组成的加法模型，损失函数是指数函数。</p>
+<ol>
 <li><p>求指数损失函数下的模型Loss<br>令前向分步算法的损失函数为指数损失函数</p>
 <script type="math/tex; mode=display">
 L(y,f(x)) = exp(-y f(x))</script><p>基函数为:</p>
@@ -590,7 +591,7 @@ f_m(x) = f_{m-1}(x) + \beta_m G_m(x)</script></li>
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">46</span>
+                  <span class="site-state-item-count">47</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -702,6 +703,10 @@ f_m(x) = f_{m-1}(x) + \beta_m G_m(x)</script></li>
                 
                   <li class="links-of-blogroll-item">
                     <a href="https://medium.com/@jonathan_hui" title="Jonathan Hui" target="_blank">Jonathan Hui</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://www.cnblogs.com/zhangchaoyang/" title="Orisun" target="_blank">Orisun</a>
                   </li>
                 
               </ul>

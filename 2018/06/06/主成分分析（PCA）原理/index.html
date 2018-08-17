@@ -89,7 +89,7 @@
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="/images/PCA_1.jpg">
 <meta property="og:image" content="/images/PCA_2.jpg">
-<meta property="og:updated_time" content="2018-07-29T12:19:18.484Z">
+<meta property="og:updated_time" content="2018-08-17T00:55:52.802Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="主成分分析（PCA）">
 <meta name="twitter:description" content="主成分分析（Principal components analysis，以下简称PCA）是最重要的降维方法之一。在数据压缩消除冗余和数据噪音消除等领域都有广泛的应用。一般我们提到降维最容易想到的算法就是PCA，下面我们就对PCA的原理做一个总结。">
@@ -380,7 +380,13 @@ u_2^Tx^{(i)} \\
 u_k^Tx^{(i)} 
 \end{bmatrix}
 \in \mathbb R^k</script><p>PCA 将 $n$ 个特征降维到 $k$ 个，可以用来进行数据压缩，如果 100 维的向量最后可以用10 维来表示，那么压缩率为 90%。同样图像处理领域的 KL 变换使用 PCA 做图像压缩。但PCA 要保证降维后，还要保证数据的特性损失最小。</p>
-<h1 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h1><p>[1]. <a href="https://book.douban.com/subject/26708119/" target="_blank" rel="noopener">《机器学习》 周志华</a><br>[1]. <a href="https://www.cnblogs.com/makefile/p/pca.html" target="_blank" rel="noopener">特征降维之PCA</a></p>
+<h1 id="PCA步骤"><a href="#PCA步骤" class="headerlink" title="PCA步骤"></a>PCA步骤</h1><ol>
+<li>特征中心化。即每一维的数据都减去该维的均值，得到新的矩阵B。这里的“维”指的就是一个特征（或属性），变换之后每一维的均值都变成了0。</li>
+<li>计算B的协方差矩阵C。</li>
+<li>计算协方差矩阵C的特征值和特征向量。</li>
+<li>选取大的特征值对应的特征向量，得到新的数据集。</li>
+</ol>
+<h1 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h1><p>[1]. <a href="https://book.douban.com/subject/26708119/" target="_blank" rel="noopener">《机器学习》 周志华</a><br>[2]. <a href="https://www.cnblogs.com/makefile/p/pca.html" target="_blank" rel="noopener">特征降维之PCA</a><br>[3]. <a href="http://www.cnblogs.com/zhangchaoyang/articles/2222048.html" target="_blank" rel="noopener">主成分分析PCA</a></p>
 
       
     </div>
@@ -535,7 +541,7 @@ u_k^Tx^{(i)}
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">46</span>
+                  <span class="site-state-item-count">47</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -649,6 +655,10 @@ u_k^Tx^{(i)}
                     <a href="https://medium.com/@jonathan_hui" title="Jonathan Hui" target="_blank">Jonathan Hui</a>
                   </li>
                 
+                  <li class="links-of-blogroll-item">
+                    <a href="https://www.cnblogs.com/zhangchaoyang/" title="Orisun" target="_blank">Orisun</a>
+                  </li>
+                
               </ul>
             </div>
           
@@ -668,7 +678,7 @@ u_k^Tx^{(i)}
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#PCA的思想"><span class="nav-number">1.</span> <span class="nav-text">PCA的思想</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#最大方差理论"><span class="nav-number">2.</span> <span class="nav-text">最大方差理论</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考文献"><span class="nav-number">3.</span> <span class="nav-text">参考文献</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#PCA的思想"><span class="nav-number">1.</span> <span class="nav-text">PCA的思想</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#最大方差理论"><span class="nav-number">2.</span> <span class="nav-text">最大方差理论</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#PCA步骤"><span class="nav-number">3.</span> <span class="nav-text">PCA步骤</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考文献"><span class="nav-number">4.</span> <span class="nav-text">参考文献</span></a></li></ol></div>
             
 
           </div>

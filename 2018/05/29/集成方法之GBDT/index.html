@@ -87,7 +87,7 @@
 <meta property="og:site_name" content="乡间小路">
 <meta property="og:description" content="提升方法实际采用加法模型与前向分步算法。提升树通常决策树作为基学习器，对分类问题决策树是二叉分类树，回归问题就是二叉回归树。提升树被认为是统计学习中性能最好的方法之一。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-06-14T01:43:12.740Z">
+<meta property="og:updated_time" content="2018-08-14T15:29:39.735Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="集成方法之GBDT">
 <meta name="twitter:description" content="提升方法实际采用加法模型与前向分步算法。提升树通常决策树作为基学习器，对分类问题决策树是二叉分类树，回归问题就是二叉回归树。提升树被认为是统计学习中性能最好的方法之一。">
@@ -356,9 +356,9 @@
 <script type="math/tex; mode=display">
 f_M (x)=\sum_{m=1}^MT(x;Θ_m )</script><p>其中，$T(x;Θ_m)$表示决策树；$Θ_m$表示决策树的参数；$M$为树的个数。<br>提升树的前向分步算法，首先确定初始提升树$f_0(x)=0$，第$m$步的模型可以写成：</p>
 <script type="math/tex; mode=display">
-fm(x)=fm−1(x)+T(x;Θ_m)</script><p>然后得到损失函数</p>
+f_m(x)=f_{m−1}(x)+T(x;Θ_m)</script><p>然后得到损失函数</p>
 <script type="math/tex; mode=display">
-L(fm(x),y)=L(fm−1(x)+T(x;Θ_m),y)</script><p>迭代的目的是构建$T(x;Θ_m)$，使得本轮损失$L(fm(x),y)$最小。通过经验风险最小化确定$Θ_m$</p>
+L(f_m(x),y)=L(f_{m−1}(x)+T(x;Θ_m),y)</script><p>迭代的目的是构建$T(x;Θ_m)$，使得本轮损失$L(f_m(x),y)$最小。通过经验风险最小化确定$Θ_m$</p>
 <script type="math/tex; mode=display">
 Θ_m = arg\min_{Θ_m}\sum_{i=1}^N L(y_i, f_{m-1}(x_i)+T(x_i; Θ_m)</script><p>思想其实并不复杂，但是问题也很明显，对于不同的任务会有不同的损失函数，包括用平方误差损失函数的回归问题，用指数损失函数的分类问题，以及用一般损失函数的一般决策问题。</p>
 <h2 id="二分类问题"><a href="#二分类问题" class="headerlink" title="二分类问题"></a>二分类问题</h2><p>对于二类分类问题，提升树算法只需将<code>AdaBoost</code>算法中的基本分类器限制为二类分类树即可，可以说是<code>AdaBoost</code>算法的特殊情况。</p>
@@ -597,7 +597,7 @@ F_m (x)=F_{m-1} (x)+ \textbf{ρ}_m T_m (x;\textbfΘ_m)</script><h2 id="参考文
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">46</span>
+                  <span class="site-state-item-count">47</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -709,6 +709,10 @@ F_m (x)=F_{m-1} (x)+ \textbf{ρ}_m T_m (x;\textbfΘ_m)</script><h2 id="参考文
                 
                   <li class="links-of-blogroll-item">
                     <a href="https://medium.com/@jonathan_hui" title="Jonathan Hui" target="_blank">Jonathan Hui</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://www.cnblogs.com/zhangchaoyang/" title="Orisun" target="_blank">Orisun</a>
                   </li>
                 
               </ul>
