@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Python,垃圾回收," />
+  <meta name="keywords" content="贝叶斯," />
 
 
 
@@ -79,18 +79,18 @@
 
 
 
-<meta name="description" content="python里也同java一样采用了垃圾收集机制。python采用了引用计数机制，使用标记-清除和分代收集两种策略进行垃圾回收。">
-<meta name="keywords" content="Python,垃圾回收">
+<meta name="description" content="朴素贝叶斯(naive Bayes) 法是基于贝叶斯定理与特征条件独立假设的分类方法。对于给定的训练数据集，首先基于特征条件独立假设学习输入/输出的联合概率分布；然后基于此模型，对给定的输入$x$，利用贝叶斯定理求出后验概率最大的输出$y$。朴素贝叶斯法实现简单，学习与预测的效率都很高，是一种常用的方法。">
+<meta name="keywords" content="贝叶斯">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Python的垃圾回收机制">
-<meta property="og:url" content="flyrie.top/2018/08/02/Python垃圾回收机制/index.html">
+<meta property="og:title" content="朴素贝叶斯">
+<meta property="og:url" content="flyrie.top/2018/08/20/朴素贝叶斯/index.html">
 <meta property="og:site_name" content="乡间小路">
-<meta property="og:description" content="python里也同java一样采用了垃圾收集机制。python采用了引用计数机制，使用标记-清除和分代收集两种策略进行垃圾回收。">
+<meta property="og:description" content="朴素贝叶斯(naive Bayes) 法是基于贝叶斯定理与特征条件独立假设的分类方法。对于给定的训练数据集，首先基于特征条件独立假设学习输入/输出的联合概率分布；然后基于此模型，对给定的输入$x$，利用贝叶斯定理求出后验概率最大的输出$y$。朴素贝叶斯法实现简单，学习与预测的效率都很高，是一种常用的方法。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-08-10T02:56:25.195Z">
+<meta property="og:updated_time" content="2018-08-22T05:13:52.381Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Python的垃圾回收机制">
-<meta name="twitter:description" content="python里也同java一样采用了垃圾收集机制。python采用了引用计数机制，使用标记-清除和分代收集两种策略进行垃圾回收。">
+<meta name="twitter:title" content="朴素贝叶斯">
+<meta name="twitter:description" content="朴素贝叶斯(naive Bayes) 法是基于贝叶斯定理与特征条件独立假设的分类方法。对于给定的训练数据集，首先基于特征条件独立假设学习输入/输出的联合概率分布；然后基于此模型，对给定的输入$x$，利用贝叶斯定理求出后验概率最大的输出$y$。朴素贝叶斯法实现简单，学习与预测的效率都很高，是一种常用的方法。">
 
 
 
@@ -120,13 +120,13 @@
 
 
 
-  <link rel="canonical" href="flyrie.top/2018/08/02/Python垃圾回收机制/"/>
+  <link rel="canonical" href="flyrie.top/2018/08/20/朴素贝叶斯/"/>
 
 
 
 
 
-  <title>Python的垃圾回收机制 | 乡间小路</title>
+  <title>朴素贝叶斯 | 乡间小路</title>
   
 
 
@@ -263,7 +263,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="flyrie.top/2018/08/02/Python垃圾回收机制/">
+    <link itemprop="mainEntityOfPage" href="flyrie.top/2018/08/20/朴素贝叶斯/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="乡间小路">
@@ -280,7 +280,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Python的垃圾回收机制</h1>
+          <h1 class="post-title" itemprop="name headline">朴素贝叶斯</h1>
         
 
         <div class="post-meta">
@@ -292,8 +292,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-08-02T01:46:15+08:00">
-                2018-08-02
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-08-20T01:46:14+08:00">
+                2018-08-20
               </time>
             
 
@@ -315,8 +315,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Python/" itemprop="url" rel="index">
-                    <span itemprop="name">Python</span>
+                  <a href="/categories/机器学习/" itemprop="url" rel="index">
+                    <span itemprop="name">机器学习</span>
                   </a>
                 </span>
 
@@ -352,39 +352,69 @@
       
 
       
-        <p>python里也同java一样采用了垃圾收集机制。python采用了引用计数机制，使用标记-清除和分代收集两种策略进行垃圾回收。<br><a id="more"></a></p>
-<h1 id="引用计数机制与标记清除策略："><a href="#引用计数机制与标记清除策略：" class="headerlink" title="引用计数机制与标记清除策略："></a>引用计数机制与标记清除策略：</h1><p>python里每一个东西都是对象，它们的核心就是一个结构体：PyObject<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> struct_object </span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">int</span> ob_refcnt;</span><br><span class="line">    struct_typeobject *ob_type;</span><br><span class="line">&#125; PyObject;</span><br></pre></td></tr></table></figure></p>
-<p>PyObject是每个对象必有的内容，其中o<code>b_refcnt</code>就是做为引用计数。当一个对象有新的引用时，它的<code>ob_refcnt</code>就会增加，当引用它的对象被删除，它的<code>ob_refcnt</code>就会减少。当引用计数为0时，该对象生命就结束了。</p>
-<p>引用计数机制的优点：</p>
-<ul>
-<li>简单</li>
-<li>实时性：一旦没有引用，内存就直接释放了。不用像其他机制等到特定时机。实时性还带来一个好处：处理回收内存的时间被分摊</li>
-</ul>
-<p>引用计数机制的缺点：</p>
-<ul>
-<li>维护引用计数消耗资源</li>
-<li>循环引用</li>
-</ul>
-<p>循环引用例子：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">l1 = []</span><br><span class="line">l2 = []</span><br><span class="line">l1.append(l2)</span><br><span class="line">l2.append(l1)</span><br></pre></td></tr></table></figure>
-<p>导致引用计数+1的情况:</p>
-<ul>
-<li>对象被创建，例如<code>a=23</code></li>
-<li>对象被引用，例如<code>b=a</code></li>
-<li>对象被作为参数，传入到一个函数中，例如<code>func(a)</code></li>
-<li>对象作为一个元素，存储在容器中，例如<code>list1=[a,a]</code></li>
-</ul>
-<p>导致引用计数-1的情况</p>
-<ul>
-<li>对象的别名被显式销毁，例如<code>del a</code></li>
-<li>对象的别名被赋予新的对象，例如<code>a=24</code></li>
-<li>一个对象离开它的作用域，例如f函数执行完毕时，func函数中的局部变量（全局变量不会）</li>
-<li>对象所在的容器被销毁，或从容器中删除对象</li>
-</ul>
-<p>一个对象的引用数为零的时候，就要对它进行回收。这个就是标记清除的基本思路。但是对于循环引用的情况，这种方法就遇到困难了，这里就需要分代回收机制。</p>
-<h1 id="分代回收"><a href="#分代回收" class="headerlink" title="分代回收"></a>分代回收</h1><p>分代回收是一种以空间换时间的操作方式，Python将内存根据对象的存活时间划分为不同的集合，每个集合称为一个代，Python将内存分为了3“代”，分别为第0代、第1代、第2代，他们对应的是3个链表。</p>
-<p>每个代的threshold值表示该代最多容纳对象的个数。对象多到该阈值时，就对这些对象做一次检查和清理，没有被清理的那些就存活下来，进入第1代，第一代检查做若干次后，对1代清理，存活下来的进入第2代，第二代也是如此。这样就实现了分代回收的操作。</p>
-<h1 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h1><p>[1]. <a href="https://www.cnblogs.com/pinganzi/p/6646742.html#_label0" target="_blank" rel="noopener">Python垃圾回收机制—完美讲解!</a><br>[2]. <a href="http://www.cnblogs.com/Xjng/p/5128269.html" target="_blank" rel="noopener">Python垃圾回收机制详解</a></p>
+        <p>朴素贝叶斯(naive Bayes) 法是基于贝叶斯定理与特征条件独立假设的分类方法。对于给定的训练数据集，首先基于特征条件独立假设学习输入/输出的联合概率分布；然后基于此模型，对给定的输入$x$，利用贝叶斯定理求出后验概率最大的输出$y$。朴素贝叶斯法实现简单，学习与预测的效率都很高，是一种常用的方法。<br><a id="more"></a></p>
+<h1 id="基本模型"><a href="#基本模型" class="headerlink" title="基本模型"></a>基本模型</h1><p>假设我们的输入空间 $\chi  \subseteq {R^n}$ 为n维向量的集合，输出空间为类标记集合 $\psi = \{ c_1, c_2, \dots, c_k \}$ ，输入特征向量 $ x  \in {R^n} $，输出为类标记 $ y \in \psi $，$X$ 是定义在输入空间 $\chi$ 上的随机向量，$Y$ 是定义在输出空间上 $\psi$ 上的随机变量，朴素贝叶斯通过训练数据集学习联合概率分布 $P(X,Y)$。训练数据集为：</p>
+<script type="math/tex; mode=display">
+T = \{ (x_{1}, y_{1}),(x_{2}, y_{2}),...,(x_{N}, y_{N}) \}</script><p>具体地， 学习数据的先验概率:</p>
+<script type="math/tex; mode=display">
+ P(Y=c_k) \quad k=1, 2, \dots,K</script><p> 和类条件概率分布 </p>
+<script type="math/tex; mode=display">
+P(X=x|Y=c_k)=P(X^{(1)}=x^{(1)}, \dots, X^{(n)}=x^{(n)} |Y=c_k) \quad k=1, 2, \dots,K</script><p>条件概率分布 $P(X=x|Y=c_{k} )$ 有指数级数量的参数。事实上，假设$x^{(j)}$ 可取值有 $S_{j}$ 个，$j=1,2,…n$，$Y$ 可取值有 $K$ 个，那么参数个数为 $K\prod_{j=1}^{n} S_{j}$ 。</p>
+<p><strong>朴素贝叶斯法对条件概率作了条件独立性假设</strong>，具体如下：</p>
+<script type="math/tex; mode=display">
+\begin{align*}
+P(X=x|Y=c_{k} ) 
+&= P(X^{(1)}=x^{(1)} ,...,X^{(n)}=x^{(n)}|Y=c_{k} )  \\
+&=\prod_{j=1}^{n} P(X^{(j)}=x^{(j)}|Y=c_{k} )
+\end{align*}</script><blockquote>
+<p><strong>条件独立假设等于说用于分类的特征在类确定的条件下都是独立的，这一假设使得朴素贝叶斯变得简单，但有时会牺牲一定的分类准确性</strong></p>
+</blockquote>
+<p>朴素贝叶斯法分类时，对给定的输入$x$，通过学习到的模型计算后验概率分布 $P(Y=c_{k} |X=x)$，将后验概率最大的类作为输出。后验概率计算根据贝叶斯定理进行：</p>
+<script type="math/tex; mode=display">
+P(Y=c_{k}|X=x )=\frac{P(X=x|Y=c_{k} )P(Y=c_{k} )}{\sum_{k=1}^{K}{P(X=x|Y=c_{k} )P(Y=c_{k} )} }</script><p>将条件独立性假设代入上式得：</p>
+<script type="math/tex; mode=display">
+P(Y=c_{k}|X=x )=\frac{P(Y=c_{k} )\prod_{j=1}^{n} P(X^{(j)}=x^{(j)}|Y=c_{k} )}{\sum_{k=1}^{K}{P(Y=c_{k} )\prod_{j=1}^{n} P(X^{(j)}=x^{(j)}|Y=c_{k} )} }</script><p>这是朴素贝叶斯分类的基本公式。于是，朴素贝叶斯分类器可表示为：</p>
+<script type="math/tex; mode=display">
+y=f(x)=argmax_{c_{k} } \frac{P(Y=c_{k} )\prod_{j=1}^{n} P(X^{(j)}=x^{(j)}|Y=c_{k} )}{\sum_{k=1}^{K}{P(Y=c_{k} )\prod_{j=1}^{n} P(X^{(j)}=x^{(j)}|Y=c_{k} )} }</script><p>注意到分母对所有 $c_{k}$ 都是相同的，所以</p>
+<script type="math/tex; mode=display">
+y=argmax_{c_{k} } P(Y=c_{k} )\prod_{j=1}^{n} P(X^{(j)}=x^{(j)}|Y=c_{k})</script><h1 id="参数估计"><a href="#参数估计" class="headerlink" title="参数估计"></a>参数估计</h1><p>朴素贝叶斯参数估计主要包括极大似然估计和贝叶斯估计。</p>
+<h2 id="极大似然估计"><a href="#极大似然估计" class="headerlink" title="极大似然估计"></a>极大似然估计</h2><h3 id="先验概率的极大似然估计"><a href="#先验概率的极大似然估计" class="headerlink" title="先验概率的极大似然估计"></a>先验概率的极大似然估计</h3><p>先验概率 $P(Y=c_k)$ 的极大似然估计为：</p>
+<script type="math/tex; mode=display">
+P(Y=c_k) = \frac{\sum_{i=1}^{N}I(y_i=c_k)}{N}, k=1,2, \dots, K</script><p>证明如下：<br>令参数 $P(Y=c_k)=\theta_k$，其中 $k\in \left\{ 1,2..K \right\}$ 。<br>那么随机变量 $Y$ 的概率可以用参数来表示为:</p>
+<script type="math/tex; mode=display">
+P(Y)=\sum_{k=1}^{K}{\theta_k} I(Y=c_k)</script><p>$I$ 是指示函数 $Y=c_k$ 成立时，$I=1$；否则 $I=0$。<br>极大似然函数</p>
+<script type="math/tex; mode=display">
+L(y_1,y_2..y_N; \theta_k)=\prod_{i=1}^{N}P(y_i) =\prod_{k=1}^{K}\theta_k^{N_k}</script><p>其中 $N$ 为样本总数，$N_k$ 为样本中 $Y=c_k$ 的样本数目，取对数得到</p>
+<script type="math/tex; mode=display">
+l(\theta_k)=ln(L(\theta))=\sum_{k=1}^{K}{N_k ln\theta_k}</script><p>要求该函数的最大值，注意到约束条件 $\sum_{k=1}^{K}{\theta_k} =1$ 可以用拉格朗日乘子法，即</p>
+<script type="math/tex; mode=display">
+l(\theta_k,\lambda)=\sum_{k=1}^{K}{N_k ln\theta_k} +\lambda(\sum_{k=1}^{K}{\theta_k} -1)</script><p>求导就可以得到：</p>
+<script type="math/tex; mode=display">
+\frac{N_k}{\theta_k}+\lambda=0</script><p>联立所有的 $k$ 以及约束条件得到 $\theta_k=\frac{N_k}{N}$</p>
+<h3 id="条件概率的极大似然估计"><a href="#条件概率的极大似然估计" class="headerlink" title="条件概率的极大似然估计"></a>条件概率的极大似然估计</h3><p>条件概率 $P(X^{(j)} =  a_{jl}| Y=c_k)$ 的极大似然估计是：</p>
+<script type="math/tex; mode=display">
+P(X^{(j)} =  a_{jl}| Y=c_k) = \frac{\sum_{i=1}^{N}I(x_i^{(j)} =  a_{jl},y_i=c_k)}{\sum_{i=1}^{N}I(y_i=c_k)}</script><p>其中，$x_i^{(j)}$ 是第  $i$ 个样本的第 $j$ 个属性；$a_{jl}$ 是第j个属性可能取l的值；$I$ 是指示函数。</p>
+<p>证明如下：<br>令参数 $\mu_{lk} = p(X = a_t | y=c_k)$，<br>$N$ 个互相独立的样本，$N$ 为样本总数：</p>
+<script type="math/tex; mode=display">
+T = \{ (x_{1}, y_{1}),(x_{2}, y_{2}),...,(x_{N}, y_{N}) \}</script><p>那么极大似然函数为：</p>
+<script type="math/tex; mode=display">
+\begin{align*}
+L((x_{1}, y_{1}),...,(x_N, y_N); \mu) &=\prod_{i=1}^{N}P(x_i, y_i) \\
+&=\prod_{l=1}^{L} \prod_{k=1}^{K} (\mu_{lk} \cdot \theta_k)^{N_{lk}}
+\end{align*}</script><p>其中 $N_{lk}$ 表示 $N$ 个样本中，$X = a_l$ 并且 $Y=c_k$ 的个数，对似然函数取对数，得：</p>
+<script type="math/tex; mode=display">
+l(\mu) = \sum_{l=1}^{L} \sum_{k=1}^{K}{N_{lk}(ln \mu_{lk} + ln \theta_k)}</script><p>同样，$\mu_{lk}$ 满足约束条件：$\sum_{l=1}^{L} \mu_{lk} = 1$，使用拉格朗日乘子法，得：</p>
+<script type="math/tex; mode=display">
+\begin{align*}
+F(\mu,\lambda) &= l(\mu) + \lambda \sum_{k=1}^{K}({\mu_{lk}} -1) \\
+& = \sum_{l=1}^{L} \sum_{k=1}^{K} N_{lk}(ln \mu_{lk} + ln \theta_k) + \lambda(\sum_{l=1}^{L} \mu_{lk} - 1)
+\end{align*}</script><p>对 $F(\mu, \lambda)$ 求偏导，得：$-\lambda =\frac{N_{lk}}{\mu_{lk}}$，联立 $\sum_{l=1}^{L} \mu_{lk} = 1$ 得：</p>
+<script type="math/tex; mode=display">
+\mu_{lk} = \frac{N_{lk}}{N_k}</script><h2 id="贝叶斯估计"><a href="#贝叶斯估计" class="headerlink" title="贝叶斯估计"></a>贝叶斯估计</h2><p>极大似然估计可能出现估计的概率为0，这会影响到后验概率的计算结果，使分类产生偏差。可以采用贝叶斯估计代替极大似然估计。 </p>
+<script type="math/tex; mode=display">
+P_\color{red}\lambda(Y=c_k)=\frac {\sum_{i=1}^N I(y_i=c_k)+\color{red}\lambda} {N+\color{red}{K\lambda}},\quad k=1,2,\ldots,K \\
+P_\color{red}\lambda(X^{(j)}=a_{jl}|Y=c_k)=\frac {\sum_{i=1}^N I(x_i^{(j)}=a_{jl},y_i=c_k)+\color{red}\lambda} {\sum_{i=1}^N I(y_i=c_k)+\color{red}{S_j\lambda}}</script><p>式中，$\lambda \ge 0$，等价于在随机变量的各个取值的频数上赋予一个正数 $\lambda &gt; 0$，当 $\lambda = 0$时就是极大似然估计，常取 $\lambda = 1$，这时称为拉普拉斯平滑，</p>
+<h1 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h1><p>[1]. <a href="https://book.douban.com/subject/10590856/" target="_blank" rel="noopener">统计学习方法 李航</a></p>
 
       
     </div>
@@ -426,9 +456,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/Python/" rel="tag"># Python</a>
-          
-            <a href="/tags/垃圾回收/" rel="tag"># 垃圾回收</a>
+            <a href="/tags/贝叶斯/" rel="tag"># 贝叶斯</a>
           
         </div>
       
@@ -441,8 +469,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/07/29/注意力机制/" rel="next" title="【转】注意力机制">
-                <i class="fa fa-chevron-left"></i> 【转】注意力机制
+              <a href="/2018/08/16/回归过程中的数据标准化/" rel="next" title="">
+                <i class="fa fa-chevron-left"></i> 
               </a>
             
           </div>
@@ -450,10 +478,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2018/08/04/Linux下GDB调试/" rel="prev" title="Linux下使用GDB调试">
-                Linux下使用GDB调试 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -676,7 +700,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#引用计数机制与标记清除策略："><span class="nav-number">1.</span> <span class="nav-text">引用计数机制与标记清除策略：</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#分代回收"><span class="nav-number">2.</span> <span class="nav-text">分代回收</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考文献"><span class="nav-number">3.</span> <span class="nav-text">参考文献</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#基本模型"><span class="nav-number">1.</span> <span class="nav-text">基本模型</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参数估计"><span class="nav-number">2.</span> <span class="nav-text">参数估计</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#极大似然估计"><span class="nav-number">2.1.</span> <span class="nav-text">极大似然估计</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#先验概率的极大似然估计"><span class="nav-number">2.1.1.</span> <span class="nav-text">先验概率的极大似然估计</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#条件概率的极大似然估计"><span class="nav-number">2.1.2.</span> <span class="nav-text">条件概率的极大似然估计</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#贝叶斯估计"><span class="nav-number">2.2.</span> <span class="nav-text">贝叶斯估计</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考文献"><span class="nav-number">3.</span> <span class="nav-text">参考文献</span></a></li></ol></div>
             
 
           </div>
