@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="归一化,标准化," />
 
 
 
@@ -79,17 +79,18 @@
 
 
 
-<meta name="description" content="参考文献[1]. 回归过程中的数据标准化">
+<meta name="description" content="归一化和标准化经常被搞混。">
+<meta name="keywords" content="归一化,标准化">
 <meta property="og:type" content="article">
-<meta property="og:title" content="乡间小路">
-<meta property="og:url" content="flyrie.top/2018/08/16/回归过程中的数据标准化/index.html">
+<meta property="og:title" content="归一化与标准化">
+<meta property="og:url" content="flyrie.top/2018/08/02/归一化与标准化/index.html">
 <meta property="og:site_name" content="乡间小路">
-<meta property="og:description" content="参考文献[1]. 回归过程中的数据标准化">
+<meta property="og:description" content="归一化和标准化经常被搞混。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-08-16T15:22:30.006Z">
+<meta property="og:updated_time" content="2018-08-25T12:39:06.138Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="乡间小路">
-<meta name="twitter:description" content="参考文献[1]. 回归过程中的数据标准化">
+<meta name="twitter:title" content="归一化与标准化">
+<meta name="twitter:description" content="归一化和标准化经常被搞混。">
 
 
 
@@ -119,13 +120,13 @@
 
 
 
-  <link rel="canonical" href="flyrie.top/2018/08/16/回归过程中的数据标准化/"/>
+  <link rel="canonical" href="flyrie.top/2018/08/02/归一化与标准化/"/>
 
 
 
 
 
-  <title> | 乡间小路</title>
+  <title>归一化与标准化 | 乡间小路</title>
   
 
 
@@ -262,7 +263,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="flyrie.top/2018/08/16/回归过程中的数据标准化/">
+    <link itemprop="mainEntityOfPage" href="flyrie.top/2018/08/02/归一化与标准化/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="乡间小路">
@@ -279,7 +280,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline"></h1>
+          <h1 class="post-title" itemprop="name headline">归一化与标准化</h1>
         
 
         <div class="post-meta">
@@ -291,8 +292,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-08-16T23:22:30+08:00">
-                2018-08-16
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-08-02T01:46:14+08:00">
+                2018-08-02
               </time>
             
 
@@ -301,6 +302,28 @@
             
           </span>
 
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/机器学习/" itemprop="url" rel="index">
+                    <span itemprop="name">机器学习</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
           
 
           
@@ -329,7 +352,32 @@
       
 
       
-        <h1 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h1><p>[1]. <a href="https://blog.csdn.net/shwan_ma/article/details/80154888" target="_blank" rel="noopener">回归过程中的数据标准化</a></p>
+        <p>归一化和标准化经常被搞混。<br><a id="more"></a></p>
+<h1 id="归一化"><a href="#归一化" class="headerlink" title="归一化"></a>归一化</h1><p>归一化是指对不同维度进行伸缩变换，把数据映射到[0,1]之间。</p>
+<script type="math/tex; mode=display">
+x^* = \frac{x-min(x)}{max(x_i) - min(x_i)}</script><h1 id="标准化"><a href="#标准化" class="headerlink" title="标准化"></a>标准化</h1><p>标准化是指将不同维度的数值特征缩放成均值为0，标准差为1的状态。</p>
+<script type="math/tex; mode=display">
+x^* = \frac{x-\mu}{\sigma}</script><p>其中，其中$\mu$是样本的均值，$\sigma$是样本的标准差。</p>
+<h1 id="两个坑"><a href="#两个坑" class="headerlink" title="两个坑"></a>两个坑</h1><ol>
+<li>归一化和标准化的相同点都是对某个特征（column）进行缩放（scaling）而不是对某个样本的特征向量（row）进行缩放。对特征向量进行缩放是毫无意义的，比如三列特征：身高、体重、血压。每一条样本（row）就是三个这样的值，对这个row无论是进行标准化还是归一化都毫无意义，因为你不能将身高、体重和血压混到一起去。</li>
+<li>在线性代数中，将一个向量除以向量的长度，也被称为标准化。不过这里的标准化是将向量变为长度为1的单位向量，它和我们这里的标准化不是一回事儿，不要搞混。</li>
+</ol>
+<h1 id="标准化与归一化的对比分析"><a href="#标准化与归一化的对比分析" class="headerlink" title="标准化与归一化的对比分析"></a>标准化与归一化的对比分析</h1><p>首先明确，在机器学习中，标准化是更常用的手段，归一化的应用场景是有限的。总结原因有两点：</p>
+<ol>
+<li><p>标准化更好保持了样本间距<br>当样本中有异常点时，归一化有可能将正常的样本“挤”到一起去。比如三个样本，某个特征的值为1,2,10000，假设10000这个值是异常值，用归一化的方法后，正常的1,2就会被“挤”到一起去。如果不幸的是1和2的分类标签还是相反的，那么，当我们用梯度下降来做分类模型训练时，模型会需要更长的时间收敛，因为将样本分开需要更大的努力。而标准化在这方面就做得很好，至少它不会将样本“挤到一起”。</p>
+</li>
+<li><p>标准化更符合统计学假设<br>对一个数值特征来说，很大可能它是服从正态分布的。标准化其实是基于这个隐含假设，只不过是略施小技，将这个正态分布调整为均值为0，方差为1的标准正态分布而已。</p>
+</li>
+</ol>
+<h1 id="逻辑回归必须要进行标准化吗？"><a href="#逻辑回归必须要进行标准化吗？" class="headerlink" title="逻辑回归必须要进行标准化吗？"></a>逻辑回归必须要进行标准化吗？</h1><p>这个问题无论你回答必须或者不必须，你都是错的！！！哈哈。真正的答案是，这取决于我们的逻辑回归是不是用正则化项。</p>
+<p>如果不用正则，标准化并不是必须的；如果用正则，那么标准化是必须的。</p>
+<p>因为不用正则时，我们的损失函数只是仅仅在度量预测与真实的差距，加上正则后，我们的损失函数除了要度量上面的差距外，还要度量参数值是否足够小。而参数值的大小程度或者说大小的级别是与特征的数值范围相关的。  </p>
+<p>举例来说，我们用体重预测身高，体重用kg衡量时，训练出的模型是：<code>身高 = 体重*x</code>。x就是我们训练出来的参数。当我们的体重用吨来衡量时，x的值就会扩大为原来的1000倍。在上面两种情况下，都用L1正则的话，显然对模型的训练影响是不同的。</p>
+<p>假如不同的特征的数值范围不一样，有的是0到0.1，有的是100到10000，那么，每个特征对应的参数大小级别也会不一样，在L1正则时，我们是简单将参数的绝对值相加，因为它们的大小级别不一样，就会导致L1最后只会对那些级别比较大的参数有作用，那些小的参数都被忽略了。</p>
+<p>如果不用正则，那么标准化对逻辑回归有什么好处吗？<br>答案是有好处，进行标准化后，我们得出的参数值的大小可以反应出不同特征对样本label的贡献度，方便我们进行特征筛选。如果不做标准化，是不能这样来筛选特征的。</p>
+<p>做标准化有什么注意事项吗？<br>最大的注意事项就是先拆分出test集，不要在整个数据集上做标准化，因为那样会将test集的信息引入到训练集中，导致训练集和测试集不独立。正确的做法是记录训练集的标准化方法，独立的对测试集进行标准化。</p>
+<p>决策树需要标准化吗？<br>不需要。因为决策树不需要考虑特征的值，只需要考虑划分界限。比如ID3 C4.5 CART 的熵和基尼系数，研究对象只是概率分布，对数值不关心。</p>
+<h1 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h1><p>[1]. <a href="https://blog.csdn.net/shwan_ma/article/details/80154888" target="_blank" rel="noopener">回归过程中的数据标准化</a><br>[2]. <a href="https://www.jianshu.com/p/4c3081d40ca6" target="_blank" rel="noopener">机器学习面试之归一化与标准化</a></p>
 
       
     </div>
@@ -369,6 +417,14 @@
 
     <footer class="post-footer">
       
+        <div class="post-tags">
+          
+            <a href="/tags/归一化/" rel="tag"># 归一化</a>
+          
+            <a href="/tags/标准化/" rel="tag"># 标准化</a>
+          
+        </div>
+      
 
       
       
@@ -378,8 +434,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/08/04/Linux下GDB调试/" rel="next" title="Linux下使用GDB调试">
-                <i class="fa fa-chevron-left"></i> Linux下使用GDB调试
+              <a href="/2018/07/29/注意力机制/" rel="next" title="【转】注意力机制">
+                <i class="fa fa-chevron-left"></i> 【转】注意力机制
               </a>
             
           </div>
@@ -388,8 +444,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2018/08/19/方差与偏差/" rel="prev" title="方差与偏差">
-                方差与偏差 <i class="fa fa-chevron-right"></i>
+              <a href="/2018/08/02/Python垃圾回收机制/" rel="prev" title="Python的垃圾回收机制">
+                Python的垃圾回收机制 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -498,7 +554,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">86</span>
+                  <span class="site-state-item-count">88</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -594,6 +650,22 @@
                     <a href="https://www.cnblogs.com/zhangchaoyang/" title="Orisun" target="_blank">Orisun</a>
                   </li>
                 
+                  <li class="links-of-blogroll-item">
+                    <a href="https://www.jianshu.com/u/511ba5d71aef" title="milter" target="_blank">milter</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://blog.csdn.net/mrlevo520" title="MrLevo520的博客" target="_blank">MrLevo520的博客</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://speech.ee.ntu.edu.tw/~tlkagk/talk.html" title="李宏毅主页" target="_blank">李宏毅主页</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://blog.csdn.net/qq_37059483" title="qingyun_wudaoletu的博客" target="_blank">qingyun_wudaoletu的博客</a>
+                  </li>
+                
               </ul>
             </div>
           
@@ -613,7 +685,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#参考文献"><span class="nav-number">1.</span> <span class="nav-text">参考文献</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#归一化"><span class="nav-number">1.</span> <span class="nav-text">归一化</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#标准化"><span class="nav-number">2.</span> <span class="nav-text">标准化</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#两个坑"><span class="nav-number">3.</span> <span class="nav-text">两个坑</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#标准化与归一化的对比分析"><span class="nav-number">4.</span> <span class="nav-text">标准化与归一化的对比分析</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#逻辑回归必须要进行标准化吗？"><span class="nav-number">5.</span> <span class="nav-text">逻辑回归必须要进行标准化吗？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考文献"><span class="nav-number">6.</span> <span class="nav-text">参考文献</span></a></li></ol></div>
             
 
           </div>
