@@ -88,7 +88,7 @@
 <meta property="og:description" content="Logistics回归也叫对数几率回归，是统计学习中的经典分类方法，属于线性模型。虽然被叫做回归，实际是一个分类方法。">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="/images/logistics回归_1.png">
-<meta property="og:updated_time" content="2018-08-28T00:55:38.444Z">
+<meta property="og:updated_time" content="2018-08-28T01:04:20.065Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Logistic回归">
 <meta name="twitter:description" content="Logistics回归也叫对数几率回归，是统计学习中的经典分类方法，属于线性模型。虽然被叫做回归，实际是一个分类方法。">
@@ -388,11 +388,11 @@ P(y=0|x)=\frac{1}{1+e^{w^Tx+b}}</script><p>这样的模型就是logistics回归�
 </ol>
 <h2 id="从更高的层次看伯努利分布"><a href="#从更高的层次看伯努利分布" class="headerlink" title="从更高的层次看伯努利分布"></a>从更高的层次看伯努利分布</h2><p>如何根据$x$求出$y$所属的伯努利分布的参数$\phi$呢。直接看，似乎没什么思路，我们需要换个角度。</p>
 <p>伯努利分布实际上属于某一大类分布中的一种情况。这一大类分布就是指数分布族。这就好比， $x + 1=0$是一个方程，但从更广泛的角度来看，它只是 $ax + b = 0$一次方程的一种具体情况而已。</p>
-<p>从指数分布族的角度来分析，我们很容易构建起x与伯努利分布参数的联系。</p>
+<p>从指数分布族的角度来分析，我们很容易构建起$x$与伯努利分布参数的联系。</p>
 <h2 id="指数分布族"><a href="#指数分布族" class="headerlink" title="指数分布族"></a>指数分布族</h2><p>指数分布家族是定义的一组分布式，伯努利分布及高斯分布等分布都可以看做指数分布的特殊形式。指数分布的公式如下：</p>
 <script type="math/tex; mode=display">
 p(y;\eta) = b(y)exp(\eta^TT(y)-a(\eta))</script><p>$p(y;\eta)$表示$y$在$\eta$下概率，但是它不是条件概率，因为$\eta$不是随机变量。</p>
-<p>它告诉我们：对于一个随机变量$x$，只要确定三个函数，就可以确定一类分布。这三个函数就是：$b(y)   T(y)  A(\eta)$，$\eta$用来确定该类分布的具体参数。</p>
+<p>它告诉我们：对于一个随机变量$y$，只要确定三个函数，就可以确定一类分布。这三个函数就是：$b(y)\quad T(y) \quad A(\eta)$，$\eta$用来确定该类分布的具体参数。</p>
 <p>对于伯努利分布，首先，我们假设$p(y=1;\phi) = \phi;p(y=0;\phi) = 1-\phi$，这个就是定义。</p>
 <script type="math/tex; mode=display">
 \begin{aligned} 
@@ -736,6 +736,10 @@ w_j := w_j + \eta (y_i-\phi(z_i))x_i^{(j)},</script><p>也就是去掉了求和�
                 
                   <li class="links-of-blogroll-item">
                     <a href="http://littlehaes.com/" title="Hae's Blog" target="_blank">Hae's Blog</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://www.jianshu.com/u/ed6d4d31c5b0" title="月牙眼的楼下小黑" target="_blank">月牙眼的楼下小黑</a>
                   </li>
                 
               </ul>

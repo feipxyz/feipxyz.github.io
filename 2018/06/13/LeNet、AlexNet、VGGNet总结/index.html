@@ -90,7 +90,7 @@
 <meta property="og:image" content="/images/LeNet_1.png">
 <meta property="og:image" content="/images/AlexNet_1.png">
 <meta property="og:image" content="/images/VGGNet_1.png">
-<meta property="og:updated_time" content="2018-07-09T03:45:35.648Z">
+<meta property="og:updated_time" content="2018-08-28T01:46:03.598Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="LeNet、AlexNet、VGGNet总结">
 <meta name="twitter:description" content="本文简要回顾LeNet、AlexNet、VGGNet、ResNet这几个经典的CNN网络。">
@@ -376,10 +376,17 @@
 <h1 id="VGGNet"><a href="#VGGNet" class="headerlink" title="VGGNet"></a>VGGNet</h1><p>VGG是由牛津大学Visual Geometry Group(网络即以课题组的名字命名)提出的卷积神经网络模型。<!--more-->AlexNet指明了加深卷积神经网络的深度可以取得很高的结果，但却没有阐明如何设计更深的网络。VGG提出了可以通过重复使用简单的基础块来构建深层模型。</p>
 <h2 id="VGG块"><a href="#VGG块" class="headerlink" title="VGG块"></a>VGG块</h2><p>VGG模型的基础组成单位是连续数个相同的使用填充1的$3\times3$卷积层后接上一个步幅为2的$2\times2$最大池化层。卷积层保持输入高宽，而池化层则对其减半。</p>
 <p>AlexNet在第一层用了$11\times11$（stride 4)的卷基层，但是VGG从第一层开始就使用$3\times3$的小卷积核，并且只使用了stride 1。</p>
-<p>改用小卷积核的原因是两个堆叠的$3\times3$卷积的感受野等于一个$5\times5$的感受野，三个相当于$7\times7$，但中间可以加入更多的非线性变换，而且多个小卷积核比一个大卷积核的参数少。</p>
+<p>改用小卷积核的原因是两个堆叠的$3\times3$卷积的感受野等于一个$5\times5$的感受野，三个相当于$7\times7$，但中间可以加入更多的非线性变换，而且多个小卷积核比一个大卷积核的参数少。一个大小为7的感受野，其参数总量为 $3\times(9\times C^2)$ ，如果直接使用$7\times7$卷积核，其参数总量为$49\times C^2$，这里 $C$ 指的是输入和输出的通道数。很明显，$27\times C^2$小于$49\times C^2$，即减少了参数；而且$3\times 3$卷积核有利于更好地保持图像性质。因为$3\times 3$是最小的能够捕获像素八邻域信息的尺寸。</p>
 <h2 id="VGG网络"><a href="#VGG网络" class="headerlink" title="VGG网络"></a>VGG网络</h2><p>论文中推荐的VGG结构如下图所示，目前主要用VGG-16和VGG-19。</p>
 <p><img src="/images/VGGNet_1.png" alt="图片"></p>
-<h1 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h1><p>[1]. <a href="https://arxiv.org/abs/1409.1556" target="_blank" rel="noopener">Very Deep Convolutional Networks for Large-Scale Image Recognition</a><br>[2]. <a href="https://papers.nips.cc/paper/4824-imagenet-classification-with-deep-convolutional-neural-networks.pdf" target="_blank" rel="noopener">ImageNet Classification with Deep Convolutional<br>Neural Networks</a><br>[3]. <a href="http://www.dengfanxin.cn/wp-content/uploads/2016/03/1998Lecun.pdf" target="_blank" rel="noopener">Gradient-Based Learning Applied to Document Recognition</a></p>
+<h2 id="VGG的优点"><a href="#VGG的优点" class="headerlink" title="VGG的优点"></a>VGG的优点</h2><ul>
+<li>VGG的结构非常简洁，整个网络都使用了同样大小的卷积核尺寸（$3\times 3$）和最大池化尺寸（$2\times 2$）。</li>
+<li>几个小滤波器（$3\times 3$）卷积层的组合比一个大滤波器（$5\times 5$或$7\times 7$）卷积层好。</li>
+<li>验证了通过不断加深网络结构可以提升性能。</li>
+</ul>
+<h2 id="VGG的缺点"><a href="#VGG的缺点" class="headerlink" title="VGG的缺点"></a>VGG的缺点</h2><p>VGG耗费更多计算资源，并且使用了更多的参数（这里不是$3\times 3$卷积的锅），导致更多的内存占用（140M）。其中绝大多数的参数都是来自于第一个全连接层。VGG可是有3个全连接层啊！</p>
+<p>PS：有的文章称：发现这些全连接层即使被去除，对于性能也没有什么影响，这样就显著降低了参数数量。</p>
+<h1 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h1><p>[1]. <a href="https://arxiv.org/abs/1409.1556" target="_blank" rel="noopener">Very Deep Convolutional Networks for Large-Scale Image Recognition</a><br>[2]. <a href="https://papers.nips.cc/paper/4824-imagenet-classification-with-deep-convolutional-neural-networks.pdf" target="_blank" rel="noopener">ImageNet Classification with Deep Convolutional<br>Neural Networks</a><br>[3]. <a href="http://www.dengfanxin.cn/wp-content/uploads/2016/03/1998Lecun.pdf" target="_blank" rel="noopener">Gradient-Based Learning Applied to Document Recognition</a><br>[4]. <a href="https://blog.csdn.net/amusi1994/article/details/81461968" target="_blank" rel="noopener">一文读懂VGG网络</a><br>[5]. <a href="https://www.jianshu.com/p/d75375dd7ebd" target="_blank" rel="noopener">为什么倾向于使用3*3 小卷积核堆叠代替大卷积核</a></p>
 
       
     </div>
@@ -682,6 +689,10 @@
                     <a href="http://littlehaes.com/" title="Hae's Blog" target="_blank">Hae's Blog</a>
                   </li>
                 
+                  <li class="links-of-blogroll-item">
+                    <a href="https://www.jianshu.com/u/ed6d4d31c5b0" title="月牙眼的楼下小黑" target="_blank">月牙眼的楼下小黑</a>
+                  </li>
+                
               </ul>
             </div>
           
@@ -701,7 +712,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#LeNet"><span class="nav-number">1.</span> <span class="nav-text">LeNet</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#AlexNet"><span class="nav-number">2.</span> <span class="nav-text">AlexNet</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#VGGNet"><span class="nav-number">3.</span> <span class="nav-text">VGGNet</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#VGG块"><span class="nav-number">3.1.</span> <span class="nav-text">VGG块</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#VGG网络"><span class="nav-number">3.2.</span> <span class="nav-text">VGG网络</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考文献"><span class="nav-number">4.</span> <span class="nav-text">参考文献</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#LeNet"><span class="nav-number">1.</span> <span class="nav-text">LeNet</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#AlexNet"><span class="nav-number">2.</span> <span class="nav-text">AlexNet</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#VGGNet"><span class="nav-number">3.</span> <span class="nav-text">VGGNet</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#VGG块"><span class="nav-number">3.1.</span> <span class="nav-text">VGG块</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#VGG网络"><span class="nav-number">3.2.</span> <span class="nav-text">VGG网络</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#VGG的优点"><span class="nav-number">3.3.</span> <span class="nav-text">VGG的优点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#VGG的缺点"><span class="nav-number">3.4.</span> <span class="nav-text">VGG的缺点</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考文献"><span class="nav-number">4.</span> <span class="nav-text">参考文献</span></a></li></ol></div>
             
 
           </div>
