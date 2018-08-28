@@ -88,7 +88,7 @@
 <meta property="og:description" content="Logistics回归也叫对数几率回归，是统计学习中的经典分类方法，属于线性模型。虽然被叫做回归，实际是一个分类方法。">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="/images/logistics回归_1.png">
-<meta property="og:updated_time" content="2018-06-09T10:15:44.589Z">
+<meta property="og:updated_time" content="2018-08-28T00:55:38.444Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Logistic回归">
 <meta name="twitter:description" content="Logistics回归也叫对数几率回归，是统计学习中的经典分类方法，属于线性模型。虽然被叫做回归，实际是一个分类方法。">
@@ -377,7 +377,36 @@ ln(\frac{P(y=1|x)}{P(y=0|x)}) = w^Tx+b</script><p>显然有：</p>
 <script type="math/tex; mode=display">
 P(y=1|x)=\frac{e^{w^Tx+b}}{1+e^{w^Tx+b}}  \\
 P(y=0|x)=\frac{1}{1+e^{w^Tx+b}}</script><p>这样的模型就是logistics回归模型。</p>
-<h1 id="参数估计"><a href="#参数估计" class="headerlink" title="参数估计"></a>参数估计</h1><p>令$z = w^Tx + b$，使用极大似然法来估计参数。设：</p>
+<h1 id="为什么使用sigmoid函数"><a href="#为什么使用sigmoid函数" class="headerlink" title="为什么使用sigmoid函数"></a>为什么使用sigmoid函数</h1><p>事实上，我们对logistic回归做了如下假设：假设给定特征$x$和参数，$y$是服从伯努利分布的二值随机变量。我们的任务用数学语言描述就是，寻找一个模型，输入$x$后，可以告诉我们$y$所服从的随机分布的参数，知道参数后，就可以计算$y$的期望作为预测。分布的参数就是$\phi=P(y=1)$，同时也是该分布的期望。</p>
+<p>我们的思路如下：</p>
+<ol>
+<li>对每一个确定的$x$，$y$仍然是一个随机变量</li>
+<li>该随机变量服从某个随机分布</li>
+<li>努力求出这个随机分布的参数</li>
+<li>求出该随机分布的期望</li>
+<li>将期望作为预测值</li>
+</ol>
+<h2 id="从更高的层次看伯努利分布"><a href="#从更高的层次看伯努利分布" class="headerlink" title="从更高的层次看伯努利分布"></a>从更高的层次看伯努利分布</h2><p>如何根据$x$求出$y$所属的伯努利分布的参数$\phi$呢。直接看，似乎没什么思路，我们需要换个角度。</p>
+<p>伯努利分布实际上属于某一大类分布中的一种情况。这一大类分布就是指数分布族。这就好比， $x + 1=0$是一个方程，但从更广泛的角度来看，它只是 $ax + b = 0$一次方程的一种具体情况而已。</p>
+<p>从指数分布族的角度来分析，我们很容易构建起x与伯努利分布参数的联系。</p>
+<h2 id="指数分布族"><a href="#指数分布族" class="headerlink" title="指数分布族"></a>指数分布族</h2><p>指数分布家族是定义的一组分布式，伯努利分布及高斯分布等分布都可以看做指数分布的特殊形式。指数分布的公式如下：</p>
+<script type="math/tex; mode=display">
+p(y;\eta) = b(y)exp(\eta^TT(y)-a(\eta))</script><p>$p(y;\eta)$表示$y$在$\eta$下概率，但是它不是条件概率，因为$\eta$不是随机变量。</p>
+<p>它告诉我们：对于一个随机变量$x$，只要确定三个函数，就可以确定一类分布。这三个函数就是：$b(y)   T(y)  A(\eta)$，$\eta$用来确定该类分布的具体参数。</p>
+<p>对于伯努利分布，首先，我们假设$p(y=1;\phi) = \phi;p(y=0;\phi) = 1-\phi$，这个就是定义。</p>
+<script type="math/tex; mode=display">
+\begin{aligned} 
+p(y;\phi) &= \phi^y (1-\phi)^{(1-y)} \\
+&= exp[yln\phi+(1-y)ln(1-\phi)]\\
+&= exp[yln{\phi \over1-\phi}+ln(1-\phi)]\\
+\end{aligned}</script><p>其中从定义来讲 $y=0 || y=1$（因为伯努利分布）</p>
+<p>那么我们做下列转化，令$\eta = ln{\phi \over(1-\phi)},\phi = {1\over1+e^{-\eta}}$,<br>自然参数和均值参数之间的转化正好满足sigmoid函数</p>
+<script type="math/tex; mode=display">
+b(y)=1\\
+T(y)=y\\
+a(\eta)=-ln(1-\phi)=-ln{1\over1+e^\eta}</script><p>最后，可以得到：</p>
+<script type="math/tex; mode=display">
+p(y;\eta) = exp[\eta y-ln{1 \over 1+e^\eta}]</script><h1 id="参数估计"><a href="#参数估计" class="headerlink" title="参数估计"></a>参数估计</h1><p>令$z = w^Tx + b$，使用极大似然法来估计参数。设：</p>
 <script type="math/tex; mode=display">
 P(y=1|x;w) = \phi(w^Tx + b) =  \phi (z) \\
 P(y=0|x;w) = 1 - \phi (z) \\</script><p>似然函数：</p>
@@ -408,7 +437,7 @@ w_j :=w_j+\eta \frac{1}{n} \sum_{i=1}^n (y_i-\phi(z_i))x_i^{(j)}</script><p>$x_i
 <script type="math/tex; mode=display">
 for \ i \ in \ range(n) \\
 w_j := w_j + \eta (y_i-\phi(z_i))x_i^{(j)},</script><p>也就是去掉了求和，而是对随机样本点都进行更新。</p>
-<h1 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h1><p>[1]. <a href="https://book.douban.com/subject/26708119/" target="_blank" rel="noopener">《机器学习》 周志华</a><br>[2]. <a href="https://book.douban.com/subject/10590856/" target="_blank" rel="noopener">《统计学习方法》 李航</a><br>[3]. <a href="https://blog.csdn.net/wjlucc/article/details/69264144?ref=myread" target="_blank" rel="noopener">逻辑斯蒂回归</a><br>[4]. <a href="https://blog.csdn.net/hongbin_xu/article/details/78270526" target="_blank" rel="noopener">对数几率回归推导</a><br>[5]. <a href="https://blog.csdn.net/zjuPeco/article/details/77165974" target="_blank" rel="noopener">逻辑回归(logistic regression)的本质——极大似然估计</a></p>
+<h1 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h1><p>[1]. <a href="https://book.douban.com/subject/26708119/" target="_blank" rel="noopener">《机器学习》 周志华</a><br>[2]. <a href="https://book.douban.com/subject/10590856/" target="_blank" rel="noopener">《统计学习方法》 李航</a><br>[3]. <a href="https://blog.csdn.net/wjlucc/article/details/69264144?ref=myread" target="_blank" rel="noopener">逻辑斯蒂回归</a><br>[4]. <a href="https://blog.csdn.net/hongbin_xu/article/details/78270526" target="_blank" rel="noopener">对数几率回归推导</a><br>[5]. <a href="https://blog.csdn.net/zjuPeco/article/details/77165974" target="_blank" rel="noopener">逻辑回归(logistic regression)的本质——极大似然估计</a><br>[6]. <a href="https://www.jianshu.com/p/a8d6b40da0cf" target="_blank" rel="noopener">机器学习面试之逻辑回归输出的值是真实的概率吗？</a><br>[7]. <a href="https://blog.csdn.net/qq_33667088/article/details/70692060" target="_blank" rel="noopener">指数分布族和广义线性模型</a></p>
 
       
     </div>
@@ -465,8 +494,8 @@ w_j := w_j + \eta (y_i-\phi(z_i))x_i^{(j)},</script><p>也就是去掉了求和�
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/06/04/Python基础总结/" rel="next" title="Python基础积累">
-                <i class="fa fa-chevron-left"></i> Python基础积累
+              <a href="/2018/06/05/Numpy基础/" rel="next" title="Numpy基础">
+                <i class="fa fa-chevron-left"></i> Numpy基础
               </a>
             
           </div>
@@ -475,8 +504,8 @@ w_j := w_j + \eta (y_i-\phi(z_i))x_i^{(j)},</script><p>也就是去掉了求和�
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2018/06/05/Numpy基础/" rel="prev" title="Numpy基础">
-                Numpy基础 <i class="fa fa-chevron-right"></i>
+              <a href="/2018/06/06/协方差矩阵/" rel="prev" title="协方差矩阵">
+                协方差矩阵 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -728,7 +757,7 @@ w_j := w_j + \eta (y_i-\phi(z_i))x_i^{(j)},</script><p>也就是去掉了求和�
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#logistics回归模型"><span class="nav-number">1.</span> <span class="nav-text">logistics回归模型</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参数估计"><span class="nav-number">2.</span> <span class="nav-text">参数估计</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#梯度下降"><span class="nav-number">3.</span> <span class="nav-text">梯度下降</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#随机梯度下降"><span class="nav-number">4.</span> <span class="nav-text">随机梯度下降</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考文献"><span class="nav-number">5.</span> <span class="nav-text">参考文献</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#logistics回归模型"><span class="nav-number">1.</span> <span class="nav-text">logistics回归模型</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#为什么使用sigmoid函数"><span class="nav-number">2.</span> <span class="nav-text">为什么使用sigmoid函数</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#从更高的层次看伯努利分布"><span class="nav-number">2.1.</span> <span class="nav-text">从更高的层次看伯努利分布</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#指数分布族"><span class="nav-number">2.2.</span> <span class="nav-text">指数分布族</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参数估计"><span class="nav-number">3.</span> <span class="nav-text">参数估计</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#梯度下降"><span class="nav-number">4.</span> <span class="nav-text">梯度下降</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#随机梯度下降"><span class="nav-number">5.</span> <span class="nav-text">随机梯度下降</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考文献"><span class="nav-number">6.</span> <span class="nav-text">参考文献</span></a></li></ol></div>
             
 
           </div>

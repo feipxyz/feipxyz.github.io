@@ -90,7 +90,7 @@
 <meta property="og:image" content="/images/最大熵模型_1.png">
 <meta property="og:image" content="/images/最大熵模型_2.png">
 <meta property="og:image" content="/images/最大熵模型_3.png">
-<meta property="og:updated_time" content="2018-08-27T04:40:51.886Z">
+<meta property="og:updated_time" content="2018-08-27T04:50:57.944Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="最大熵模型【转】">
 <meta name="twitter:description" content="最大熵模型（Maximum Entropy Model，以下简称MaxEnt），MaxEnt 是概率模型学习中一个准则，其思想为：在学习概率模型时，所有可能的模型中熵最大的模型是最好的模型；若概率模型需要满足一些约束，则最大熵原理就是在满足已知约束的条件集合中选择熵最大模型。">
@@ -358,9 +358,7 @@
       
         <p>最大熵模型（Maximum Entropy Model，以下简称MaxEnt），MaxEnt 是概率模型学习中一个准则，其思想为：在学习概率模型时，所有可能的模型中熵最大的模型是最好的模型；若概率模型需要满足一些约束，则最大熵原理就是在满足已知约束的条件集合中选择熵最大模型。   <a id="more"></a></p>
 <blockquote>
-<blockquote>
 <p>最大熵原理指出，<strong>当我们需要对一个随机事件的概率分布进行预测时，我们的预测应当满足全部已知的条件，而对未知的情况不要做任何主观假设。（不做主观假设这点很重要。） 在这种情况下，概率分布最均匀，预测的风险最小</strong>。因为这时概率分布的信息熵最大，所以人们称这种模型叫“最大熵模型” 。我们常说，不要把所有的鸡蛋放在一个篮子里，其实就是最大熵原理的一个朴素的说法，因为当我们遇到不确定性时，就要保留各种可能性。 ——《数学之美》</p>
-</blockquote>
 </blockquote>
 <h1 id="特征函数"><a href="#特征函数" class="headerlink" title="特征函数"></a>特征函数</h1><p>接下来以统计建模的形式来描述 MaxEnt 模型，给定训练数据 $\left \{ (x_i,y_i)\right\}_{i=1}^N$ ，现在要通过Maximum Entrop 来建立一个概率判别模型，该模型的任务是对于给定的 $X = x$ 以条件概率分布 $P(Y|X = x)$ 预测 $Y$ 的取值。根据训练语料能得出 $(X,Y)$ 的经验分布， 得出部分 $(X,Y)$ 的概率值，或某些概率需要满足的条件，即问题变成求部分信息下的最大熵或满足一定约束的最优解，约束条件是靠特征函数来引入的。</p>
 <p>特征函数 $f(x,y)$ 描述 $x$ 与 $y$ 之间的某一事实，其定义如下：</p>
@@ -491,8 +489,8 @@ L_{\widetilde{P}}(P_w) &=  \sum_{x,y}\widetilde{P}(x,y)logP(y|x)\\ &= \sum_{x,y}
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2018/07/20/Python序列化/" rel="prev" title="Python序列化">
-                Python序列化 <i class="fa fa-chevron-right"></i>
+              <a href="/2018/07/20/Python中的深拷贝与浅拷贝/" rel="prev" title="Python中的深拷贝与浅拷贝">
+                Python中的深拷贝与浅拷贝 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
