@@ -89,8 +89,7 @@
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="/images/svm_3.png">
 <meta property="og:image" content="/images/svm_2.png">
-<meta property="og:image" content="/images/svm_1.png">
-<meta property="og:updated_time" content="2018-08-17T01:34:53.719Z">
+<meta property="og:updated_time" content="2018-09-02T00:49:39.725Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="支持向量机（SVM）">
 <meta name="twitter:description" content="支持向量机(support vector machines，SVM)是一种二类分类模型。它的基本模型是定义在特征空间上的间隔最大的线性分类器，间隔最大使它有别于感知机；支持向量机还包括核技巧，这使它成为实质上的非线性分类器。">
@@ -392,7 +391,7 @@ L(\omega,b,\alpha) = \frac{1}{2} \vert \vert \omega \vert \vert^2 + \sum\limits_
 & \max_{\alpha} \ \sum\limits_{i=1}^{m} \alpha_i - \frac{1}{2} \sum\limits_{i=1}^{m} \sum\limits_{j=1}^{m} \alpha_i \alpha_j y_i y_j x_i^T x_j\\ 
 &s.t. \quad \sum\limits_{i=1}^{m} \alpha_i y_i = 0 \\
 & \quad\quad\ \ \  \alpha_i \geq 0, i=1,\cdots,m
-\end{aligned}</script><p>解除 $\alpha$ 后，求出 $\omega, b$，于是可以得到模型为</p>
+\end{aligned}</script><p>解出 $\alpha$ 后，求出 $\omega, b$，于是可以得到模型为</p>
 <script type="math/tex; mode=display">
 \begin{aligned}
 f(x) &= \omega^T x + b \\
@@ -456,25 +455,9 @@ f(\mathbf{x}) & =\omega^{T} \phi(x) + b \\
 <li>如果Feature的数量比较小，而样本数量很多，由于求解最优化问题的时候，目标函数涉及两两样本计算内积，使用高斯核明显计算量会大于线性核，所以手动添加一些特征，使得线性可分，然后可以用LR或者线性核的SVM；  </li>
 <li>如果不满足上述两点，即Feature的数量比较小，样本数量一般，不算大也不算小，选用SVM+Gaussian Kernel。   </li>
 </ol>
-<h1 id="软间隔与正则化"><a href="#软间隔与正则化" class="headerlink" title="软间隔与正则化"></a>软间隔与正则化</h1><p>现实任务中往往很难确定合适的核函数使得训练样本在特征空间中线性可分，即便线性可分，也很难判定这个结果不是由于过拟合造成的。<br>缓解这个问题的一个方法是允许支持向量机在一些样本上出错，引入“软间隔”概念。允许某些样本不满足约束 </p>
+<h1 id="软间隔与正则化"><a href="#软间隔与正则化" class="headerlink" title="软间隔与正则化"></a>软间隔与正则化</h1><p>现实任务中往往很难确定合适的核函数使得训练样本在特征空间中线性可分，即便线性可分，也很难判定这个结果不是由于过拟合造成的。<br>缓解这个问题的一个方法是允许支持向量机在一些样本上出错，引入“软间隔”概念。允许某些样本不满足约束$y_i (\omega^T x_i + b) \geq 1$，SVM对训练集里面的每个样本$(x_i,y_i)$引入了一个松弛变量$\xi_i \geq 0$,使函数间隔加上松弛变量大于等于1，也就是说： </p>
 <script type="math/tex; mode=display">
-y_i (\omega^T x_i + b) \geq 1</script><p><img src="/images/svm_2.png" alt="图片"><br>当然，在最大化间隔的同时，不满足约束的样本赢尽可能少。于是，优化目标可写成</p>
-<script type="math/tex; mode=display">
-\min{}_{\omega,b} \frac{1}{2} \vert \vert \omega \vert \vert^2 + C\sum\limits_{i=1}^{m} l_{0/1} (y_i (\omega^T x_i + b) - 1)</script><p>其中 $l_{0/1}$ 是“0/1损失函数”</p>
-<script type="math/tex; mode=display">
-l_{0/1} = \left\{
-\begin{aligned}
-& 1 & z \leq 0 \\
-& 0 & otherwise
-\end{aligned}
-\right.</script><p>$l_{0/1}$ 非凸、非连续、数学性质不好，使得上式难以求解，因此人们用其他一些函数来代替它，称为“代替函数”。<br>常用的代替函数：</p>
-<ul>
-<li>hinge损失： $l_{hinge}(z) = max(0,1-z)$</li>
-<li>指数损失： $l_{exp}(z) = exp(-z)$</li>
-<li>对率损失： $l_{log}(z) = log(1+exp(-z))$</li>
-</ul>
-<p>图像如下：<img src="/images/svm_1.png" alt="图片">   </p>
-<p>软间隔支持向量机：</p>
+y_i (\omega^T x_i + b) \geq 1 - \xi_i</script><p><img src="/images/svm_2.png" alt="图片"><br>当然，松弛变量不能白加，这是有成本的，每一个松弛变量$\xi_i$, 对应了一个代价$\xi_i$，<br>软间隔支持向量机：</p>
 <script type="math/tex; mode=display">
 \begin{aligned}
 \min_{\omega,b} \  &\frac{1}{2} \vert \vert \omega \vert \vert^2 + C\sum\limits_{i=1}^{m} \xi_i\\ 
@@ -506,7 +489,7 @@ s.t. & \sum\limits_{i=1}^{m} \alpha_i y_i = 0 \\
 & \mu_i \xi_i = 0
 \end{aligned}
 \right.</script><p>实际上支持向量机和对率回归的优化目标相近，通常情况下他们的性能相当。对率回归的优势主要对于其输出具有自然的概率意义，即在给出预测标记的同时也给了概率，而支持向量机的输出不具有概率意义，欲得到概率需要进行特殊处理；此外，对率回归能够直接用于多分类任务，支持向量机为此需要进行推广。另一方面，可以看出hinge损失函数有一块平摊的零区域，这使得支持向量机的解具有稀疏性，而对率损失是光滑的而单调递减函数，不能导出类似支持向量的概念。因此对率回归的解依赖于更多的训练样本，其预测开销大。</p>
-<h1 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h1><p>[1]. <a href="https://book.douban.com/subject/26708119/" target="_blank" rel="noopener">《机器学习》 周志华</a><br>[2]. <a href="https://book.douban.com/subject/10590856/" target="_blank" rel="noopener">《统计学习方法》 李航</a><br>[3]. <a href="https://blog.csdn.net/Eathen_Zheng/article/details/53765358" target="_blank" rel="noopener">支持向量机</a>    </p>
+<h1 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h1><p>[1]. <a href="https://book.douban.com/subject/26708119/" target="_blank" rel="noopener">《机器学习》 周志华</a><br>[2]. <a href="https://book.douban.com/subject/10590856/" target="_blank" rel="noopener">《统计学习方法》 李航</a><br>[3]. <a href="https://blog.csdn.net/Eathen_Zheng/article/details/53765358" target="_blank" rel="noopener">支持向量机</a><br>[4]. <a href="https://www.jianshu.com/p/bce3b2850406" target="_blank" rel="noopener">机器学习面试之有必要手推SVM吗</a></p>
 
       
     </div>
@@ -659,7 +642,7 @@ s.t. & \sum\limits_{i=1}^{m} \alpha_i y_i = 0 \\
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">54</span>
+                  <span class="site-state-item-count">55</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -681,7 +664,7 @@ s.t. & \sum\limits_{i=1}^{m} \alpha_i y_i = 0 \\
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">89</span>
+                  <span class="site-state-item-count">90</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -807,6 +790,10 @@ s.t. & \sum\limits_{i=1}^{m} \alpha_i y_i = 0 \\
                 
                   <li class="links-of-blogroll-item">
                     <a href="https://www.jianshu.com/u/ed6d4d31c5b0" title="月牙眼的楼下小黑" target="_blank">月牙眼的楼下小黑</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://www.hanlongfei.com/" title="Longfei Han" target="_blank">Longfei Han</a>
                   </li>
                 
               </ul>

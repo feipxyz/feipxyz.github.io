@@ -89,7 +89,7 @@
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="/images/方差与偏差_1.jpg">
 <meta property="og:image" content="/images/方差与偏差_2.png">
-<meta property="og:updated_time" content="2018-08-25T04:15:15.684Z">
+<meta property="og:updated_time" content="2018-08-28T05:18:26.958Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="方差与偏差">
 <meta name="twitter:description" content="学习算法的预测误差, 或者说泛化误差(generalization error)可以分解为三个部分: 偏差(bias), 方差(variance) 和噪声(noise). 在估计学习算法性能的过程中, 我们主要关注偏差与方差. 因为噪声属于不可约减的误差 (irreducible error)。">
@@ -444,6 +444,14 @@ E(f;D)={bias}^2(x)+var(x)</script><p>我们希望偏差与方差越小越好, �
 <li>充分训练后, 学习器的拟合能力已非常强, 训练数据的轻微扰动都会导致学习器发生显著变化, 当训练数据自身的、非全局的特性被学习器学到了, 则将发生过拟合.</li>
 </ul>
 <p><img src="/images/方差与偏差_2.png" alt="图片"></p>
+<h1 id="典型模型分析"><a href="#典型模型分析" class="headerlink" title="典型模型分析"></a>典型模型分析</h1><ol>
+<li><p>KNN<br>对于KNN算法，k值越大，表示模型的学习能力越弱，因为k越大，它越倾向于从“面”上考虑做出判断，而不是具体地考虑一个样本近身的情况来做出判断，所以，它的偏差会越来越大。</p>
+</li>
+<li><p>RF<br>对于RF，我们实际上是部分实现了多次训练取均值的效果，每次训练得到的树都是一个很强的学习器，每一个的方差都比较大，但综合起来就会比较小。<br>为什么说是部分实现了多次训练取均值的效果而不是全部呢？因为我们在训练各棵树时，是通过抽样样本集来实现多次训练的，不同的训练集中不可避免地会有重合的情况，此时，就不能认为是独立的多次训练了，各个训练得到的树之间的方差会产生一定的相关性，训练集中重合的样本越多，则两棵树之间的方差的相关性越强，就越难达成方差互相抵消的效果。</p>
+</li>
+<li><p>GBDT<br>对于GBDT，N棵树之间根本就不是一种多次训练取均值的关系，而是N棵树组成了相关关联，层层递进的超级学习者，可想而知，它的方差一定是比较大的。但由于它的学习能力比较强，所以，它的偏差是很小的，而且树的棵树越多，学习能力就越强，偏差就越小。也就是说，只要学习次数够多，预测的均值会无限接近于目标。简单讲就是GBDT的N棵树实际上是一个有机关联的模型，不能认为是N个模型。</p>
+</li>
+</ol>
 <h1 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h1><p>[1] <a href="https://book.douban.com/subject/26708119/" target="_blank" rel="noopener">《机器学习》周志华</a><br>[2] <a href="http://scott.fortmann-roe.com/docs/BiasVariance.html" target="_blank" rel="noopener">Understanding the Bias-Variance Tradeoff</a><br>[3] <a href="https://blog.csdn.net/hohaizx/article/details/80640686" target="_blank" rel="noopener">误差（error），偏差（bias），方差（variance）</a></p>
 
       
@@ -601,7 +609,7 @@ E(f;D)={bias}^2(x)+var(x)</script><p>我们希望偏差与方差越小越好, �
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">54</span>
+                  <span class="site-state-item-count">55</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -623,7 +631,7 @@ E(f;D)={bias}^2(x)+var(x)</script><p>我们希望偏差与方差越小越好, �
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">89</span>
+                  <span class="site-state-item-count">90</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -751,6 +759,10 @@ E(f;D)={bias}^2(x)+var(x)</script><p>我们希望偏差与方差越小越好, �
                     <a href="https://www.jianshu.com/u/ed6d4d31c5b0" title="月牙眼的楼下小黑" target="_blank">月牙眼的楼下小黑</a>
                   </li>
                 
+                  <li class="links-of-blogroll-item">
+                    <a href="http://www.hanlongfei.com/" title="Longfei Han" target="_blank">Longfei Han</a>
+                  </li>
+                
               </ul>
             </div>
           
@@ -770,7 +782,7 @@ E(f;D)={bias}^2(x)+var(x)</script><p>我们希望偏差与方差越小越好, �
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#偏差、方差与噪声的含义"><span class="nav-number">1.</span> <span class="nav-text">偏差、方差与噪声的含义</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#分析过程"><span class="nav-number">2.</span> <span class="nav-text">分析过程</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考文献"><span class="nav-number">3.</span> <span class="nav-text">参考文献</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#偏差、方差与噪声的含义"><span class="nav-number">1.</span> <span class="nav-text">偏差、方差与噪声的含义</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#分析过程"><span class="nav-number">2.</span> <span class="nav-text">分析过程</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#典型模型分析"><span class="nav-number">3.</span> <span class="nav-text">典型模型分析</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考文献"><span class="nav-number">4.</span> <span class="nav-text">参考文献</span></a></li></ol></div>
             
 
           </div>

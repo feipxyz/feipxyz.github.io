@@ -88,7 +88,7 @@
 <meta property="og:description" content="Logistics回归也叫对数几率回归，是统计学习中的经典分类方法，属于线性模型。虽然被叫做回归，实际是一个分类方法。">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="/images/logistics回归_1.png">
-<meta property="og:updated_time" content="2018-08-28T01:04:20.065Z">
+<meta property="og:updated_time" content="2018-08-28T05:06:18.321Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Logistic回归">
 <meta name="twitter:description" content="Logistics回归也叫对数几率回归，是统计学习中的经典分类方法，属于线性模型。虽然被叫做回归，实际是一个分类方法。">
@@ -406,7 +406,8 @@ b(y)=1\\
 T(y)=y\\
 a(\eta)=-ln(1-\phi)=-ln{1\over1+e^\eta}</script><p>最后，可以得到：</p>
 <script type="math/tex; mode=display">
-p(y;\eta) = exp[\eta y-ln{1 \over 1+e^\eta}]</script><h1 id="参数估计"><a href="#参数估计" class="headerlink" title="参数估计"></a>参数估计</h1><p>令$z = w^Tx + b$，使用极大似然法来估计参数。设：</p>
+p(y;\eta) = exp[\eta y-ln{1 \over 1+e^\eta}]</script><p>可以看到，伯努利分布确实可以改写成指数分布族的形式。并且，伯努利分布的参数$\phi$与$\eta$之间，还有一个sigmoid的函数关系。</p>
+<h1 id="参数估计"><a href="#参数估计" class="headerlink" title="参数估计"></a>参数估计</h1><p>令$z = w^Tx + b$，使用极大似然法来估计参数。设：</p>
 <script type="math/tex; mode=display">
 P(y=1|x;w) = \phi(w^Tx + b) =  \phi (z) \\
 P(y=0|x;w) = 1 - \phi (z) \\</script><p>似然函数：</p>
@@ -592,7 +593,7 @@ w_j := w_j + \eta (y_i-\phi(z_i))x_i^{(j)},</script><p>也就是去掉了求和�
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">54</span>
+                  <span class="site-state-item-count">55</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -614,7 +615,7 @@ w_j := w_j + \eta (y_i-\phi(z_i))x_i^{(j)},</script><p>也就是去掉了求和�
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">89</span>
+                  <span class="site-state-item-count">90</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -740,6 +741,10 @@ w_j := w_j + \eta (y_i-\phi(z_i))x_i^{(j)},</script><p>也就是去掉了求和�
                 
                   <li class="links-of-blogroll-item">
                     <a href="https://www.jianshu.com/u/ed6d4d31c5b0" title="月牙眼的楼下小黑" target="_blank">月牙眼的楼下小黑</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://www.hanlongfei.com/" title="Longfei Han" target="_blank">Longfei Han</a>
                   </li>
                 
               </ul>
