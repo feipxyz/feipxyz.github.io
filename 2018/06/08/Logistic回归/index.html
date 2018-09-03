@@ -83,12 +83,12 @@
 <meta name="keywords" content="logistic,极大似然估计">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Logistic回归">
-<meta property="og:url" content="flyrie.top/2018/06/05/Logistic回归/index.html">
+<meta property="og:url" content="flyrie.top/2018/06/08/Logistic回归/index.html">
 <meta property="og:site_name" content="乡间小路">
 <meta property="og:description" content="Logistics回归也叫对数几率回归，是统计学习中的经典分类方法，属于线性模型。虽然被叫做回归，实际是一个分类方法。">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="/images/logistics回归_1.png">
-<meta property="og:updated_time" content="2018-08-28T05:06:18.321Z">
+<meta property="og:updated_time" content="2018-09-02T09:21:48.220Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Logistic回归">
 <meta name="twitter:description" content="Logistics回归也叫对数几率回归，是统计学习中的经典分类方法，属于线性模型。虽然被叫做回归，实际是一个分类方法。">
@@ -122,7 +122,7 @@
 
 
 
-  <link rel="canonical" href="flyrie.top/2018/06/05/Logistic回归/"/>
+  <link rel="canonical" href="flyrie.top/2018/06/08/Logistic回归/"/>
 
 
 
@@ -275,7 +275,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="flyrie.top/2018/06/05/Logistic回归/">
+    <link itemprop="mainEntityOfPage" href="flyrie.top/2018/06/08/Logistic回归/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="乡间小路">
@@ -304,8 +304,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-06-05T01:46:15+08:00">
-                2018-06-05
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-06-08T01:46:15+08:00">
+                2018-06-08
               </time>
             
 
@@ -448,7 +448,31 @@ w_j :=w_j+\eta \frac{1}{n} \sum_{i=1}^n (y_i-\phi(z_i))x_i^{(j)}</script><p>$x_i
 <script type="math/tex; mode=display">
 for \ i \ in \ range(n) \\
 w_j := w_j + \eta (y_i-\phi(z_i))x_i^{(j)},</script><p>也就是去掉了求和，而是对随机样本点都进行更新。</p>
-<h1 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h1><p>[1]. <a href="https://book.douban.com/subject/26708119/" target="_blank" rel="noopener">《机器学习》 周志华</a><br>[2]. <a href="https://book.douban.com/subject/10590856/" target="_blank" rel="noopener">《统计学习方法》 李航</a><br>[3]. <a href="https://blog.csdn.net/wjlucc/article/details/69264144?ref=myread" target="_blank" rel="noopener">逻辑斯蒂回归</a><br>[4]. <a href="https://blog.csdn.net/hongbin_xu/article/details/78270526" target="_blank" rel="noopener">对数几率回归推导</a><br>[5]. <a href="https://blog.csdn.net/zjuPeco/article/details/77165974" target="_blank" rel="noopener">逻辑回归(logistic regression)的本质——极大似然估计</a><br>[6]. <a href="https://www.jianshu.com/p/a8d6b40da0cf" target="_blank" rel="noopener">机器学习面试之逻辑回归输出的值是真实的概率吗？</a><br>[7]. <a href="https://blog.csdn.net/qq_33667088/article/details/70692060" target="_blank" rel="noopener">指数分布族和广义线性模型</a></p>
+<h1 id="SVM和LR的不同"><a href="#SVM和LR的不同" class="headerlink" title="SVM和LR的不同"></a>SVM和LR的不同</h1><ol>
+<li><p>样本点对模型的作用不同。SVM中，只有关键的样本点（支持向量）对模型结果有影响，而LR中，每一个样本点都对模型有影响。</p>
+</li>
+<li><p>损失函数不同。SVM是hinge损失函数，LR是log损失函数</p>
+</li>
+<li><p>输出不同。LR可以对每个样本点给出类别判断的概率值，SVM无法做到。</p>
+</li>
+<li><p>可处理的特征空间维度不同。LR在特征空间维度很高时，表现较差。SVM则可以通过对偶求解高效应对这一挑战。</p>
+</li>
+<li><p>防过拟合能力不同。SVM模型中内含了L2正则，可有效防止过拟合。LR要自己添加正则项。</p>
+</li>
+<li><p>处理非线性分类问题能力不同。SVM可通过核函数灵活地将非线性问题转化为线性分类问题。LR如果要做到这一点，需要自己手动地进行特征转换。</p>
+</li>
+<li><p>处理分类问题能力不同。SVM只能处理二类分类问题，如果要处理多类别分类，需要进行 one VS one 或one VS all建模。LR可以直接进行多类别分类。</p>
+</li>
+<li><p>计算复杂度不同。对于海量数据，SVM的效率较低，LR效率比较高。</p>
+</li>
+<li><p>对数据要求不同。SVM依赖于数据表达出的距离测度，所以需要对数据进行标准化处理，而LR不需要。</p>
+</li>
+<li><p>能力范围不同。 SVM拓展后，可解决回归问题，LR不能。</p>
+</li>
+<li><p>抗噪声数据能力不同。SVM的损失函数基于距离测度，抗噪声能力要强于LR。</p>
+</li>
+</ol>
+<h1 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h1><p>[1]. <a href="https://book.douban.com/subject/26708119/" target="_blank" rel="noopener">《机器学习》 周志华</a><br>[2]. <a href="https://book.douban.com/subject/10590856/" target="_blank" rel="noopener">《统计学习方法》 李航</a><br>[3]. <a href="https://blog.csdn.net/wjlucc/article/details/69264144?ref=myread" target="_blank" rel="noopener">逻辑斯蒂回归</a><br>[4]. <a href="https://blog.csdn.net/hongbin_xu/article/details/78270526" target="_blank" rel="noopener">对数几率回归推导</a><br>[5]. <a href="https://blog.csdn.net/zjuPeco/article/details/77165974" target="_blank" rel="noopener">逻辑回归(logistic regression)的本质——极大似然估计</a><br>[6]. <a href="https://www.jianshu.com/p/a8d6b40da0cf" target="_blank" rel="noopener">机器学习面试之逻辑回归输出的值是真实的概率吗？</a><br>[7]. <a href="https://blog.csdn.net/qq_33667088/article/details/70692060" target="_blank" rel="noopener">指数分布族和广义线性模型</a><br>[8]. <a href="https://www.jianshu.com/p/f86de852ee96" target="_blank" rel="noopener">数据挖掘面试题之SVM和LR的不同</a></p>
 
       
     </div>
@@ -505,8 +529,8 @@ w_j := w_j + \eta (y_i-\phi(z_i))x_i^{(j)},</script><p>也就是去掉了求和�
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/06/05/Numpy基础/" rel="next" title="Numpy基础">
-                <i class="fa fa-chevron-left"></i> Numpy基础
+              <a href="/2018/06/08/支持向量机（SVM）/" rel="next" title="支持向量机（SVM）">
+                <i class="fa fa-chevron-left"></i> 支持向量机（SVM）
               </a>
             
           </div>
@@ -515,8 +539,8 @@ w_j := w_j + \eta (y_i-\phi(z_i))x_i^{(j)},</script><p>也就是去掉了求和�
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2018/06/06/协方差矩阵/" rel="prev" title="协方差矩阵">
-                协方差矩阵 <i class="fa fa-chevron-right"></i>
+              <a href="/2018/06/09/机器学习中的类别不均衡问题/" rel="prev" title="机器学习中的类别不均衡问题">
+                机器学习中的类别不均衡问题 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -776,7 +800,7 @@ w_j := w_j + \eta (y_i-\phi(z_i))x_i^{(j)},</script><p>也就是去掉了求和�
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#logistics回归模型"><span class="nav-number">1.</span> <span class="nav-text">logistics回归模型</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#为什么使用sigmoid函数"><span class="nav-number">2.</span> <span class="nav-text">为什么使用sigmoid函数</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#从更高的层次看伯努利分布"><span class="nav-number">2.1.</span> <span class="nav-text">从更高的层次看伯努利分布</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#指数分布族"><span class="nav-number">2.2.</span> <span class="nav-text">指数分布族</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参数估计"><span class="nav-number">3.</span> <span class="nav-text">参数估计</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#梯度下降"><span class="nav-number">4.</span> <span class="nav-text">梯度下降</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#随机梯度下降"><span class="nav-number">5.</span> <span class="nav-text">随机梯度下降</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考文献"><span class="nav-number">6.</span> <span class="nav-text">参考文献</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#logistics回归模型"><span class="nav-number">1.</span> <span class="nav-text">logistics回归模型</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#为什么使用sigmoid函数"><span class="nav-number">2.</span> <span class="nav-text">为什么使用sigmoid函数</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#从更高的层次看伯努利分布"><span class="nav-number">2.1.</span> <span class="nav-text">从更高的层次看伯努利分布</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#指数分布族"><span class="nav-number">2.2.</span> <span class="nav-text">指数分布族</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参数估计"><span class="nav-number">3.</span> <span class="nav-text">参数估计</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#梯度下降"><span class="nav-number">4.</span> <span class="nav-text">梯度下降</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#随机梯度下降"><span class="nav-number">5.</span> <span class="nav-text">随机梯度下降</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#SVM和LR的不同"><span class="nav-number">6.</span> <span class="nav-text">SVM和LR的不同</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考文献"><span class="nav-number">7.</span> <span class="nav-text">参考文献</span></a></li></ol></div>
             
 
           </div>

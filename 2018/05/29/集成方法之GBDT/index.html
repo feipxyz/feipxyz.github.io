@@ -87,7 +87,7 @@
 <meta property="og:site_name" content="乡间小路">
 <meta property="og:description" content="提升方法实际采用加法模型与前向分步算法。提升树通常决策树作为基学习器，对分类问题决策树是二叉分类树，回归问题就是二叉回归树。提升树被认为是统计学习中性能最好的方法之一。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-08-14T15:29:39.735Z">
+<meta property="og:updated_time" content="2018-09-02T04:30:47.006Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="集成方法之GBDT">
 <meta name="twitter:description" content="提升方法实际采用加法模型与前向分步算法。提升树通常决策树作为基学习器，对分类问题决策树是二叉分类树，回归问题就是二叉回归树。提升树被认为是统计学习中性能最好的方法之一。">
@@ -404,7 +404,16 @@ r=y-f_{m-1}(x)</script><p>是当前拟合的残差，所以对回归问题的提
 </blockquote>
 <h2 id="梯度提升GBDT"><a href="#梯度提升GBDT" class="headerlink" title="梯度提升GBDT"></a>梯度提升GBDT</h2><p>当损失函数是平方损失和指数损失函数时，提升树每一步优化很简单。但对于一般的损失函数，往往每一步的优化并不是那么容易，针对这一问题，Freidman提出了梯度提升(gradient boosting)算法。这是利用最速下降法的近似方法，关键在于利用损失函数的负梯度在当前模型的值</p>
 <script type="math/tex; mode=display">
--\Biggl[{\partial L(y,f(x_i)) \over \partial f(x_i)}\Biggr]_{f(x)=f_{m-1}(x)}</script><p>作为近似残差，拟合一个回归树。</p>
+-\Biggl[{\partial L(y,f(x_i)) \over \partial f(x_i)}\Biggr]_{f(x)=f_{m-1}\;(x)}</script><p>作为近似残差，拟合一个回归树。</p>
+<p><strong>为什么可以用负梯度近似残差？</strong><br>观察式子：</p>
+<script type="math/tex; mode=display">
+\sum_{i=1}^N L(y_i, f_{m-1}(x_i)+\beta b(x_i))</script><p>我们要最小化的式子由N部分相加而成，如果能够最小化每一部分，自然也就最小化了整个式子。考察其中任一部分，并将其进行泰勒一阶展开（这是关键所在！）：</p>
+<script type="math/tex; mode=display">
+L(y_i, f_{m-1}(x_i)+\beta b(x_i)) = L\Biggl((y_i, f_{m-1}(x_i)) + \beta b(x_i){\partial L(y_i,{f_{m-1}\;(x_i)}) \over \partial {f_{m-1}\;(x_i)}}\Biggl)</script><p>如由于$\beta$是大于0的，若：</p>
+<script type="math/tex; mode=display">
+b(x_i) = {- \partial L(y_i,{f_{m-1}\;(x_i)}) \over \partial {f_{m-1}\;(x_i)}}</script><p>不难得出：</p>
+<script type="math/tex; mode=display">
+L(y_i, f_{m-1}(x_i)+\beta b(x_i)) <= L(y_i, f_{m-1}(x_i))</script><p>这说明，我们已经成功地降低了在第$i$个样本点上的预测损失。</p>
 <blockquote>
 <p>算法步骤： </p>
 <p>训练数据集：$T=\{(x_1,y_1),(x_2,y_2),……,(x_N,y_N)\}$</p>
@@ -413,7 +422,7 @@ r=y-f_{m-1}(x)</script><p>是当前拟合的残差，所以对回归问题的提
 </li>
 <li><p>对$m=1,2,..,M$:<br>a. 对于$i=1,2,…,N$，计算</p>
 <script type="math/tex; mode=display">
-r_{mi}=-\Biggl[{\partial L(y,f(x_i)) \over \partial f(x_i)}\Biggr]_{f(x)=f_{m-1}(x)}</script><p>b. 拟合 $r_{mi}$ ，学习一个回归树的叶节点区域 $R_{mj} , j=1,2,…,J$<br>c. 对 $j=1,2,…,J$ 计算</p>
+r_{mi}=-\Biggl[{\partial L(y,f(x_i)) \over \partial f(x_i)}\Biggr]_{f(x)=f_{m-1}\;(x)}</script><p>b. 拟合 $r_{mi}$ ，学习一个回归树的叶节点区域 $R_{mj} , j=1,2,…,J$<br>c. 对 $j=1,2,…,J$ 计算</p>
 <script type="math/tex; mode=display">
 C_{mj}=arg\min_c\sum_{x_i \in R_{mj}} L(y_i, f_{m-1}(x_i)+C)</script><p>d. 更新 $f_m(x)=f_{m-1}(x)+\sum_{j=1}^J C_{mj}I(x \in R_{mj})$</p>
 </li>
@@ -422,6 +431,7 @@ C_{mj}=arg\min_c\sum_{x_i \in R_{mj}} L(y_i, f_{m-1}(x_i)+C)</script><p>d. 更�
 f(x)^*=f_M(x)=\sum_{m=1}^M\sum_{j=1}^J C_{mj}I(x \in R_{mj})</script></li>
 </ol>
 </blockquote>
+<p>在上面的图中，有一点值得注意，就是我们用$r_mi$拟合出一个回归树之后，进一步用整体损失函数对这棵回归树的值进行了优化。这样的思想在机器学习中很常见，就是先通过逐步的局部优化得出一个结果，然后再从全局的角度来优化这个结果。</p>
 <p>算法解释：</p>
 <p>这里最关键的点是<strong>把损失函数的数值优化看成是在函数空间，而不是在参数空间</strong>。</p>
 <p>首先，我们已经知道强分类器是由多个弱分类器线性相加而成，那么可以写成如下形式：</p>
@@ -439,20 +449,20 @@ p_m=-ρ_m g_m</script><p>从初始值$p_0$开始，$m$对应每一步更新迭�
 F(x)=\sum_{m=0}^Mf_m (x)</script><p>相当于在函数空间上做梯度下降。每一步梯度下降：</p>
 <script type="math/tex; mode=display">
 f_m(x)=-ρ_m g_m(x) \\
-g_m (x)=[\frac{-∂ϕ(F(x))}{∂F(x)} ]_{F(x)=F_{m-1} (x) } \\
+g_m (x)=[\frac{-∂ϕ(F(x))}{∂F(x)} ]_{F(x)=F_{m-1}\ (x) } \\
 F_{m-1}(x)=\sum_{i=0}^{m-1}f_i(x)</script><p>现在把这个思想代入到GBDT，我们之前已经得到预测函数为：</p>
 <script type="math/tex; mode=display">
 F(x;\{β_m,Θ_m \}_1^M )=\sum_{m=1}^Mβ_m T(x;Θ_m)</script><p>需要做的事情是得到预测函数的最优解，就是：</p>
 <script type="math/tex; mode=display">
 \{\textbf{β}_m, \textbfΘ_m \}_1^M= arg\min_{\{β_m,Θ_m\}_1^M} L(y,\sum_{m=1}^Mβ_m T(x;Θ_m ))= arg\min_{β_m,Θ_m} L(y,F_{m-1} (x)+β_m T_m (x;Θ_m))</script><p>已知最速梯度下降方向为</p>
 <script type="math/tex; mode=display">
-g_m (x)=[\frac{-∂ϕ(F(x))}{∂F(x) }]_{F(x)=F_{m-1} (x) }</script><p>每一个$T_m (x;Θ_m)$都建立在最速梯度下降的方向，我们可以得到：</p>
+g_m (x)=[\frac{-∂ϕ(F(x))}{∂F(x) }]_{F(x)=F_{m-1}\ (x) }</script><p>每一个$T_m (x;Θ_m)$都建立在最速梯度下降的方向，我们可以得到：</p>
 <script type="math/tex; mode=display">
 \textbfβ_m,\textbfΘ_m=arg\min_{β_m,Θ_m} [-g_m (x)-β_m T_m (x;Θ_m) ]^2</script><p>可以认为是用$T_m (x;a)$去拟合伪标签$r_{mi}=-g_m (x)$。</p>
 <p>然后进行线搜索确定最优步长$ρ_m$：</p>
 <script type="math/tex; mode=display">
 \textbf{ρ}_m= arg\min_{ρ_m} L(y,F_{m-1}(x)+ρ_m T_m (x;\textbfΘ_m)) \\
-F_m (x)=F_{m-1} (x)+ \textbf{ρ}_m T_m (x;\textbfΘ_m)</script><h2 id="参考文献："><a href="#参考文献：" class="headerlink" title="参考文献："></a>参考文献：</h2><p>[1]. <a href="https://book.douban.com/subject/10590856/" target="_blank" rel="noopener">《统计学习方法》 李航</a><br>[2]. <a href="https://blog.csdn.net/unixtch/article/details/77099245" target="_blank" rel="noopener">提升方法之AdaBoost、提升树（GBDT）</a><br>[3]. <a href="https://www.cnblogs.com/ScorpioLu/p/8296994.html" target="_blank" rel="noopener">GBDT原理详解</a></p>
+F_m (x)=F_{m-1} (x)+ \textbf{ρ}_m T_m (x;\textbfΘ_m)</script><h2 id="参考文献："><a href="#参考文献：" class="headerlink" title="参考文献："></a>参考文献：</h2><p>[1]. <a href="https://book.douban.com/subject/10590856/" target="_blank" rel="noopener">《统计学习方法》 李航</a><br>[2]. <a href="https://blog.csdn.net/unixtch/article/details/77099245" target="_blank" rel="noopener">提升方法之AdaBoost、提升树（GBDT）</a><br>[3]. <a href="https://www.cnblogs.com/ScorpioLu/p/8296994.html" target="_blank" rel="noopener">GBDT原理详解</a><br>[4]. <a href="https://www.jianshu.com/p/0e5ccc88d2cb" target="_blank" rel="noopener">数据挖掘面试题之梯度提升树</a></p>
 
       
     </div>
