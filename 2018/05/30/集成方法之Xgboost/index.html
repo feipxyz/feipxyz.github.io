@@ -91,7 +91,7 @@
 <meta property="og:image" content="/images/xgboost_2.png">
 <meta property="og:image" content="/images/xgboost_3.png">
 <meta property="og:image" content="/images/xgboost_4.png">
-<meta property="og:updated_time" content="2018-09-03T03:04:01.587Z">
+<meta property="og:updated_time" content="2018-09-03T04:22:59.831Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="集成方法之XGboost">
 <meta name="twitter:description" content="XGboost由陈天奇大牛开发，它是目前最快最好的开源Boosting包，比常见的工具包快大概10倍。在数据科学方面，有大量kaggle选手选用它进行数据挖掘比赛，其中包括两个以上kaggle比赛的夺冠方案。在工业界，xgboost的分布式版本有广泛的可移植性，支持在YARN, MPI, Sungrid Engine等各个平台上面运行，并且保留了单机并行版本的各种优化，使得它可以很好地解决于工业界">
@@ -370,9 +370,9 @@
         <p>XGboost由陈天奇大牛开发，它是目前最快最好的开源Boosting包，比常见的工具包快大概10倍。在数据科学方面，有大量kaggle选手选用它进行数据挖掘比赛，其中包括两个以上kaggle比赛的夺冠方案。在工业界，xgboost的分布式版本有广泛的可移植性，支持在YARN, MPI, Sungrid Engine等各个平台上面运行，并且保留了单机并行版本的各种优化，使得它可以很好地解决于工业界规模的问题。<br><a id="more"></a></p>
 <h2 id="算法原理"><a href="#算法原理" class="headerlink" title="算法原理"></a>算法原理</h2><hr>
 <h3 id="基学习器：CART"><a href="#基学习器：CART" class="headerlink" title="基学习器：CART"></a>基学习器：CART</h3><p>首先讲模型。Boosted tree 最基本的组成部分叫做回归树(regression tree)。我们可以简单地把它理解为decision tree的一个扩展，从简单的类标到分数。</p>
-<h3 id="Tree-Ensemble"><a href="#Tree-Ensemble" class="headerlink" title="Tree Ensemble"></a>Tree Ensemble</h3><p>对于tree ensemble，我们模型是：</p>
+<h3 id="Tree-Ensemble"><a href="#Tree-Ensemble" class="headerlink" title="Tree Ensemble"></a>Tree Ensemble</h3><p>对于tree ensemble，模型是：</p>
 <script type="math/tex; mode=display">
-\hat y_i = \sum_{k=1}^K f_k(x_i), \quad f_k \in \mathcal{F}</script><p>其中每个 $f$ 是一个在函数空间 $\mathcal{F}$ 里面的函数，而 $\mathcal{F}$ 对应了所有regression tree的集合。</p>
+\hat y_i = \sum_{k=1}^K f_k(x_i), \quad f_k \in \mathcal{F}</script><p>其中每个 $f$ 是一个在函数空间 $\mathcal{F}$ 里面的函数，也就是表示具体的一棵CART树，$K$是树的棵数。而 $\mathcal{F}$ 对应了所有regression tree的集合。</p>
 <p>一般目标函数包括误差函数 $L(\theta)$ 和正则化项 $\Omega$：</p>
 <script type="math/tex; mode=display">
 Obj(\theta) = L(\theta) + \Omega(\theta)</script><p>具体到我们设计的目标函数，包含两部分：</p>
@@ -382,12 +382,12 @@ J(f_t) &= \sum_{i=1}^n L(y_i,\hat y_i) +\sum_{k=1}^K\Omega(f_k)  \\
 &= \sum_{i=1}^nL(y_i, \hat y_i^{(t-1)} + f_t(x_i)) + \Omega(f_t) + constant
 \end{align*}</script><p>根据Taylor展开式：<br>
 $$
-f\left( x \right) = f\left( {{x_0}} \right) + f'\left( {{x_0}} \right)\left( {x - {x_0}} \right) + f''\left( {{x_0}} \right){\left( {x - {x_0}} \right)^2}
+f\left( x \right) = f\left( {{x_0}} \right) + f'\left( {{x_0}} \right)\left( {x - {x_0}} \right) + \frac{1}{2} f''\left( {{x_0}} \right){\left( {x - {x_0}} \right)^2}
 $$
 </p>
 <p>我们对 $l(y_i, Y)$ 在 ${\hat y}^{(t-1)}_i$处进行二阶展开得到<br>
 $$
-l({y_i}, Y) = l\left( {{y_i},\hat y_i^{(t-1)}} \right) + {{\partial l\left( {{y_i},\hat y_i^{(t-1)}} \right)} \over {\partial \hat y_i^{(t-1)}}}\left( {Y - \hat y_i^{(t-1)}} \right) + {{{\partial ^2}l\left( {{y_i},\hat y_i^{(t-1)}} \right)} \over {\partial \hat y_i^{(t-1)}}}{\left( {Y - \hat y_i^{(t-1)}} \right)^2}
+l({y_i}, Y) = l\left( {{y_i},\hat y_i^{(t-1)}} \right) + {{\partial l\left( {{y_i},\hat y_i^{(t-1)}} \right)} \over {\partial \hat y_i^{(t-1)}}}\left( {Y - \hat y_i^{(t-1)}} \right) + \frac{1}{2} {{{\partial ^2}l\left( {{y_i},\hat y_i^{(t-1)}} \right)} \over {\partial \hat y_i^{(t-1)}}}{\left( {Y - \hat y_i^{(t-1)}} \right)^2}
 $$
 </p>
 <p>令</p>
@@ -402,13 +402,21 @@ $$
 <script type="math/tex; mode=display">
 J(f_t) \approx \sum_{i=1}^n \left[L(y_i, \hat y_i^{(t-1)}) + g_if_t(x_i) + \frac{1}{2}h_if_t^2(x_i)\right] + \Omega(f_t) + C</script><p>把常数项移除，则会得到如下一个比较统一的目标函数。<strong>这一个目标函数有一个非常明显的特点，它只依赖于每个数据点的在误差函数上的一阶导数和二阶导数</strong>。</p>
 <script type="math/tex; mode=display">
-J(f_t) \approx \sum_{i=1}^n \left[g_if_t(x_i) + \frac{1}{2}h_if_t^2(x_i)\right] + \Omega(f_t)</script><h3 id="树的复杂度"><a href="#树的复杂度" class="headerlink" title="树的复杂度"></a>树的复杂度</h3><p>到目前为止我们确定了目标函数中训练误差的部分。接下来我们讨论如何定义树的复杂度。我们先对于 $f$ 的定义做一下细化，把树拆分成结构部分 $q$ 和叶子权重部分 $w$。假定某决策树的叶结点数目为 $T$，每个叶结点的权值为 $\vec w = (w_1,w_2…w_T)$。决策树的学习过程，就是构造如何使用特征得到划分，从而得到这些权值的过程。样本 $x$ 落在叶结点 $q$ 中，定义 $f$ 为：</p>
+J(f_t) \approx \sum_{i=1}^n \left[g_if_t(x_i) + \frac{1}{2}h_if_t^2(x_i)\right] + \Omega(f_t)</script><blockquote>
+<p>有一个小问题，在优化第$t$棵树时，有多少个$g_i$和$h_i$要计算？嗯，没错就是各有$N$个，$N$是训练样本的数量。如果有10万样本，在优化第$t$棵树时，就需要计算出个10万个$g_i$和$h_i$。这10万个gi之间没有关系，所以可以并行计算。为什么xgboost会那么快!!!</p>
+<p>$g_i$和$h_i$是不依赖于损失函数的形式的，只要这个损失函数二次可微就可以了。这有什么好处呢？好处就是xgboost可以支持自定义损失函数，只需满足二次可微即可。强大了我的哥!!!</p>
+</blockquote>
+<h3 id="树的复杂度"><a href="#树的复杂度" class="headerlink" title="树的复杂度"></a>树的复杂度</h3><p>到目前为止我们确定了目标函数中训练误差的部分。接下来我们讨论如何定义树的复杂度。我们先对于 $f$ 的定义做一下细化，把树拆分成结构部分 $q$ 和叶子权重部分 $w$。假定某决策树的叶结点数目为 $T$，每个叶结点的权值为 $\vec w = (w_1,w_2…w_T)$。决策树的学习过程，就是构造如何使用特征得到划分，从而得到这些权值的过程。样本 $x$ 落在叶结点 $q$ 中，定义 $f$ 为：</p>
 <script type="math/tex; mode=display">
 f_t(x) = w_{q(x)}</script><p>下图是一个具体的例子。结构函数 $q$ 把输入映射到叶子的索引号上面去，而 $w$ 给定了每个索引号对应的叶子分数是什么。  </p>
 <p><img src="/images/xgboost1.png" alt="图片"></p>
 <p>当我们给定了如上定义之后，我们可以定义一棵树的复杂度如下</p>
 <script type="math/tex; mode=display">
-\Omega(f_t) = \gamma {T_t} + \frac{1}{2}\lambda \sum_{j=1}^{T_t} w_j^2</script><p>其中 $T_t$ 为叶结点数，$w_j$ 为 $j$ 叶子结点权重。这个复杂度包含了一棵树里面节点的个数，以及每个树叶子节点上面输出分数的 $L2$ 模平方。当然这不是唯一的一种定义方式，不过这一定义方式学习出的树效果一般都不错。下图还给出了复杂度计算的一个例子。  </p>
+\Omega(f_t) = \gamma {T_t} + \frac{1}{2}\lambda \sum_{j=1}^{T_t} w_j^2</script><p>其中 $T_t$ 为叶结点数，$w_j$ 为 $j$ 叶子结点权重。这个复杂度包含了一棵树里面节点的个数，以及每个树叶子节点上面输出分数的 $L2$ 模平方。当然这不是唯一的一种定义方式，不过这一定义方式学习出的树效果一般都不错。</p>
+<blockquote>
+<p>这里出现了$\lambda$和$\gamma$，是xgboost自己定义的，在使用xgboost时，你可以设定它们的值，显然，$\gamma$越大，表示越希望获得结构简单的树，因为此时对较多叶子节点的树的惩罚越大。$\lambda$越大也是越希望获得结构简单的树。</p>
+</blockquote>
+<p>下图还给出了复杂度计算的一个例子。  </p>
 <p><img src="/images/xgboost_2.png" alt="图片"></p>
 <h3 id="关键步骤"><a href="#关键步骤" class="headerlink" title="关键步骤"></a>关键步骤</h3><p>目标函数的计算：</p>
 <script type="math/tex; mode=display">
@@ -418,7 +426,10 @@ J(f_t)
 &= \sum_{i=1}^n \left[g_i w_{q(x_i)} + \frac{1}{2}h_i w_{q(x_i)}^2\right] + \gamma {T_t} + \frac{1}{2}\lambda \sum_{j=1}^{T_t} w_j^2 \\
 &=\sum_{j=1}^{T_t} \left[(\sum_{i \in I_j}g_i)w_j + \frac{1}{2}(\sum_{i \in I_j}h_i)w_j^2\right]  +\gamma {T_t} + \frac{1}{2}\lambda \sum_{j=1}^{T_t} w_j^2 \\
 &=\sum_{j=1}^{T_t} \left[(\sum_{i \in I_j}g_i)w_j + \frac{1}{2}(\sum_{i \in I_j}h_i + \lambda)w_j^2\right]  +\gamma {T_t}
-\end{align*}</script><p>这一个目标包含了 $T_t$ 个相互独立的单变量二次函数，定义：</p>
+\end{align*}</script><blockquote>
+<p>$I_j$代表什么？它代表一个集合，集合中每个值代表一个训练样本的序号，整个集合就是被第t棵CART树分到了第j个叶子节点上的训练样本。</p>
+</blockquote>
+<p>这一个目标包含了 $T_t$ 个相互独立的单变量二次函数，定义：</p>
 <script type="math/tex; mode=display">
 G_j = \sum_{i \in I_j}g_i \\
 H_j = \sum_{i \in I_j}h_i</script><p>从而</p>
@@ -440,7 +451,7 @@ Gain = \frac{1}{2} \left[ {{{G_L^2} \over {{H_L} + \lambda }} + {{G_R^2} \over {
 <p>可以发现对于所有的 $a$，我们只要做一遍从左到右的扫描就可以枚举出所有分割的梯度和$G_L$和$G_R$。然后用上面的公式计算每个分割方案的分数就可以了。</p>
 <p>观察这个目标函数，会发现第二个值得注意的事情就是引入分割不一定会使得情况变好，因为我们有一个引入新叶子的惩罚项。优化这个目标对应了树的剪枝， 当引入的分割带来的增益小于一个阀值的时候，我们可以剪掉这个分割。xgboost在切分的时候就已经考虑了树的复杂度。所以，它不需要进行单独的剪枝操作。可以发现，当我们正式地推导目标的时候，像计算分数和剪枝这样的策略都会自然地出现，而不再是一种因为heuristic而进行的操作了。</p>
 <h2 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h2><hr>
-<p>[1] <a href="http://www.52cs.org/?p=429" target="_blank" rel="noopener">XGBoost 与 Boosted Tree</a><br>[2] <a href="http://mlnote.com/2016/10/05/a-guide-to-xgboost-A-Scalable-Tree-Boosting-System/" target="_blank" rel="noopener">XGboost: A Scalable Tree Boosting System论文及源码导读</a><br>[3] <a href="https://zhuanlan.zhihu.com/p/27111288" target="_blank" rel="noopener">XGBoost/GBDT相关blog推荐</a></p>
+<p>[1] <a href="http://www.52cs.org/?p=429" target="_blank" rel="noopener">XGBoost 与 Boosted Tree</a><br>[2] <a href="http://mlnote.com/2016/10/05/a-guide-to-xgboost-A-Scalable-Tree-Boosting-System/" target="_blank" rel="noopener">XGboost: A Scalable Tree Boosting System论文及源码导读</a><br>[3] <a href="https://zhuanlan.zhihu.com/p/27111288" target="_blank" rel="noopener">XGBoost/GBDT相关blog推荐</a><br>[4] <a href="https://www.jianshu.com/p/7467e616f227" target="_blank" rel="noopener">xgboost的原理没你想像的那么难</a></p>
 
       
     </div>
