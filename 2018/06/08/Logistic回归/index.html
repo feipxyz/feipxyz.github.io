@@ -88,7 +88,7 @@
 <meta property="og:description" content="Logistics回归也叫对数几率回归，是统计学习中的经典分类方法，属于线性模型。虽然被叫做回归，实际是一个分类方法。">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="/images/logistics回归_1.png">
-<meta property="og:updated_time" content="2018-09-02T09:21:48.220Z">
+<meta property="og:updated_time" content="2018-09-04T12:04:51.275Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Logistic回归">
 <meta name="twitter:description" content="Logistics回归也叫对数几率回归，是统计学习中的经典分类方法，属于线性模型。虽然被叫做回归，实际是一个分类方法。">
@@ -387,6 +387,43 @@ ln(\frac{P(y=1|x)}{P(y=0|x)}) = w^Tx+b</script><p>显然有：</p>
 <script type="math/tex; mode=display">
 P(y=1|x)=\frac{e^{w^Tx+b}}{1+e^{w^Tx+b}}  \\
 P(y=0|x)=\frac{1}{1+e^{w^Tx+b}}</script><p>这样的模型就是logistics回归模型。</p>
+<h1 id="参数估计"><a href="#参数估计" class="headerlink" title="参数估计"></a>参数估计</h1><p>最大化似然函数即为最小化负的似然函数，从损失函数的视角来看，它就成了log损失函数了：</p>
+<script type="math/tex; mode=display">
+L(Y,P(Y|X)) = -\log P(Y|X)</script><p>令$z = w^Tx + b$，设：</p>
+<script type="math/tex; mode=display">
+P(y=1|x;w) = \phi(w^Tx + b) =  \phi (z) \\
+P(y=0|x;w) = 1 - \phi (z) \\</script><p>将它带入到上式，通过推导可以得到logistic的损失函数表达式，如下：</p>
+<script type="math/tex; mode=display">
+\begin{aligned} 
+L(y,P(Y=y|x)) = \left\{\begin{matrix} \log (1+exp\ (-z\ )) & ,y=1\\  \log (1+exp\ ( z\ ))  & ,y=0\\ \end{matrix}\right.
+\end{aligned}</script><p>似然函数：</p>
+<script type="math/tex; mode=display">
+L(w)=\prod_{i=1}^{n}p(y_i|x_i;w)=\prod_{i=1}^{n}(\phi(z_i))^{y_i}(1-\phi(z_i))^{1-y_i}</script><p>对数似然函数：</p>
+<script type="math/tex; mode=display">
+\begin{eqnarray*}
+l(w)=lnL(w)=\sum_{i = 1}^n [y_iln(\phi(z_i)) + (1 - y_i)ln(1-\phi(z_i))]
+\end{eqnarray*}</script><p>损失函数如下：</p>
+<script type="math/tex; mode=display">
+J(w)=-\frac{1}{n}l(w)=-\frac{1}{n}\sum_{i = 1}^n [y_iln(\phi(z_i)) + (1 - y_i)ln(1-\phi(z_i))]</script><p>其中，$n$为样本个数。</p>
+<p>这样，就可以采用梯度下降或拟牛顿法来最小化损失函数。</p>
+<h1 id="梯度下降"><a href="#梯度下降" class="headerlink" title="梯度下降"></a>梯度下降</h1><p>使用梯度下降法来对参数更新。  参数更新如下：</p>
+<script type="math/tex; mode=display">
+w_j := w_j + \Delta w_j,\ \Delta w_j = -\eta \dfrac{\partial J(w)}{\partial w_j}</script><p>其中，$w_j$表示第$j$个特征的权重；$\eta$为学习率，用来控制步长。</p>
+<p>$sigmoid function$有一个很好的性质就是$\phi’(z) = \phi(z)(1 - \phi(z))$ ，这个导数在接下来的</p>
+<p>求偏导如下：</p>
+<script type="math/tex; mode=display">
+\begin{align*}
+\dfrac{\partial J(w)}{w_j} &= -\frac{1}{n}\sum_{i=1}^n (y_i\dfrac{1}{\phi(z_i)}-(1 - y_i)\dfrac{1}{1-\phi(z_i)})\dfrac{\partial \phi(z_i)}{\partial w_j} \\ 
+&=-\frac{1}{n}\sum_{i=1}^n (y_i\dfrac{1}{\phi(z_i)}-(1 - y_i)\dfrac{1}{1-\phi(z_i)})\phi(z_i)(1-\phi(z_i))\dfrac{\partial z_i}{\partial w_j} \\ 
+&=-\frac{1}{n}\sum_{i=1}^n (y_i(1-\phi(z_i))-(1-y_i)\phi(z_i))x_i^{(j)} \\ 
+&=-\frac{1}{n}\sum_{i=1}^n (y_i-\phi(z_i))x_i^{(j)}
+\end{align*}</script><p>所以，在使用梯度下降法更新权重时，只要根据下式即可</p>
+<script type="math/tex; mode=display">
+w_j :=w_j+\eta \frac{1}{n} \sum_{i=1}^n (y_i-\phi(z_i))x_i^{(j)}</script><p>$x_i^{(j)}$表示第$i$个样本的第$j$个分量。</p>
+<h1 id="随机梯度下降"><a href="#随机梯度下降" class="headerlink" title="随机梯度下降"></a>随机梯度下降</h1><p>在样本量极大的时候，每次更新权重会非常耗费时间，这时可以采用随机梯度下降法，这时每次迭代时需要将样本重新打乱，然后用下式不断更新权重。</p>
+<script type="math/tex; mode=display">
+for \ i \ in \ range(n) \\
+w_j := w_j + \eta (y_i-\phi(z_i))x_i^{(j)},</script><p>也就是去掉了求和，而是对随机样本点都进行更新。</p>
 <h1 id="为什么使用sigmoid函数"><a href="#为什么使用sigmoid函数" class="headerlink" title="为什么使用sigmoid函数"></a>为什么使用sigmoid函数</h1><p>事实上，我们对logistic回归做了如下假设：假设给定特征$x$和参数，$y$是服从伯努利分布的二值随机变量。我们的任务用数学语言描述就是，寻找一个模型，输入$x$后，可以告诉我们$y$所服从的随机分布的参数，知道参数后，就可以计算$y$的期望作为预测。分布的参数就是$\phi=P(y=1)$，同时也是该分布的期望。</p>
 <p>我们的思路如下：</p>
 <ol>
@@ -417,62 +454,7 @@ T(y)=y\\
 a(\eta)=-ln(1-\phi)=-ln{1\over1+e^\eta}</script><p>最后，可以得到：</p>
 <script type="math/tex; mode=display">
 p(y;\eta) = exp[\eta y-ln{1 \over 1+e^\eta}]</script><p>可以看到，伯努利分布确实可以改写成指数分布族的形式。并且，伯努利分布的参数$\phi$与$\eta$之间，还有一个sigmoid的函数关系。</p>
-<h1 id="参数估计"><a href="#参数估计" class="headerlink" title="参数估计"></a>参数估计</h1><p>令$z = w^Tx + b$，使用极大似然法来估计参数。设：</p>
-<script type="math/tex; mode=display">
-P(y=1|x;w) = \phi(w^Tx + b) =  \phi (z) \\
-P(y=0|x;w) = 1 - \phi (z) \\</script><p>似然函数：</p>
-<script type="math/tex; mode=display">
-L(w)=\prod_{i=1}^{n}p(y_i|x_i;w)=\prod_{i=1}^{n}(\phi(z_i))^{y_i}(1-\phi(z_i))^{1-y_i}</script><p>对数似然函数：</p>
-<script type="math/tex; mode=display">
-\begin{eqnarray*}
-l(w)=lnL(w)=\sum_{i = 1}^n [y_iln(\phi(z_i)) + (1 - y_i)ln(1-\phi(z_i))]
-\end{eqnarray*}</script><p>损失函数如下：</p>
-<script type="math/tex; mode=display">
-J(w)=-\frac{1}{n}l(w)=-\frac{1}{n}\sum_{i = 1}^n [y_iln(\phi(z_i)) + (1 - y_i)ln(1-\phi(z_i))]</script><p>其中，$n$为样本个数。</p>
-<p>这样，就可以采用梯度下降或拟牛顿法来最小化损失函数。</p>
-<h1 id="梯度下降"><a href="#梯度下降" class="headerlink" title="梯度下降"></a>梯度下降</h1><p>使用梯度下降法来对参数更新。  参数更新如下：</p>
-<script type="math/tex; mode=display">
-w_j := w_j + \Delta w_j,\ \Delta w_j = -\eta \dfrac{\partial J(w)}{\partial w_j}</script><p>其中，$w_j$表示第$j$个特征的权重；$\eta$为学习率，用来控制步长。</p>
-<p>$sigmoid function$有一个很好的性质就是$\phi’(z) = \phi(z)(1 - \phi(z))$ ，这个导数在接下来的</p>
-<p>求偏导如下：</p>
-<script type="math/tex; mode=display">
-\begin{align*}
-\dfrac{\partial J(w)}{w_j} &= -\frac{1}{n}\sum_{i=1}^n (y_i\dfrac{1}{\phi(z_i)}-(1 - y_i)\dfrac{1}{1-\phi(z_i)})\dfrac{\partial \phi(z_i)}{\partial w_j} \\ 
-&=-\frac{1}{n}\sum_{i=1}^n (y_i\dfrac{1}{\phi(z_i)}-(1 - y_i)\dfrac{1}{1-\phi(z_i)})\phi(z_i)(1-\phi(z_i))\dfrac{\partial z_i}{\partial w_j} \\ 
-&=-\frac{1}{n}\sum_{i=1}^n (y_i(1-\phi(z_i))-(1-y_i)\phi(z_i))x_i^{(j)} \\ 
-&=-\frac{1}{n}\sum_{i=1}^n (y_i-\phi(z_i))x_i^{(j)}
-\end{align*}</script><p>所以，在使用梯度下降法更新权重时，只要根据下式即可</p>
-<script type="math/tex; mode=display">
-w_j :=w_j+\eta \frac{1}{n} \sum_{i=1}^n (y_i-\phi(z_i))x_i^{(j)}</script><p>$x_i^{(j)}$表示第$i$个样本的第$j$个分量。</p>
-<h1 id="随机梯度下降"><a href="#随机梯度下降" class="headerlink" title="随机梯度下降"></a>随机梯度下降</h1><p>在样本量极大的时候，每次更新权重会非常耗费时间，这时可以采用随机梯度下降法，这时每次迭代时需要将样本重新打乱，然后用下式不断更新权重。</p>
-<script type="math/tex; mode=display">
-for \ i \ in \ range(n) \\
-w_j := w_j + \eta (y_i-\phi(z_i))x_i^{(j)},</script><p>也就是去掉了求和，而是对随机样本点都进行更新。</p>
-<h1 id="SVM和LR的不同"><a href="#SVM和LR的不同" class="headerlink" title="SVM和LR的不同"></a>SVM和LR的不同</h1><ol>
-<li><p>样本点对模型的作用不同。SVM中，只有关键的样本点（支持向量）对模型结果有影响，而LR中，每一个样本点都对模型有影响。</p>
-</li>
-<li><p>损失函数不同。SVM是hinge损失函数，LR是log损失函数</p>
-</li>
-<li><p>输出不同。LR可以对每个样本点给出类别判断的概率值，SVM无法做到。</p>
-</li>
-<li><p>可处理的特征空间维度不同。LR在特征空间维度很高时，表现较差。SVM则可以通过对偶求解高效应对这一挑战。</p>
-</li>
-<li><p>防过拟合能力不同。SVM模型中内含了L2正则，可有效防止过拟合。LR要自己添加正则项。</p>
-</li>
-<li><p>处理非线性分类问题能力不同。SVM可通过核函数灵活地将非线性问题转化为线性分类问题。LR如果要做到这一点，需要自己手动地进行特征转换。</p>
-</li>
-<li><p>处理分类问题能力不同。SVM只能处理二类分类问题，如果要处理多类别分类，需要进行 one VS one 或one VS all建模。LR可以直接进行多类别分类。</p>
-</li>
-<li><p>计算复杂度不同。对于海量数据，SVM的效率较低，LR效率比较高。</p>
-</li>
-<li><p>对数据要求不同。SVM依赖于数据表达出的距离测度，所以需要对数据进行标准化处理，而LR不需要。</p>
-</li>
-<li><p>能力范围不同。 SVM拓展后，可解决回归问题，LR不能。</p>
-</li>
-<li><p>抗噪声数据能力不同。SVM的损失函数基于距离测度，抗噪声能力要强于LR。</p>
-</li>
-</ol>
-<h1 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h1><p>[1]. <a href="https://book.douban.com/subject/26708119/" target="_blank" rel="noopener">《机器学习》 周志华</a><br>[2]. <a href="https://book.douban.com/subject/10590856/" target="_blank" rel="noopener">《统计学习方法》 李航</a><br>[3]. <a href="https://blog.csdn.net/wjlucc/article/details/69264144?ref=myread" target="_blank" rel="noopener">逻辑斯蒂回归</a><br>[4]. <a href="https://blog.csdn.net/hongbin_xu/article/details/78270526" target="_blank" rel="noopener">对数几率回归推导</a><br>[5]. <a href="https://blog.csdn.net/zjuPeco/article/details/77165974" target="_blank" rel="noopener">逻辑回归(logistic regression)的本质——极大似然估计</a><br>[6]. <a href="https://www.jianshu.com/p/a8d6b40da0cf" target="_blank" rel="noopener">机器学习面试之逻辑回归输出的值是真实的概率吗？</a><br>[7]. <a href="https://blog.csdn.net/qq_33667088/article/details/70692060" target="_blank" rel="noopener">指数分布族和广义线性模型</a><br>[8]. <a href="https://www.jianshu.com/p/f86de852ee96" target="_blank" rel="noopener">数据挖掘面试题之SVM和LR的不同</a></p>
+<h1 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h1><p>[1]. <a href="https://book.douban.com/subject/26708119/" target="_blank" rel="noopener">《机器学习》 周志华</a><br>[2]. <a href="https://book.douban.com/subject/10590856/" target="_blank" rel="noopener">《统计学习方法》 李航</a><br>[3]. <a href="https://blog.csdn.net/wjlucc/article/details/69264144?ref=myread" target="_blank" rel="noopener">逻辑斯蒂回归</a><br>[4]. <a href="https://blog.csdn.net/hongbin_xu/article/details/78270526" target="_blank" rel="noopener">对数几率回归推导</a><br>[5]. <a href="https://blog.csdn.net/zjuPeco/article/details/77165974" target="_blank" rel="noopener">逻辑回归(logistic regression)的本质——极大似然估计</a><br>[6]. <a href="https://www.jianshu.com/p/a8d6b40da0cf" target="_blank" rel="noopener">机器学习面试之逻辑回归输出的值是真实的概率吗？</a><br>[7]. <a href="https://blog.csdn.net/qq_33667088/article/details/70692060" target="_blank" rel="noopener">指数分布族和广义线性模型</a><br>[8]. <a href="https://www.jianshu.com/p/f86de852ee96" target="_blank" rel="noopener">数据挖掘面试题之SVM和LR的不同</a><br>[9]. <a href="https://blog.csdn.net/bitcarmanlee/article/details/51165444" target="_blank" rel="noopener">logistic回归详解(二）：损失函数（cost function）详解</a><br>[10]. <a href="https://www.cnblogs.com/ModifyRong/p/7739955.html" target="_blank" rel="noopener">逻辑回归的常见面试点总结</a></p>
 
       
     </div>
@@ -539,8 +521,8 @@ w_j := w_j + \eta (y_i-\phi(z_i))x_i^{(j)},</script><p>也就是去掉了求和�
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2018/06/09/机器学习中的类别不均衡问题/" rel="prev" title="机器学习中的类别不均衡问题">
-                机器学习中的类别不均衡问题 <i class="fa fa-chevron-right"></i>
+              <a href="/2018/06/08/SVM和Logistic回归的对比/" rel="prev" title="SVM和LR的对比分析">
+                SVM和LR的对比分析 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -627,7 +609,7 @@ w_j := w_j + \eta (y_i-\phi(z_i))x_i^{(j)},</script><p>也就是去掉了求和�
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">55</span>
+                  <span class="site-state-item-count">56</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -781,6 +763,10 @@ w_j := w_j + \eta (y_i-\phi(z_i))x_i^{(j)},</script><p>也就是去掉了求和�
                     <a href="http://www.hanlongfei.com/" title="Longfei Han" target="_blank">Longfei Han</a>
                   </li>
                 
+                  <li class="links-of-blogroll-item">
+                    <a href="https://blog.csdn.net/bitcarmanlee" title="bitcarmanlee的博客" target="_blank">bitcarmanlee的博客</a>
+                  </li>
+                
               </ul>
             </div>
           
@@ -800,7 +786,7 @@ w_j := w_j + \eta (y_i-\phi(z_i))x_i^{(j)},</script><p>也就是去掉了求和�
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#logistics回归模型"><span class="nav-number">1.</span> <span class="nav-text">logistics回归模型</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#为什么使用sigmoid函数"><span class="nav-number">2.</span> <span class="nav-text">为什么使用sigmoid函数</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#从更高的层次看伯努利分布"><span class="nav-number">2.1.</span> <span class="nav-text">从更高的层次看伯努利分布</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#指数分布族"><span class="nav-number">2.2.</span> <span class="nav-text">指数分布族</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参数估计"><span class="nav-number">3.</span> <span class="nav-text">参数估计</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#梯度下降"><span class="nav-number">4.</span> <span class="nav-text">梯度下降</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#随机梯度下降"><span class="nav-number">5.</span> <span class="nav-text">随机梯度下降</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#SVM和LR的不同"><span class="nav-number">6.</span> <span class="nav-text">SVM和LR的不同</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考文献"><span class="nav-number">7.</span> <span class="nav-text">参考文献</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#logistics回归模型"><span class="nav-number">1.</span> <span class="nav-text">logistics回归模型</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参数估计"><span class="nav-number">2.</span> <span class="nav-text">参数估计</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#梯度下降"><span class="nav-number">3.</span> <span class="nav-text">梯度下降</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#随机梯度下降"><span class="nav-number">4.</span> <span class="nav-text">随机梯度下降</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#为什么使用sigmoid函数"><span class="nav-number">5.</span> <span class="nav-text">为什么使用sigmoid函数</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#从更高的层次看伯努利分布"><span class="nav-number">5.1.</span> <span class="nav-text">从更高的层次看伯努利分布</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#指数分布族"><span class="nav-number">5.2.</span> <span class="nav-text">指数分布族</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考文献"><span class="nav-number">6.</span> <span class="nav-text">参考文献</span></a></li></ol></div>
             
 
           </div>
