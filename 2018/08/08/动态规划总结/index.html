@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="C++,STL," />
+  <meta name="keywords" content="动态规划," />
 
 
 
@@ -79,18 +79,18 @@
 
 
 
-<meta name="description" content="本文记录C++ STL学习过程中的一些知识。">
-<meta name="keywords" content="C++,STL">
+<meta name="description" content="把知道的东西讲清楚">
+<meta name="keywords" content="动态规划">
 <meta property="og:type" content="article">
-<meta property="og:title" content="C++ STL学习笔记">
-<meta property="og:url" content="flyrie.top/2018/07/25/C++ STL学习笔记/index.html">
+<meta property="og:title" content="动态规划总结">
+<meta property="og:url" content="flyrie.top/2018/08/08/动态规划总结/index.html">
 <meta property="og:site_name" content="乡间小路">
-<meta property="og:description" content="本文记录C++ STL学习过程中的一些知识。">
+<meta property="og:description" content="把知道的东西讲清楚">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-08-18T03:16:39.936Z">
+<meta property="og:updated_time" content="2018-09-28T04:00:54.869Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="C++ STL学习笔记">
-<meta name="twitter:description" content="本文记录C++ STL学习过程中的一些知识。">
+<meta name="twitter:title" content="动态规划总结">
+<meta name="twitter:description" content="把知道的东西讲清楚">
 
 
 
@@ -120,13 +120,13 @@
 
 
 
-  <link rel="canonical" href="flyrie.top/2018/07/25/C++ STL学习笔记/"/>
+  <link rel="canonical" href="flyrie.top/2018/08/08/动态规划总结/"/>
 
 
 
 
 
-  <title>C++ STL学习笔记 | 乡间小路</title>
+  <title>动态规划总结 | 乡间小路</title>
   
 
 
@@ -273,7 +273,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="flyrie.top/2018/07/25/C++ STL学习笔记/">
+    <link itemprop="mainEntityOfPage" href="flyrie.top/2018/08/08/动态规划总结/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="乡间小路">
@@ -290,7 +290,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">C++ STL学习笔记</h1>
+          <h1 class="post-title" itemprop="name headline">动态规划总结</h1>
         
 
         <div class="post-meta">
@@ -302,8 +302,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-07-25T01:46:14+08:00">
-                2018-07-25
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-08-08T01:46:14+08:00">
+                2018-08-08
               </time>
             
 
@@ -325,8 +325,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/C/" itemprop="url" rel="index">
-                    <span itemprop="name">C++</span>
+                  <a href="/categories/数据结构与算法/" itemprop="url" rel="index">
+                    <span itemprop="name">数据结构与算法</span>
                   </a>
                 </span>
 
@@ -362,19 +362,7 @@
       
 
       
-        <p>本文记录C++ STL学习过程中的一些知识。<a id="more"></a></p>
-<h1 id="std-pair"><a href="#std-pair" class="headerlink" title="std::pair"></a>std::pair</h1><p><code>pair</code> 实质上是一个结构体，其主要的两个成员变量是 <code>first</code> 和 <code>second</code>。</p>
-<h2 id="pair的应用"><a href="#pair的应用" class="headerlink" title="pair的应用"></a>pair的应用</h2><ul>
-<li><p><code>std::pair</code> 主要的作用是将两个数据组合成一个数据，两个数据可以是同一类型或者不同类型。例如   </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">std::pair&lt;int,float&gt;</span><br><span class="line">std::pair&lt;double,double&gt;</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>当一个函数需要返回2个数据的时候，可以选择 <code>pair</code>。  </p>
-</li>
-</ul>
-<h2 id="make-pair函数"><a href="#make-pair函数" class="headerlink" title="make_pair函数"></a>make_pair函数</h2><p>初始化一个 <code>pair</code> 可以使用构造函数，也可以使用 <code>std::make_pair</code> 函数，<code>make_pair</code> 函数的定义如下：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">template</span> pair <span class="title">make_pair</span><span class="params">(T1 a, T2 b)</span> </span></span><br><span class="line"><span class="function"></span>&#123; </span><br><span class="line">	<span class="keyword">return</span> pair(a, b); </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>一般 <code>make_pair</code>都使用在需要 <code>pair</code> 做参数的位置，可以直接调用 <code>make_pair</code> 生成 <code>pair</code> 对象。 另一个使用的方面就是 <code>pair</code> 可以接受隐式的类型转换，这样可以获得更高的灵活度。但是这样会出现如下问题：例如有如下两个定义：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">std</span>::pair&lt;<span class="keyword">int</span>, <span class="keyword">float</span>&gt;(<span class="number">1</span>, <span class="number">1.1</span>);</span><br><span class="line"><span class="built_in">std</span>::make_pair(<span class="number">1</span>, <span class="number">1.1</span>);</span><br></pre></td></tr></table></figure></p>
-<p>其中第一个的 <code>second</code> 变量是 <code>float</code> 类型，而 <code>make_pair</code> 函数会将 <code>second</code> 变量都转换成 <code>double</code> 类型。这个问题在编程是需要引起注意。</p>
-
+        
       
     </div>
     
@@ -415,9 +403,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/C/" rel="tag"># C++</a>
-          
-            <a href="/tags/STL/" rel="tag"># STL</a>
+            <a href="/tags/动态规划/" rel="tag"># 动态规划</a>
           
         </div>
       
@@ -430,8 +416,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/07/23/word2vec/" rel="next" title="【转】word2vec">
-                <i class="fa fa-chevron-left"></i> 【转】word2vec
+              <a href="/2018/08/04/Linux下GDB调试/" rel="next" title="Linux下使用GDB调试">
+                <i class="fa fa-chevron-left"></i> Linux下使用GDB调试
               </a>
             
           </div>
@@ -440,8 +426,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2018/07/25/Glove和fastText/" rel="prev" title="【转】Glove和fastText">
-                【转】Glove和fastText <i class="fa fa-chevron-right"></i>
+              <a href="/2018/08/15/LeetCode与LintCode上没有的基础算法题目/" rel="prev" title="LeetCode与LintCode上没有的基础算法题目">
+                LeetCode与LintCode上没有的基础算法题目 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -499,17 +485,8 @@
       
 
       
-        <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
-            文章目录
-          </li>
-          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
-            站点概览
-          </li>
-        </ul>
-      
 
-      <section class="site-overview-wrap sidebar-panel">
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -528,7 +505,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">56</span>
+                  <span class="site-state-item-count">60</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -550,7 +527,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">90</span>
+                  <span class="site-state-item-count">91</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -686,6 +663,14 @@
                     <a href="https://blog.csdn.net/bitcarmanlee" title="bitcarmanlee的博客" target="_blank">bitcarmanlee的博客</a>
                   </li>
                 
+                  <li class="links-of-blogroll-item">
+                    <a href="https://blog.csdn.net/lanchunhui" title="Zhang's Wikipedia" target="_blank">Zhang's Wikipedia</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://samaelchen.github.io/" title="碎碎念" target="_blank">碎碎念</a>
+                  </li>
+                
               </ul>
             </div>
           
@@ -695,22 +680,6 @@
         </div>
       </section>
 
-      
-      <!--noindex-->
-        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
-          <div class="post-toc">
-
-            
-              
-            
-
-            
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#std-pair"><span class="nav-number">1.</span> <span class="nav-text">std::pair</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#pair的应用"><span class="nav-number">1.1.</span> <span class="nav-text">pair的应用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#make-pair函数"><span class="nav-number">1.2.</span> <span class="nav-text">make_pair函数</span></a></li></ol></li></ol></div>
-            
-
-          </div>
-        </section>
-      <!--/noindex-->
       
 
       
