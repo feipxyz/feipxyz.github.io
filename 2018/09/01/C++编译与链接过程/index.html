@@ -1,0 +1,1021 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="C++," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="大家知道计算机使用的一系列的1和0，那个一个C++语言程序又是如何从一个个.h和.cpp文件变成包含1和0的可执行文件呢？ 可以认为有以下的几个环节：源程序-&amp;gt;预处理-&amp;gt;编译和优化-&amp;gt;生成目标文件-&amp;gt;链接-&amp;gt;可执行文件 在预编译的时候，.h头文件会被复制、扩展到包含它的.cpp文件里，然后编译器编译该.cpp文件为一个.obj文件，每个.cpp文件作为一个编译单元独立">
+<meta name="keywords" content="C++">
+<meta property="og:type" content="article">
+<meta property="og:title" content="C++编译与链接">
+<meta property="og:url" content="flyrie.top/2018/09/01/C++编译与链接过程/index.html">
+<meta property="og:site_name" content="乡间小路">
+<meta property="og:description" content="大家知道计算机使用的一系列的1和0，那个一个C++语言程序又是如何从一个个.h和.cpp文件变成包含1和0的可执行文件呢？ 可以认为有以下的几个环节：源程序-&amp;gt;预处理-&amp;gt;编译和优化-&amp;gt;生成目标文件-&amp;gt;链接-&amp;gt;可执行文件 在预编译的时候，.h头文件会被复制、扩展到包含它的.cpp文件里，然后编译器编译该.cpp文件为一个.obj文件，每个.cpp文件作为一个编译单元独立">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-10-15T16:51:39.595Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="C++编译与链接">
+<meta name="twitter:description" content="大家知道计算机使用的一系列的1和0，那个一个C++语言程序又是如何从一个个.h和.cpp文件变成包含1和0的可执行文件呢？ 可以认为有以下的几个环节：源程序-&amp;gt;预处理-&amp;gt;编译和优化-&amp;gt;生成目标文件-&amp;gt;链接-&amp;gt;可执行文件 在预编译的时候，.h头文件会被复制、扩展到包含它的.cpp文件里，然后编译器编译该.cpp文件为一个.obj文件，每个.cpp文件作为一个编译单元独立">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"always","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="flyrie.top/2018/09/01/C++编译与链接过程/"/>
+
+
+
+
+
+  <title>C++编译与链接 | 乡间小路</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?95d8d402b20d99d1e2e6f2de7b397428";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">乡间小路</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="flyrie.top/2018/09/01/C++编译与链接过程/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="乡间小路">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="乡间小路">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">C++编译与链接</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-09-01T01:46:15+08:00">
+                2018-09-01
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/C/" itemprop="url" rel="index">
+                    <span itemprop="name">C++</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>大家知道计算机使用的一系列的1和0，那个一个C++语言程序又是如何从一个个.h和.cpp文件变成包含1和0的可执行文件呢？</p>
+<p>可以认为有以下的几个环节：源程序-&gt;预处理-&gt;编译和优化-&gt;生成目标文件-&gt;链接-&gt;可执行文件</p>
+<p>在预编译的时候，.h头文件会被复制、扩展到包含它的.cpp文件里，然后编译器编译该.cpp文件为一个.obj文件，每个.cpp文件作为一个编译单元独立编译。当编译器将一个工程里的所有.cpp文件以分离的方式编译完毕后，再由链接器进行链接成为一个可执行文件。</p>
+<h1 id="预处理"><a href="#预处理" class="headerlink" title="预处理"></a>预处理</h1><p>C++的预处理是指在C++程序源代码被编译之前，由预处理器对C++程序源代码进行的处理。这个过程并不对程序的源代码进行解析。</p>
+<p>预处理器主要负责以下的几处：</p>
+<ul>
+<li>宏的替换</li>
+<li>删除注释</li>
+<li>处理所有的条件预编译指令，如：#if  #ifdef #elif #else #endif</li>
+<li>处理#include预编译指令，将被包含的文件插进到该指令的位置，这个过程是递归的</li>
+<li>添加行号与文件名标识，以便产生调试用的行号信息以及编译错误或警告时能够显示行号</li>
+<li>保留所有的#pragma编译器指令，因为编译器需要使用它们</li>
+</ul>
+<h1 id="编译、链接"><a href="#编译、链接" class="headerlink" title="编译、链接"></a>编译、链接</h1><p>把预处理完的cpp文件进行一系列词法分析、语法分析、语义分析及优化后生成汇编代码。之后汇编代码-&gt;机器指令。各文件的编译和汇编是独立的。如果编译通过，就会把对应的CPP转换成OBJ文件。</p>
+<p><strong>编译单元</strong>：根据C++标准，每一个CPP文件就是一个编译单元。每个编译单元之间是相互独立并且互相不可知。</p>
+<p><strong>目标文件</strong>：由编译所生成的文件，以机器码的形式包含了编译单元里所有的代码和数据，还有一些其他信息，如未解决符号表，导出符号表和地址重定向表等。目标文件是以二进制的形式存在的。</p>
+<p>假设有一个A.cpp文件，如下定义：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> n = <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">FunA</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    ++n;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>它编译出来的目标文件A.obj就会有一个区域（或者说是段），包含以上的数据和函数，其中就有n、FunA，以文件偏移量形式给出可能就是下面这种情况：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">偏移量    内容    长度</span><br><span class="line">0x0000    n       4</span><br><span class="line">0x0004    FunA    ??</span><br></pre></td></tr></table></figure></p>
+<p>实际目标文件的布局可能不是这样，这里只是方便学习才这样表示，??便是未知。目标文件的各个数据可能不是连续的，也不一定是从0x0000开始。</p>
+<p>有另外一个B.cpp文件，定义如下：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">extern</span> <span class="keyword">int</span> n;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">FunB</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    ++n;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>它对应的B.obj的二进制：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">偏移量    内容    长度</span><br><span class="line">0x0000    FunB    ??</span><br></pre></td></tr></table></figure></p>
+<p>由于n被声明为extern，而extern关键字告诉编译器n已经在别的编译单元里定义了，在这个单元里不用定义。由于编译单元之间是互不相关的，所以编译器就不知道n究竟在哪里，所以在函数B.obj中就没有办法生成n的地址。</p>
+<p>为了让各个编译单元结合起来，就需要链接器了。为了能让链接器知道哪些地方的地址没有填好（也就是还????），那么目标文件中就要有一个表来告诉链接器，这个表就是“未解决符号表”（unresolved symbol table）。同样，提供n的目标文件也要提供一个“导出符号表”（exprot symbol table），来告诉链接器自己可以提供哪些地址。 </p>
+<p>因此，一个目标文件不仅要提供数据和二进制代码，还要提供两个表：未解决符号表和导出符号表，来告诉链接器自己需要什么和自己能提供些什么。</p>
+<p>那么这两个表是怎么建立对应关系的呢？</p>
+<p>在C/C++中，每一个变量及函数都会有自己的符号，如变量n的符号就是n，函数的符号会更加复杂，根据编译器不同而不同。</p>
+<p>A.obj的导出符号表为<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">符号    地址</span><br><span class="line">n       0x0000</span><br><span class="line">_FunA   0x0004</span><br></pre></td></tr></table></figure></p>
+<p>未解决符号为空。</p>
+<p>B.obj的导出符号表为<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">符号    地址</span><br><span class="line">_FunB   0x0000</span><br></pre></td></tr></table></figure></p>
+<p>未解决符号表为<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">符号    地址</span><br><span class="line">n       0x0001</span><br></pre></td></tr></table></figure></p>
+<p>这个表告诉链接器，在本编译单元0x0001位置有一个地址，该地址不明，但符号是n。</p>
+<p>在链接的时候，链接器在B.obj中发现了未解决符号，就会在所有的编译单元中的导出符号表去查找与这个未解决符号相匹配的符号名，如果找到，就把这个符号的地址填到B.obj的未解决符号的地址处。如果没有找到，就会报链接错误。在此例中，在A.obj中会找到符号n，就会把n的地址填到B.obj的0x0001处。然后解决地址重复的问题，对每个目标文件的地址进行调整，提供一个地址重定向表。</p>
+<p>总结：</p>
+<p>目标文件至少要提供三个表：未解决符号表，导出符号表和地址重定向表。</p>
+<ol>
+<li>未解决符号表：列出了本单元里有引用但是不在本单元定义的符号及其出现的地址。</li>
+<li>导出符号表：提供了本编译单元具有定义，并且可以提供给其他编译单元使用的符号及其在本单元中的地址。</li>
+<li>地址重定向表：提供了本编译单元所有对自身地址的引用记录。</li>
+</ol>
+<p>当链接器进行链接的时候，首先决定各个目标文件在最终可执行文件里的位置。然后访问所有目标文件的地址重定义表，对其中记录的地址进行重定向（加上一个偏移量，即该编译单元在可执行文件上的起始地址）。然后遍历所有目标文件的未解决符号表，并且在所有的导出符号表里查找匹配的符号，并在未解决符号表中所记录的位置上填写实现地址。最后把所有的目标文件的内容写在各自的位置上，再做一些其他工作，就生成一个可执行文件。</p>
+<p>说明：实现链接的时候会更加复杂，一般实现的目标文件都会把数据，代码分成好向个区，重定向按区进行，但原理都是一样的。</p>
+<h2 id="外部链接与内部链接"><a href="#外部链接与内部链接" class="headerlink" title="外部链接与内部链接"></a>外部链接与内部链接</h2><h3 id="内部链接"><a href="#内部链接" class="headerlink" title="内部链接"></a>内部链接</h3><p>如果一个名称对于他的编译单元是局部的，并且在链接时不会与其他的编译单元中同样的名字冲突，那么这个名称就拥有内部链接。这个实体有内部链接，他就不会与其他.cpp文件同名的实体冲突。换个说法，那些编译单元（.cpp）中不能向其他编译单元（.cpp）展示提供其定义的函数、变量就拥有内部链接。</p>
+<p>那么哪些实体拥有内部链接？</p>
+<ul>
+<li>静态(static)全局变量定义.如: <code>static int x;</code></li>
+<li>枚举类型定义.如: <code>enum Boolean {NO,YES };</code></li>
+<li>类定义. 如: <code>class Point { int d_x; int d_y; ... };</code></li>
+<li>内联函数定义.如: <code>inline int operator==(const Point&amp; left,const Point&amp;right) { ... }</code></li>
+<li>union的定义.</li>
+<li>名字空间中const常量定义</li>
+</ul>
+<h3 id="外部链接"><a href="#外部链接" class="headerlink" title="外部链接"></a>外部链接</h3><p>一个多文件的程序中，一个实体可以在链接时与其他编译单元交互，那么这个实体就拥有外部链接。</p>
+<p>换个说法，那些编译单元（.cpp）中能向其他编译单元（.cpp）提供其定义，让其他编译单元(.cpp)使用的函数、变量就拥有外部链接。</p>
+<p>那么哪些实体拥有外部链接？</p>
+<ul>
+<li>非内联的类成员函数.如: <code>Point&amp; Point::operator+=(const Point&amp; right) { ... }</code></li>
+<li>非内联、非静态的自由函数. 如: <code>Point operator+(const Point&amp; left, const Point&amp; right) { ... }</code></li>
+<li>非静态的全局定义</li>
+</ul>
+<h2 id="几个经典的链接错误"><a href="#几个经典的链接错误" class="headerlink" title="几个经典的链接错误"></a>几个经典的链接错误</h2><p><code>unresolved external link..</code></p>
+<p>这个很显然，是链接器发现一个未解决符号，但是在导出符号表里没有找到对应的项。</p>
+<p>解决方案就是在某个编译单元里提供这个符号的定义。（注意，这个符号可以是一个变量，也可以是一个函数），也可以看看是不是有什么该链接的文件没有链接。</p>
+<p><code>duplicated external simbols...</code></p>
+<p>这个则是导出符号表里出现了重复项，因此链接器无法确定应该使用哪一个。这可能是使用了重复的名称，也可能有别的原因。</p>
+<h2 id="C-C-针对这些而提供的特性："><a href="#C-C-针对这些而提供的特性：" class="headerlink" title="C/C++针对这些而提供的特性："></a>C/C++针对这些而提供的特性：</h2><p>extern：告诉编译器，这个符号在别的编译单元里定义，也就是要把这个符号放到未解决符号表里去。（外部链接）</p>
+<p>static：如果该关键字位于全局函数或者变量的声明的前面，表明该编译单元不导出这个函数/变量的符号。因此无法在别的编译单元里使用（内部链接）。如果是static局部变量，则该变量的存储方式和全局变量一样，但是仍然不导出符号。</p>
+<p>外部链接的利弊：外部链接的符号，可以在整个程序范围内使用（因为导出了符号）。但是同时要求其他的编译单元不能导出相同的符号（不然就是duplicated external simbols)</p>
+<p>内部链接的利弊：内部链接的符号，不能在别的编译单元内使用。但是不同的编译单元可以拥有同样名称的内部链接符号。</p>
+<h1 id="一些问题的解答"><a href="#一些问题的解答" class="headerlink" title="一些问题的解答"></a>一些问题的解答</h1><ol>
+<li><p>为什么头文件里一般只可以有声明不能有定义？<br>头文件可以被多个编译单元包含，如果头文件里有定义，那么每个包含这个头文件的编译单元就都会对同一个符号进行定义，如果该符号为外部链接，则会导致duplicated external simbols。因此如果头文件里要定义，必须保证定义的符号只能具有内部链接。</p>
+</li>
+<li><p>为什么类的静态变量不可以就地初始化？<br>所谓就地初始化就是类似于这样，由于class的声明通常是在头文件里，如果允许这样做，其实就相当于在头文件里定义了一个非const变量。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"> <span class="class"><span class="keyword">class</span> <span class="title">A</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">char</span> msg[] = <span class="string">"aha"</span>;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>为什么公共使用的内联函数要定义于头文件里？<br>因为编译时编译单元之间互相不知道，如果内联函数被定义于.cpp文件中，编译其他使用该函数的编译单元时没有办法找到函数的定义，因此无法对函数进行展开。所以说如果内联函数定义于.cpp文件里，那么就只有这个cpp文件可以使用这个函数。</p>
+</li>
+<li><p>头文件里的内联函数被拒绝会怎样？<br>记住，内联只是给编译器的一个建议，如果定义于头文件里的内联函数被拒绝，那么编译器会自动在每个包含了该头文件的编译单元里定义这个函数并且不导出符号。</p>
+</li>
+</ol>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><p>[1]. <a href="https://blog.csdn.net/jiange_zh/article/details/52187611" target="_blank" rel="noopener">C++编译链接原理简介</a><br>[2]. <a href="https://www.cnblogs.com/magicsoar/p/3760201.html" target="_blank" rel="noopener">C++编译与链接（1）-编译与链接过程</a>  </p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>持续技术分享，您的支持将鼓励我继续创作！</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.jpg" alt="乡间小路 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/C/" rel="tag"># C++</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/08/25/C++ STL学习笔记/" rel="next" title="C++ STL学习笔记">
+                <i class="fa fa-chevron-left"></i> C++ STL学习笔记
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zNjg4MS8xMzQxNw=="></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.jpg"
+                alt="乡间小路" />
+            
+              <p class="site-author-name" itemprop="name">乡间小路</p>
+              <p class="site-description motion-element" itemprop="description">把知道的东西讲清楚</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">62</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">11</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">93</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-globe"></i>
+                推荐博客
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://www.flickering.cn/" title="火光摇曳" target="_blank">火光摇曳</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://www.wulc.me/" title="吴良超的学习笔记" target="_blank">吴良超的学习笔记</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://www.cnblogs.com/pinard/" title="刘建平Pinard" target="_blank">刘建平Pinard</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://mlnote.com/" title="水滴石穿" target="_blank">水滴石穿</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://www.cnblogs.com/makefile/" title="明也无涯" target="_blank">明也无涯</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://noahsnail.com/" title="SnailTyan" target="_blank">SnailTyan</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://lanbing510.info/" title="求知若饥，知行合一" target="_blank">求知若饥，知行合一</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://saicoco.github.io/" title="Fix you" target="_blank">Fix you</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://qiankun214.github.io/" title="月见樽" target="_blank">月见樽</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://jacobkong.github.io/" title="Jacob Kong" target="_blank">Jacob Kong</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://www.cnblogs.com/xuanyuyt/" title="xuanyuyt" target="_blank">xuanyuyt</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://blog.csdn.net/sinat_26917383" title="悟乙己" target="_blank">悟乙己</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://blog.csdn.net/julialove102123" title="女王的宫殿" target="_blank">女王的宫殿</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://frankchen.xyz/" title="不正经数据科学家" target="_blank">不正经数据科学家</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://blog.csdn.net/victoriaw" title="CodeTutor" target="_blank">CodeTutor</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://deepsystems.ai/" title="Deep Systems" target="_blank">Deep Systems</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://medium.com/@jonathan_hui" title="Jonathan Hui" target="_blank">Jonathan Hui</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://www.cnblogs.com/zhangchaoyang/" title="Orisun" target="_blank">Orisun</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://www.jianshu.com/u/511ba5d71aef" title="milter" target="_blank">milter</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://blog.csdn.net/mrlevo520" title="MrLevo520的博客" target="_blank">MrLevo520的博客</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://speech.ee.ntu.edu.tw/~tlkagk/talk.html" title="李宏毅主页" target="_blank">李宏毅主页</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://blog.csdn.net/qq_37059483" title="qingyun_wudaoletu的博客" target="_blank">qingyun_wudaoletu的博客</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://liam0205.me/" title="始终" target="_blank">始终</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://www.cnblogs.com/grandyang/" title="Grandyang" target="_blank">Grandyang</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://littlehaes.com/" title="Hae's Blog" target="_blank">Hae's Blog</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://www.jianshu.com/u/ed6d4d31c5b0" title="月牙眼的楼下小黑" target="_blank">月牙眼的楼下小黑</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://www.hanlongfei.com/" title="Longfei Han" target="_blank">Longfei Han</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://blog.csdn.net/bitcarmanlee" title="bitcarmanlee的博客" target="_blank">bitcarmanlee的博客</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://blog.csdn.net/lanchunhui" title="Zhang's Wikipedia" target="_blank">Zhang's Wikipedia</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://samaelchen.github.io/" title="碎碎念" target="_blank">碎碎念</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://blog.csdn.net/jiange_zh" title="jiange_zh" target="_blank">jiange_zh</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#预处理"><span class="nav-number">1.</span> <span class="nav-text">预处理</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#编译、链接"><span class="nav-number">2.</span> <span class="nav-text">编译、链接</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#外部链接与内部链接"><span class="nav-number">2.1.</span> <span class="nav-text">外部链接与内部链接</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#内部链接"><span class="nav-number">2.1.1.</span> <span class="nav-text">内部链接</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#外部链接"><span class="nav-number">2.1.2.</span> <span class="nav-text">外部链接</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#几个经典的链接错误"><span class="nav-number">2.2.</span> <span class="nav-text">几个经典的链接错误</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#C-C-针对这些而提供的特性："><span class="nav-number">2.3.</span> <span class="nav-text">C/C++针对这些而提供的特性：</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#一些问题的解答"><span class="nav-number">3.</span> <span class="nav-text">一些问题的解答</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考"><span class="nav-number">4.</span> <span class="nav-text">参考</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">乡间小路</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+
+  
+
+  
+
+</body>
+</html>
