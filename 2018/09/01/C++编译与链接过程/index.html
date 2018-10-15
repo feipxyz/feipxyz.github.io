@@ -79,18 +79,18 @@
 
 
 
-<meta name="description" content="大家知道计算机使用的一系列的1和0，那个一个C++语言程序又是如何从一个个.h和.cpp文件变成包含1和0的可执行文件呢？ 可以认为有以下的几个环节：源程序-&amp;gt;预处理-&amp;gt;编译和优化-&amp;gt;生成目标文件-&amp;gt;链接-&amp;gt;可执行文件 在预编译的时候，.h头文件会被复制、扩展到包含它的.cpp文件里，然后编译器编译该.cpp文件为一个.obj文件，每个.cpp文件作为一个编译单元独立">
+<meta name="description" content="大家知道计算机使用的一系列的1和0，那个一个C++语言程序又是如何从一个个.h和.cpp文件变成包含1和0的可执行文件呢？ 可以认为有以下的几个环节：源程序-&amp;gt;预处理-&amp;gt;编译和优化-&amp;gt;生成目标文件-&amp;gt;链接-&amp;gt;可执行文件">
 <meta name="keywords" content="C++">
 <meta property="og:type" content="article">
 <meta property="og:title" content="C++编译与链接">
 <meta property="og:url" content="flyrie.top/2018/09/01/C++编译与链接过程/index.html">
 <meta property="og:site_name" content="乡间小路">
-<meta property="og:description" content="大家知道计算机使用的一系列的1和0，那个一个C++语言程序又是如何从一个个.h和.cpp文件变成包含1和0的可执行文件呢？ 可以认为有以下的几个环节：源程序-&amp;gt;预处理-&amp;gt;编译和优化-&amp;gt;生成目标文件-&amp;gt;链接-&amp;gt;可执行文件 在预编译的时候，.h头文件会被复制、扩展到包含它的.cpp文件里，然后编译器编译该.cpp文件为一个.obj文件，每个.cpp文件作为一个编译单元独立">
+<meta property="og:description" content="大家知道计算机使用的一系列的1和0，那个一个C++语言程序又是如何从一个个.h和.cpp文件变成包含1和0的可执行文件呢？ 可以认为有以下的几个环节：源程序-&amp;gt;预处理-&amp;gt;编译和优化-&amp;gt;生成目标文件-&amp;gt;链接-&amp;gt;可执行文件">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-10-15T16:51:39.595Z">
+<meta property="og:updated_time" content="2018-10-15T16:53:44.978Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="C++编译与链接">
-<meta name="twitter:description" content="大家知道计算机使用的一系列的1和0，那个一个C++语言程序又是如何从一个个.h和.cpp文件变成包含1和0的可执行文件呢？ 可以认为有以下的几个环节：源程序-&amp;gt;预处理-&amp;gt;编译和优化-&amp;gt;生成目标文件-&amp;gt;链接-&amp;gt;可执行文件 在预编译的时候，.h头文件会被复制、扩展到包含它的.cpp文件里，然后编译器编译该.cpp文件为一个.obj文件，每个.cpp文件作为一个编译单元独立">
+<meta name="twitter:description" content="大家知道计算机使用的一系列的1和0，那个一个C++语言程序又是如何从一个个.h和.cpp文件变成包含1和0的可执行文件呢？ 可以认为有以下的几个环节：源程序-&amp;gt;预处理-&amp;gt;编译和优化-&amp;gt;生成目标文件-&amp;gt;链接-&amp;gt;可执行文件">
 
 
 
@@ -363,7 +363,7 @@
 
       
         <p>大家知道计算机使用的一系列的1和0，那个一个C++语言程序又是如何从一个个.h和.cpp文件变成包含1和0的可执行文件呢？</p>
-<p>可以认为有以下的几个环节：源程序-&gt;预处理-&gt;编译和优化-&gt;生成目标文件-&gt;链接-&gt;可执行文件</p>
+<p>可以认为有以下的几个环节：源程序-&gt;预处理-&gt;编译和优化-&gt;生成目标文件-&gt;链接-&gt;可执行文件<br><a id="more"></a></p>
 <p>在预编译的时候，.h头文件会被复制、扩展到包含它的.cpp文件里，然后编译器编译该.cpp文件为一个.obj文件，每个.cpp文件作为一个编译单元独立编译。当编译器将一个工程里的所有.cpp文件以分离的方式编译完毕后，再由链接器进行链接成为一个可执行文件。</p>
 <h1 id="预处理"><a href="#预处理" class="headerlink" title="预处理"></a>预处理</h1><p>C++的预处理是指在C++程序源代码被编译之前，由预处理器对C++程序源代码进行的处理。这个过程并不对程序的源代码进行解析。</p>
 <p>预处理器主要负责以下的几处：</p>
