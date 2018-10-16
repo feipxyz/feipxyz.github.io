@@ -1,0 +1,983 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Python," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="Python默认复制的副本共享可能引发意想不到的结果。">
+<meta name="keywords" content="Python">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Python中的深拷贝与浅拷贝">
+<meta property="og:url" content="flyrie.top/2018/07/20/Python_Copy_Deepcopy/index.html">
+<meta property="og:site_name" content="乡间小路">
+<meta property="og:description" content="Python默认复制的副本共享可能引发意想不到的结果。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="/images/Python基础积累_1.png">
+<meta property="og:image" content="/images/Python基础积累_2.png">
+<meta property="og:image" content="/images/Python基础积累_3.png">
+<meta property="og:image" content="/images/Python基础积累_4.png">
+<meta property="og:image" content="/images/Python基础积累_5.png">
+<meta property="og:updated_time" content="2018-10-16T16:38:53.899Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Python中的深拷贝与浅拷贝">
+<meta name="twitter:description" content="Python默认复制的副本共享可能引发意想不到的结果。">
+<meta name="twitter:image" content="/images/Python基础积累_1.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"always","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="flyrie.top/2018/07/20/Python_Copy_Deepcopy/"/>
+
+
+
+
+
+  <title>Python中的深拷贝与浅拷贝 | 乡间小路</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?95d8d402b20d99d1e2e6f2de7b397428";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">乡间小路</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="flyrie.top/2018/07/20/Python_Copy_Deepcopy/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="乡间小路">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="乡间小路">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Python中的深拷贝与浅拷贝</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-07-20T01:46:15+08:00">
+                2018-07-20
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Python/" itemprop="url" rel="index">
+                    <span itemprop="name">Python</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>Python默认复制的副本共享可能引发意想不到的结果。<a id="more"></a></p>
+<h1 id="默认做浅复制"><a href="#默认做浅复制" class="headerlink" title="默认做浅复制"></a>默认做浅复制</h1><ol>
+<li><p><code>=</code>直接赋值，传递的是对象的引用，相当于一个别名，其中一个改变另一个也会跟着变。</p>
+</li>
+<li><p>构造方法或<code>[:]</code>做的是浅复制（即复制了最外层容器），如果所有元素都是不可变的，那么这样没有问题，还能节省内存。但是，如果有可变的元素，可能就会导致意想不到的问题。</p>
+</li>
+<li><p><code>copy</code>模块提供的<code>deepcopy</code>和<code>copy</code>函数能为任意对象做深复制和浅复制。</p>
+</li>
+<li><p>深复制有时可能太深了。例如，对象可能会引用不该复制的外部资源或单例值。我们可以实现特殊方法 <code>__copy__()</code> 和 <code>__deepcopy__()</code>，控制 <code>copy</code> 和 <code>deepcopy</code> 的行为。</p>
+</li>
+</ol>
+<p>复制列表（或多数内置的可变集合）最简单的方式是使用内置的类型构造方法或<code>[:]</code>。例如：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">l1 = [<span class="number">3</span>, [<span class="number">66</span>, <span class="number">55</span>, <span class="number">44</span>], (<span class="number">7</span>, <span class="number">8</span>, <span class="number">9</span>)]</span><br><span class="line">l2 = list(l1)</span><br><span class="line">l2 == l1     <span class="comment"># True</span></span><br><span class="line">l2 <span class="keyword">is</span> l1     <span class="comment"># False</span></span><br><span class="line">id(l1)       <span class="comment"># 140027414483080</span></span><br><span class="line">id(l2)       <span class="comment"># 140027413720392</span></span><br></pre></td></tr></table></figure>
+<pre><code>140027413719624
+</code></pre><p>可以看出，副本与源列表相等，但是二者指代不同的对象。</p>
+<p>下面看看这段代码的效果：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">l1 = [<span class="number">3</span>, [<span class="number">66</span>, <span class="number">55</span>, <span class="number">44</span>], (<span class="number">7</span>, <span class="number">8</span>, <span class="number">9</span>)]</span><br><span class="line">l2 = list(l1) <span class="comment"># ➊</span></span><br><span class="line">l1.append(<span class="number">100</span>) <span class="comment"># ➋</span></span><br><span class="line"></span><br><span class="line">l1[<span class="number">1</span>].remove(<span class="number">55</span>) <span class="comment"># ➌</span></span><br><span class="line">print(<span class="string">'l1:'</span>, l1)</span><br><span class="line">print(<span class="string">'l2:'</span>, l2)</span><br><span class="line">l2[<span class="number">1</span>] += [<span class="number">33</span>, <span class="number">22</span>] <span class="comment"># ➍</span></span><br><span class="line">l2[<span class="number">2</span>] += (<span class="number">10</span>, <span class="number">11</span>) <span class="comment"># ➎</span></span><br><span class="line">print(<span class="string">'l1:'</span>, l1)</span><br><span class="line">print(<span class="string">'l2:'</span>, l2)</span><br></pre></td></tr></table></figure>
+<pre><code>l1: [3, [66, 44], (7, 8, 9), 100]
+l2: [3, [66, 44], (7, 8, 9)]
+l1: [3, [66, 44, 33, 22], (7, 8, 9), 100]
+l2: [3, [66, 44, 33, 22], (7, 8, 9, 10, 11)]
+</code></pre><p>➊ <code>l2</code> 是 <code>l1</code> 的浅复制副本。此时的状态如图。<br><img src="/images/Python基础积累_1.png" alt="图片"><br>➋ 把 100 追加到 <code>l1</code> 中，对 <code>l2</code> 没有影响。<br><img src="/images/Python基础积累_2.png" alt="图片"><br>➌ 把内部列表 <code>l1[1]</code> 中的 55 删除。这对 <code>l2</code> 有影响，因为 <code>l2[1]</code> 绑定的列表与 <code>l1[1]</code>是同一个。<br><img src="/images/Python基础积累_3.png" alt="图片"><br>➍ 对可变的对象来说，如 <code>l2[1]</code> 引用的列表， <code>+=</code> 运算符就地修改列表。这次修改在<code>l1[1]</code> 中也有体现，因为它是 <code>l2[1]</code> 的别名。<br><img src="/images/Python基础积累_4.png" alt="图片"><br>➎ 对元组来说， += 运算符创建一个新元组，然后重新绑定给变量 l2[2]。现在， l1 和 l2 中最后位置上的元组不是同一个对象。<br><img src="/images/Python基础积累_5.png" alt="图片"></p>
+<h1 id="为任意对象做深复制和浅复制"><a href="#为任意对象做深复制和浅复制" class="headerlink" title="为任意对象做深复制和浅复制"></a>为任意对象做深复制和浅复制</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> copy</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Bus</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, passengers=None)</span>:</span></span><br><span class="line">        <span class="keyword">if</span> passengers <span class="keyword">is</span> <span class="keyword">None</span>:</span><br><span class="line">            self.passengers = []</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            self.passengers = list(passengers)</span><br><span class="line">            </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">pick</span><span class="params">(self, name)</span>:</span></span><br><span class="line">        self.passengers.append(name)</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">drop</span><span class="params">(self, name)</span>:</span></span><br><span class="line">        self.passengers.remove(name)</span><br><span class="line">        </span><br><span class="line">bus1 = Bus([<span class="string">'Alice'</span>, <span class="string">'Bill'</span>, <span class="string">'David'</span>])</span><br><span class="line">bus2 = copy.copy(bus1)</span><br><span class="line">bus3 = copy.deepcopy(bus1)</span><br><span class="line">id(bus1), id(bus2), id(bus3) <span class="comment"># ➊</span></span><br></pre></td></tr></table></figure>
+<pre><code>(140027413487568, 140027413487400, 140027413569776)
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">id(bus1.passengers), id(bus2.passengers), id(bus3.passengers) <span class="comment"># ➋</span></span><br></pre></td></tr></table></figure>
+<pre><code>(140027413574216, 140027413574216, 140027413866632)
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bus1.drop(<span class="string">'Bill'</span>)</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bus2.passengers <span class="comment"># ❸</span></span><br></pre></td></tr></table></figure>
+<pre><code>[&#39;Alice&#39;, &#39;David&#39;]
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bus3.passengers <span class="comment"># ❹</span></span><br></pre></td></tr></table></figure>
+<pre><code>[&#39;Alice&#39;, &#39;Bill&#39;, &#39;David&#39;]
+</code></pre><p>➊ 使用 copy 和 deepcopy，创建 3 个不同的 Bus 实例。<br>➋ 审查 passengers 属性后发现，bus1 和 bus2 共享同一个列表对象，因为 bus2 是bus1 的浅复制副本。<br>❸ bus1 中的 ‘Bill’ 下车后，bus2 中也没有他了。<br>❹ bus3 是 bus1 的深复制副本，因此它的 passengers 属性指代另一个列表。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>持续技术分享，您的支持将鼓励我继续创作！</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.jpg" alt="乡间小路 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Python/" rel="tag"># Python</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/07/20/Python序列化/" rel="next" title="Python序列化">
+                <i class="fa fa-chevron-left"></i> Python序列化
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/07/23/word2vec/" rel="prev" title="【转】word2vec">
+                【转】word2vec <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zNjg4MS8xMzQxNw=="></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.jpg"
+                alt="乡间小路" />
+            
+              <p class="site-author-name" itemprop="name">乡间小路</p>
+              <p class="site-description motion-element" itemprop="description">把知道的东西讲清楚</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">65</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">11</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">93</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-globe"></i>
+                推荐博客
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://www.flickering.cn/" title="火光摇曳" target="_blank">火光摇曳</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://www.wulc.me/" title="吴良超的学习笔记" target="_blank">吴良超的学习笔记</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://www.cnblogs.com/pinard/" title="刘建平Pinard" target="_blank">刘建平Pinard</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://mlnote.com/" title="水滴石穿" target="_blank">水滴石穿</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://www.cnblogs.com/makefile/" title="明也无涯" target="_blank">明也无涯</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://noahsnail.com/" title="SnailTyan" target="_blank">SnailTyan</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://lanbing510.info/" title="求知若饥，知行合一" target="_blank">求知若饥，知行合一</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://saicoco.github.io/" title="Fix you" target="_blank">Fix you</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://qiankun214.github.io/" title="月见樽" target="_blank">月见樽</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://jacobkong.github.io/" title="Jacob Kong" target="_blank">Jacob Kong</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://www.cnblogs.com/xuanyuyt/" title="xuanyuyt" target="_blank">xuanyuyt</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://blog.csdn.net/sinat_26917383" title="悟乙己" target="_blank">悟乙己</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://blog.csdn.net/julialove102123" title="女王的宫殿" target="_blank">女王的宫殿</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://frankchen.xyz/" title="不正经数据科学家" target="_blank">不正经数据科学家</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://blog.csdn.net/victoriaw" title="CodeTutor" target="_blank">CodeTutor</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://deepsystems.ai/" title="Deep Systems" target="_blank">Deep Systems</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://medium.com/@jonathan_hui" title="Jonathan Hui" target="_blank">Jonathan Hui</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://www.cnblogs.com/zhangchaoyang/" title="Orisun" target="_blank">Orisun</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://www.jianshu.com/u/511ba5d71aef" title="milter" target="_blank">milter</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://blog.csdn.net/mrlevo520" title="MrLevo520的博客" target="_blank">MrLevo520的博客</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://speech.ee.ntu.edu.tw/~tlkagk/talk.html" title="李宏毅主页" target="_blank">李宏毅主页</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://blog.csdn.net/qq_37059483" title="qingyun_wudaoletu的博客" target="_blank">qingyun_wudaoletu的博客</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://liam0205.me/" title="始终" target="_blank">始终</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://www.cnblogs.com/grandyang/" title="Grandyang" target="_blank">Grandyang</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://littlehaes.com/" title="Hae's Blog" target="_blank">Hae's Blog</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://www.jianshu.com/u/ed6d4d31c5b0" title="月牙眼的楼下小黑" target="_blank">月牙眼的楼下小黑</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://www.hanlongfei.com/" title="Longfei Han" target="_blank">Longfei Han</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://blog.csdn.net/bitcarmanlee" title="bitcarmanlee的博客" target="_blank">bitcarmanlee的博客</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://blog.csdn.net/lanchunhui" title="Zhang's Wikipedia" target="_blank">Zhang's Wikipedia</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://samaelchen.github.io/" title="碎碎念" target="_blank">碎碎念</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://blog.csdn.net/jiange_zh" title="jiange_zh" target="_blank">jiange_zh</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#默认做浅复制"><span class="nav-number">1.</span> <span class="nav-text">默认做浅复制</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#为任意对象做深复制和浅复制"><span class="nav-number">2.</span> <span class="nav-text">为任意对象做深复制和浅复制</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">乡间小路</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+
+  
+
+  
+
+</body>
+</html>
