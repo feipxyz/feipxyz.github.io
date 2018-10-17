@@ -656,27 +656,16 @@
 
       
         
-          
-            <ol>
+          <ol>
 <li>每个变量都有标识、类型和值。对象一旦创建，它的标识绝不会变；可以把标识理解为对象在内存中的地址。</li>
-<li><code>id()</code>返回标识的整数标识，可以认为是对象内存地址。</li>
-<li><code>==</code>运算符比较两个对象的值，<code>is</code>比较对象的标识。</li>
-<li><code>=</code>直接赋值，传递的是对象的引用，相当于一个别名，其中一个改变另一个也会跟着变。</li>
-<li>元组的不可变是相对不可变。</li>
-</ol>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">t1 = (<span class="number">1</span>, <span class="number">2</span>, [<span class="number">30</span>, <span class="number">40</span>])</span><br><span class="line">t2 = (<span class="number">1</span>, <span class="number">2</span>, [<span class="number">30</span>, <span class="number">40</span>])</span><br><span class="line">t1 == t2</span><br></pre></td></tr></table></figure>
-<pre><code>True
-</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">id(t1[<span class="number">-1</span>])</span><br></pre></td></tr></table></figure>
-<pre><code>140181428815816
-</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">t1[<span class="number">-1</span>].append(<span class="number">99</span>)</span><br><span class="line">t1</span><br></pre></td></tr></table></figure>
-<pre><code>(1, 2, [30, 40, 99, 99])
-</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">id(t1[<span class="number">-1</span>])</span><br></pre></td></tr></table></figure>
-<pre><code>140181428815816
-</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">t1 == t2</span><br></pre></td></tr></table></figure>
-<pre><code>False
-</code></pre><p>虽然 t1 和 t2 是不同的对象，但是二者相等——与预期相符。t1[-1] 的标识没变，只是值变了。</p>
-
-          
+<li><code>id()</code>返回标识的整数标识，可以认为是对象内存地址。
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/09/03/Python_Identification_/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
