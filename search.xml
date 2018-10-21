@@ -12,6 +12,17 @@
       </tags>
   </entry>
   <entry>
+    <title><![CDATA[排序算法总结]]></title>
+    <url>%2F2018%2F09%2F14%2FSummary_Of_Sorting_Algorithm%2F</url>
+    <content type="text"></content>
+      <categories>
+        <category>数据结构与算法</category>
+      </categories>
+      <tags>
+        <tag>排序算法</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[Python标识、相等性和别名]]></title>
     <url>%2F2018%2F09%2F03%2FPython_Identification_%2F</url>
     <content type="text"><![CDATA[每个变量都有标识、类型和值。对象一旦创建，它的标识绝不会变；可以把标识理解为对象在内存中的地址。 id()返回标识的整数标识，可以认为是对象内存地址。 ==运算符比较两个对象的值，is比较对象的标识。 =直接赋值，传递的是对象的引用，相当于一个别名，其中一个改变另一个也会跟着变。 元组的不可变是相对不可变。 123t1 = (1, 2, [30, 40])t2 = (1, 2, [30, 40])t1 == t2 True 1id(t1[-1]) 140181428815816 12t1[-1].append(99)t1 (1, 2, [30, 40, 99, 99]) 1id(t1[-1]) 140181428815816 1t1 == t2 False 虽然 t1 和 t2 是不同的对象，但是二者相等——与预期相符。t1[-1] 的标识没变，只是值变了。]]></content>
@@ -93,8 +104,8 @@
   </entry>
   <entry>
     <title><![CDATA[算法解题]]></title>
-    <url>%2F2018%2F08%2F15%2F%E7%AE%97%E6%B3%95%E9%A2%98%E7%9B%AE%2F</url>
-    <content type="text"><![CDATA[记录一些算法题目的解题过程。 动态规划双指针有效三角形的个数 leetcode 611给定一个包含非负整数的数组，你的任务是统计其中可以组成三角形三条边的三元组个数。输入: [2,2,3,4]输出: 3 解答：从小到大排序，假定nums[k]是最大边，只需之前的i &lt; j &lt; k满足nums[i] + nums[j] &gt; nums[k]即可，两边之差小于第三边自动满足。 数组旋转数组 leetocde 188给定一个数组，将数组中的元素向右移动 k 个位置，其中 k 是非负数。输入: [1,2,3,4,5,6,7] 和 k = 3。输出: [5,6,7,1,2,3,4]输入: [-1,-100,3,99] 和 k = 2。输出: [3,99,-1,-100] 解答：123reverse(nums, 0, nums.length - 1);reverse(nums, 0, k - 1);reverse(nums, k, nums.length - 1);]]></content>
+    <url>%2F2018%2F08%2F15%2FAlgorithm_Solutions%2F</url>
+    <content type="text"><![CDATA[记录一些算法题目的解题过程。 动态规划正则表达式匹配 leetcode 10给定一个字符串 (s) 和一个字符模式 (p)。实现支持 . 和 * 的正则表达式匹配。. 匹配任意单个字符。* 匹配零个或多个前面的元素。 解答： dp[i][j]表示s的i长度跟p的j长度是否使用匹配。则有一下情况。 dp[0][0]: 表示当s和p都为空，此时肯定是匹配的，dp[0][0] = 1; 当s为空&quot;&quot;，p为&#39;a*&#39;时，唯一可能match的情况是p匹配为空串，取决于dp[0][j-2]。如: 12s: &quot; &quot; p: &quot;a*b*c*&quot; 当s[i-1] == p[j-1] || p[j-1] == &#39;.&#39; : dp[i][j] = dp[i-1][j-1]； 当p[j-1] == &#39;*&#39;，分下面两种情况讨论： 如果p[j-2] != s[i-1] &amp;&amp; p[j-2] != &#39;.&#39;: 只能把它匹配成一个空串，即0个字符，dp[i][j] = dp[i][j-2]； 否则，可能匹配0个字符，1个字符，多个字符，即dp[i][j] = (dp[i][j-2] || dp[i][j-1] || dp[i-1][j])。 代码中注意动态规划的初始赋值。1234567891011121314151617181920212223242526272829303132333435363738class Solution &#123;public: bool isMatch(string s, string p) &#123; int m = s.size(); int n = p.size(); vector&lt;vector&lt;int&gt;&gt; dp(m + 1, vector&lt;int&gt; (n + 1, 0)); dp[0][0] = true; for (int i = 1; i &lt;= n; i++) &#123; if (p[i - 1] == '*' &amp;&amp; i &gt;= 2) dp[0][i] = dp[0][i - 2]; &#125; for (int i = 1; i &lt;= m; i++) &#123; for (int j = 1; j &lt;= n; j++) &#123; if (s[i - 1] == p[j - 1] || p[j - 1] == '.') &#123; dp[i][j] = dp[i - 1][j - 1]; &#125; else if (p[j - 1] == '*') &#123; if (j &gt;= 2 &amp;&amp; p[j - 2] != s[i - 1] &amp;&amp; p[j - 2] != '.') &#123; dp[i][j] = dp[i][j - 2]; &#125; else &#123; dp[i][j] = ((j &gt;= 2 &amp;&amp; dp[i][j - 2]) || (j &gt;= 2 &amp;&amp; dp[i - 1][j - 2]) || dp[i - 1][j]); &#125; &#125; &#125; &#125; return dp[m][n]; &#125;&#125;; 双指针有效三角形的个数 leetcode 611给定一个包含非负整数的数组，你的任务是统计其中可以组成三角形三条边的三元组个数。输入: [2,2,3,4]输出: 3 解答： 从小到大排序，假定nums[k]是最大边，只需之前的i &lt; j &lt; k满足nums[i] + nums[j] &gt; nums[k]即可，两边之差小于第三边自动满足。 栈最长有效括号 leetcode 32给定一个只包含 ‘(‘ 和 ‘)’ 的字符串，找出最长的包含有效括号的子串的长度。输入: &quot;)()())&quot;输出: 4解释: 最长有效括号子串为 &quot;()()&quot; 解答 动态规划+栈。维持一个(的栈，当遇到)时弹出。同时维护一个最左端可以匹配的索引，初始为left = -1，当遇到)且栈为空时，就left = i。123456789101112131415161718192021222324252627282930313233343536class Solution &#123;public: int longestValidParentheses(string s) &#123; stack&lt;int&gt; pstack; int nMax = 0; int nLeft = -1; for (int i = 0; i &lt; s.size(); i++) &#123; if (s[i] == '(') &#123; pstack.push(i); &#125; else &#123; if (pstack.empty()) &#123; nLeft = i; &#125; else &#123; pstack.pop(); if (pstack.empty()) &#123; nMax = max(nMax, i - nLeft); &#125; else &#123; nMax = max(nMax, i - pstack.top()); &#125; &#125; &#125; &#125; return nMax; &#125;&#125;; 数组旋转数组 leetocde 188给定一个数组，将数组中的元素向右移动 k 个位置，其中 k 是非负数。输入: [1,2,3,4,5,6,7] 和 k = 3。输出: [5,6,7,1,2,3,4]输入: [-1,-100,3,99] 和 k = 2。输出: [3,99,-1,-100] 解答： 123reverse(nums, 0, nums.length - 1);reverse(nums, 0, k - 1);reverse(nums, k, nums.length - 1);]]></content>
       <categories>
         <category>数据结构与算法</category>
       </categories>
@@ -115,17 +126,6 @@
       </tags>
   </entry>
   <entry>
-    <title><![CDATA[C++11新特性]]></title>
-    <url>%2F2018%2F08%2F15%2FC%2B%2B%2011%E6%96%B0%E7%89%B9%E6%80%A7%2F</url>
-    <content type="text"><![CDATA[lambda表达式利用Lambda表达式，可以方便的定义和创建匿名函数，用以替换独立函数或者函数对象，并且使代码更可读。但是从本质上来讲，lambda表达式只是一种语法糖，因为所有其能完成的工作都可以用其它稍微复杂的代码来实现。但是它简便的语法却给C++带来了深远的影响。 我们定义一个可以输出字符串的lambda表达式，表达式一般都是从方括号[]开始，然后结束于花括号{}，花括号里面就像定义函数那样，包含了lamdba表达式体：1234// 定义简单的lambda表达式auto basicLambda = [] &#123; cout &lt;&lt; "Hello, world!" &lt;&lt; endl; &#125;;// 调用basicLambda(); // 输出：Hello, world! 上面是最简单的lambda表达式，没有参数。如果需要参数，那么就要像函数那样，放在圆括号里面，如果有返回值，返回类型要放在-&gt;后面，即拖尾返回类型，当然你也可以忽略返回类型，lambda会帮你自动推断出返回类型：123456// 指明返回类型auto add = [](int a, int b) -&gt; int &#123; return a + b; &#125;;// 自动推断返回类型auto multiply = [](int a, int b) &#123; return a * b; &#125;;int sum = add(2, 5); // 输出：7int product = multiply(2, 5); // 输出：10 参考[1]. C++11 lambda表达式与函数对象[2]. C++11 Lambda表达式]]></content>
-      <categories>
-        <category>C++</category>
-      </categories>
-      <tags>
-        <tag>C++</tag>
-      </tags>
-  </entry>
-  <entry>
     <title><![CDATA[LeetCode与LintCode上没有的基础算法题目]]></title>
     <url>%2F2018%2F08%2F15%2FLeetCode%E4%B8%8ELintCode%E4%B8%8A%E6%B2%A1%E6%9C%89%E7%9A%84%E5%9F%BA%E7%A1%80%E7%AE%97%E6%B3%95%E9%A2%98%E7%9B%AE%2F</url>
     <content type="text"><![CDATA[本人一直在leetcode和lintcode上刷题，但有些经典的题目这两个平台都没有，遂将题目记录在博客。 贪心算法 汽车加油 Description一辆汽车加满油后可行驶n公里。旅途中有若干个加油站。设计一个有效算法，指出应在哪些加油站停靠加油，使沿途加油次数最少。Input第一行有2个正整数n和k，表示汽车加满油后可行驶n公里，且旅途中有k个加油站。接下来的1 行中，有k+1个整数，表示第k个加油站与第k-1个加油站之间的距离。第0个加油站表示出发地，汽车已加满油。第k+1个加油站表示目的地。Output将计算出的最少加油次数输出。如果无法到达目的地，则输出”No Solution”。Sample Input7 71 2 3 4 5 1 6 6Sample Output4 12345678910111213141516171819int MinRefuelingNum(int n, vector&lt;int&gt; nums)&#123; int res = 0; int nCanReach = 0; for (int i = 1; i &lt; nums.size(); i++) &#123; if (nums[i] &gt; n) &#123; return -1; &#125; nCanReach += nums[i]; if (nCanReach &gt; n) &#123; res++; nCanReach = nums[i]; &#125; &#125; return res;&#125;]]></content>
@@ -134,6 +134,36 @@
       </categories>
       <tags>
         <tag>基础算法</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[【转】如何让lantern不限流量（改mac地址）]]></title>
+    <url>%2F2018%2F08%2F15%2FLinux_Mac_Lantern%2F</url>
+    <content type="text"><![CDATA[lantern算是比较好的穿墙工具，可每个月只有500M的不限速流量，用完了就很慢，咋办，改Mac地址啊。 ifconfig 列出你的网卡； ifconfig eth0 down #其中eth0是要修改mac地址网卡的名称； 修改mac地址：ifconfig eth0 hw ether 00:00:00:00:00:00 #将后面的一串0替换成你想改成的mac地址即可； 重新启用网卡：ifconfig eth0 up； 上述修改在重启之后就会失效。 如果计算机每次启动都要修改mac地址 下一步任务是修改开机启动项: 在这里就和其他版本系统差别有点大了ubuntu18.04不再使用init.d管理系统，改用了systemd 使用systemd设置开机启动，systemd默认读取/etc/systemd/system下的配置文件，该目录下的文件会链接/lib/systemd/system/下的文件。一般系统安装完/lib/systemd/system/下会有rc-local.service文件，即我们需要的配置文件。 cat /lib/systemd/system/rc-local.service #查看rc-local.service文件 发现[Unit]区块中有个ConditionFileIsExecutable=/etc/rc.local语句rc.local文件和以前的系统很像 去对应目录下找没找到，应该是系统还没创建额外的启动项 创建/etc/rc.local并编辑文件123sudo touch /etc/rc.localsudo chmod 755 /etc/rc.local #赋予可执行权限sudo gedit /etc/rc.local #使用gedit文本编辑器打开此文件进行编辑 在其中增加123sudo /sbin/ifconfig eth0 downsudo /sbin/ifconfig eth0 hw ether 00:AA:BB:CC:DD:EE （你的MAC地址）sudo /sbin/ifconfig eth0 up 到最后以后他就会每次启动计算机的时候自动修改网卡地址。 本文转自ubuntu18.04修改mac地址]]></content>
+      <categories>
+        <category>杂七杂八</category>
+      </categories>
+  </entry>
+  <entry>
+    <title><![CDATA[Hexo记录]]></title>
+    <url>%2F2018%2F08%2F15%2FHexo_Note%2F</url>
+    <content type="text"><![CDATA[建博客时候的一些记录。 文章按更新时间排序默认按照文章创建时间排序，现在想改成按照更新时间排序。 找到hexo-generator-index/lib/generator.js 对posts.data（储存着所有文章数据）进行自定义排序 12345678910111213posts.data = posts.data.sort(function(a, b) &#123; if(a.top &amp;&amp; b.top) &#123; if(a.top == b.top) return b.date - a.date; else return b.top - a.top; &#125; else if(a.top &amp;&amp; !b.top) &#123; return -1; &#125; else if(!a.top &amp;&amp; b.top) &#123; return 1; &#125; else return b.updated - a.updated; &#125;); 默认为b.date - a.date。]]></content>
+      <categories>
+        <category>杂七杂八</category>
+      </categories>
+      <tags>
+        <tag>hexo</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[C++11新特性]]></title>
+    <url>%2F2018%2F08%2F15%2FC%2B%2B%2011%E6%96%B0%E7%89%B9%E6%80%A7%2F</url>
+    <content type="text"><![CDATA[lambda表达式利用Lambda表达式，可以方便的定义和创建匿名函数，用以替换独立函数或者函数对象，并且使代码更可读。但是从本质上来讲，lambda表达式只是一种语法糖，因为所有其能完成的工作都可以用其它稍微复杂的代码来实现。但是它简便的语法却给C++带来了深远的影响。 我们定义一个可以输出字符串的lambda表达式，表达式一般都是从方括号[]开始，然后结束于花括号{}，花括号里面就像定义函数那样，包含了lamdba表达式体：1234// 定义简单的lambda表达式auto basicLambda = [] &#123; cout &lt;&lt; "Hello, world!" &lt;&lt; endl; &#125;;// 调用basicLambda(); // 输出：Hello, world! 上面是最简单的lambda表达式，没有参数。如果需要参数，那么就要像函数那样，放在圆括号里面，如果有返回值，返回类型要放在-&gt;后面，即拖尾返回类型，当然你也可以忽略返回类型，lambda会帮你自动推断出返回类型：123456// 指明返回类型auto add = [](int a, int b) -&gt; int &#123; return a + b; &#125;;// 自动推断返回类型auto multiply = [](int a, int b) &#123; return a * b; &#125;;int sum = add(2, 5); // 输出：7int product = multiply(2, 5); // 输出：10 参考[1]. C++11 lambda表达式与函数对象[2]. C++11 Lambda表达式]]></content>
+      <categories>
+        <category>C++</category>
+      </categories>
+      <tags>
+        <tag>C++</tag>
       </tags>
   </entry>
   <entry>
@@ -149,7 +179,7 @@
   </entry>
   <entry>
     <title><![CDATA[Linux下使用GDB调试]]></title>
-    <url>%2F2018%2F08%2F04%2FLinux%E4%B8%8BGDB%E8%B0%83%E8%AF%95%2F</url>
+    <url>%2F2018%2F08%2F04%2FLinux_Gdb%2F</url>
     <content type="text"><![CDATA[GDB 是Linux下一个用来调试 C 和 C++ 程序的强力调试器，它使你能在程序运行时观察程序的内部结构和内存的使用情况。以下是 gdb 所提供的一些功能: 设置断点 监视程序变量的值 程序的单步执行 修改变量的值 GDB支持C, C++ ,FORTRAN, PACAL, Java, Chill, assembly, Modula2。 一般来说，GDB会根据调试的程序来确定的相应的调试语言，比如说扩展名为.c, GDB should it is a c programme, extern_name is .c, .cc, .cp, .cxx, .cpp, .c++, GDB should they are c++ programme。 在可以使用GDB调试程序之前，必须使用-g选项编译源文件。例如一个名字命名为test.cpp, 编译时使用如下语句：1g++ -o test -g test.cpp -o表示输出的意思 在命令行上键入gdb并按回车键就可以运行GDB了。 gdb命令描述： 启动、退出、帮助 file FILE 装入想要调试的可执行文件 kill 终止正在调试的程序 quit(q) 退出gdb 执行 next(n) 执行一行源代码但不进入函数内部 step(s) 执行一行源代码而且进入函数内部 run(r) 执行当前被调试的程序 continue(c) 继续运行 断点 break(b) 设置断点 delete 删除断点 disable 禁用断点 enable 启用断点1234567break 3 # 第3行设置断点b 3 # 第3行设置断点br 3 # 第3行设置断点delete br # 删除所有断点delete br 3 # 删除编号为3的断点disable br 3 # 禁用编号为3的断点enable br 3 # 启用编号为3的断点 信息、打印、显示 info(i) 查看一些信息 print(p) 打印表达式、变量的值 list(l) 列出附近的代码，继续l或回车列出接下来的代码 display 显示变量的值 undisplay 取消显示123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555657585960616263646566676869707172737475767778798081828384info locals # 查看局部变量的值info br # 查看所有的断点print mpNums # 打印mpNums的值l # 列出附近的10行代码l 10, 40 # 列出10-40行的代码l 30 # 列出30行附近的10行代码l - # 列出上一个l命令前的10行代码l FunName # 列出这个函数附近的代码l test.cpp main # 列出一个文件中某个函数附近的代码display mpNums # 每次停下的时候显示mpNums的值undisplay 2 # 取消显示编号为2的display``` # watch backtracewatch通常需要和break，run，continue联合使用。```shell(gdb) b main # 设置断点Breakpoint 15 at 0x555555554f59: file test.cpp, line 37.(gdb) r # 运行Starting program: /home/pengfei/MyCode/test.out Breakpoint 15, main (argc=1, argv=0x7fffffffdca8) at test.cpp:37 # 中断37 &#123;(gdb) watch nTest # 设置观察变量nTestHardware watchpoint 16: nTest(gdb) cContinuing.here begin!!!Hardware watchpoint 16: nTest# 在40行的时候nTest发生变化Old value = &#123;-136423008, 32767, 0, 0, 1431665312&#125;New value = &#123;1, 32767, 0, 0, 1431665312&#125;0x0000555555554f97 in main (argc=1, argv=0x7fffffffdca8) at test.cpp:4040 int nTest[5] = &#123;1, 3, 5, 9, 2&#125;;(gdb) cContinuing.Hardware watchpoint 16: nTestOld value = &#123;1, 32767, 0, 0, 1431665312&#125;New value = &#123;1, 3, 0, 0, 1431665312&#125;0x0000555555554f9e in main (argc=1, argv=0x7fffffffdca8) at test.cpp:4040 int nTest[5] = &#123;1, 3, 5, 9, 2&#125;;(gdb) cContinuing.Hardware watchpoint 16: nTestOld value = &#123;1, 3, 0, 0, 1431665312&#125;New value = &#123;1, 3, 5, 0, 1431665312&#125;0x0000555555554fa5 in main (argc=1, argv=0x7fffffffdca8) at test.cpp:4040 int nTest[5] = &#123;1, 3, 5, 9, 2&#125;;(gdb) cContinuing.Hardware watchpoint 16: nTestOld value = &#123;1, 3, 5, 0, 1431665312&#125;New value = &#123;1, 3, 5, 9, 1431665312&#125;0x0000555555554fac in main (argc=1, argv=0x7fffffffdca8) at test.cpp:4040 int nTest[5] = &#123;1, 3, 5, 9, 2&#125;;(gdb) cContinuing.Hardware watchpoint 16: nTestOld value = &#123;1, 3, 5, 9, 1431665312&#125;New value = &#123;1, 3, 5, 9, 2&#125;main (argc=1, argv=0x7fffffffdca8) at test.cpp:4141 vector&lt;int&gt; vtTest(nTest, nTest + 5);(gdb) cContinuing.fun beginreturn1 2 here end!!!Watchpoint 16 deleted because the program has left the block inwhich its expression is valid.__libc_start_main (main=0x555555554f40 &lt;main(int, char**)&gt;, argc=1, argv=0x7fffffffdca8, init=&lt;optimized out&gt;, fini=&lt;optimized out&gt;, rtld_fini=&lt;optimized out&gt;, stack_end=0x7fffffffdc98) at ../csu/libc-start.c:344344 ../csu/libc-start.c: 没有那个文件或目录. backtrace(bt) 查看函数的栈帧]]></content>
       <categories>
         <category>Linux</category>
@@ -267,8 +297,8 @@
   </entry>
   <entry>
     <title><![CDATA[启发式算法【转】]]></title>
-    <url>%2F2018%2F07%2F05%2F%E5%90%AF%E5%8F%91%E5%BC%8F%E7%AE%97%E6%B3%95%2F</url>
-    <content type="text"><![CDATA[转自启发式算法（Heuristic Algorithm）]]></content>
+    <url>%2F2018%2F07%2F05%2FHeuristic_Algorithm%2F</url>
+    <content type="text"><![CDATA[讲一下什么是启发式算法。 转自启发式算法（Heuristic Algorithm）]]></content>
       <categories>
         <category>机器学习</category>
       </categories>
@@ -404,7 +434,7 @@
   </entry>
   <entry>
     <title><![CDATA[linux遇到的问题]]></title>
-    <url>%2F2018%2F06%2F19%2Flinux%E9%81%87%E5%88%B0%E7%9A%84%E9%97%AE%E9%A2%98%2F</url>
+    <url>%2F2018%2F06%2F19%2FLinux_Problems_And_Solutions%2F</url>
     <content type="text"><![CDATA[windows与linux互传文件的便捷方法使用winscp，具体参考Windows和linux(ubuntu)互传文件简便快捷的方法。 可能会遇到拒绝连接的情况，这说明没有建立好通信。操作系统要想使用ssh协议进行通信，就要提供ssh客户端服务和ssh服务器端服务。默认情况下，ubuntu中只提供了ssh客户端服务，而没有提供ssh服务器端服务。所以windows和它通信就不成功。我们只需要进入到linux操作系统ubuntu中安装好ssh服务器端服务就行了。 具体参考使用WinSCP软件在windows和ubuntu中进行文件传输。]]></content>
       <categories>
         <category>Linux</category>
@@ -428,8 +458,8 @@
   </entry>
   <entry>
     <title><![CDATA[linux知识积累]]></title>
-    <url>%2F2018%2F06%2F16%2Flinux%E7%9F%A5%E8%AF%86%E7%A7%AF%E7%B4%AF%2F</url>
-    <content type="text"><![CDATA[dpkg 安装软件安装一个Debian软件包1dpkg -i &lt;package.deb&gt; mv 移动把多个文件移动到一个目录中，-t后面紧跟将要移动的目录。如123mv a b c -t dmv -t d a b cmv Document/* Download/ *表示文件夹下所有文件 rm 删除 123rm a.txtrm -r dirrm -rf dir -r 就是向下递归，不管有多少级目录，一并删除-f 就是直接强行删除，不作任何提示的意思 mkdir 新建文件夹 tar 解压-c:建立压缩档案-x:解压-r:向压缩归档文件末尾追加文件-z:有gzip属性的-j:有bz2属性的-v:显示所有过程-f:使用档案名字，这个参数是最后一个参数，后面只能接档案名 touch 新建文件 1touch test.java ~/.的意思代表/home/用户明目录，假设用户名是x，那么~/就是/home/x/，.是代表此目录本身，但是一般可以不写, 所以cd ~/. 和cd ~ 和cd ~/效果是一样的。但是.后面有东西又是另外一个问题，点在文件名头部，代表一个隐藏文件。~/.local是主目录下一个.local的文件夹的路径，并且从.可以看出，这是一个饮藏文件，如果不用ls -a的话，一般ls是无法看到的 文件权限 Linux 权限基于 UGO 模型进行控制：U 代表 User，是文件或文件夹所属用户的权限；G 代表 Group，是文件或文件夹所属组的权限；O 代表 Other，是其他用户对文件或文件夹的权限。每一个文件的权限基于 UGO 模型进行设置。权限三个一组（rwx），对应 UGO 分别设置（总共有 3 个组 9 个权限）。每一个文件拥有一个所属用户和所属组，对应 U、G模型；不属于该文件所属用户和所属组的使用 O（Other）模型对应的权限。使用ls -l查看权限。 chmod 权限修改u、g、o分别代表用户、组、其他;a代表ugo;+、-代表加入或删除对应权限;r、w、x代表三种权限;-R递归地修改。r = 4 (2 ^ 2); w = 2 (2 ^ 1);x = 1 (2 ^ 0);rw = 4 + 2 = 6;rwx = 4 + 2 + 1 = 7;r-x = 4 + 1 = 5。1234chmod u +rw test.md "给文件的所属用户添加rw权限chmod g -x test.md "给文件的所属组移除x权限chmod go +r test.md "给文件的所属组和其他用户添加r权限chmod a -x test.md "给文件的所属UGO三个模型均移除x权限]]></content>
+    <url>%2F2018%2F06%2F16%2FLinux_Knowledge%2F</url>
+    <content type="text"><![CDATA[dpkg 安装软件安装一个Debian软件包1dpkg -i &lt;package.deb&gt; mv 移动把多个文件移动到一个目录中，-t后面紧跟将要移动的目录。如123mv a b c -t dmv -t d a b cmv Document/* Download/ *表示文件夹下所有文件 rm 删除 123rm a.txtrm -r dirrm -rf dir -r 就是向下递归，不管有多少级目录，一并删除-f 就是直接强行删除，不作任何提示的意思 mkdir 新建文件夹 tar 解压-c:建立压缩档案-x:解压-r:向压缩归档文件末尾追加文件-z:有gzip属性的-j:有bz2属性的-v:显示所有过程-f:使用档案名字，这个参数是最后一个参数，后面只能接档案名 touch 新建文件 1touch test.java ~/.的意思代表/home/用户明目录，假设用户名是x，那么~/就是/home/x/，.是代表此目录本身，但是一般可以不写, 所以cd ~/. 和cd ~ 和cd ~/效果是一样的。但是.后面有东西又是另外一个问题，点在文件名头部，代表一个隐藏文件。~/.local是主目录下一个.local的文件夹的路径，并且从.可以看出，这是一个饮藏文件，如果不用ls -a的话，一般ls是无法看到的 文件权限 Linux 权限基于 UGO 模型进行控制：U 代表 User，是文件或文件夹所属用户的权限；G 代表 Group，是文件或文件夹所属组的权限；O 代表 Other，是其他用户对文件或文件夹的权限。每一个文件的权限基于 UGO 模型进行设置。权限三个一组（rwx），对应 UGO 分别设置（总共有 3 个组 9 个权限）。每一个文件拥有一个所属用户和所属组，对应 U、G模型；不属于该文件所属用户和所属组的使用 O（Other）模型对应的权限。使用ls -l查看权限。 chmod 权限修改u、g、o分别代表用户、组、其他;a代表ugo;+、-代表加入或删除对应权限;r、w、x代表三种权限;-R递归地修改。r = 4 (2 ^ 2); w = 2 (2 ^ 1);x = 1 (2 ^ 0);rw = 4 + 2 = 6;rwx = 4 + 2 + 1 = 7;r-x = 4 + 1 = 5。 1234chmod u +rw test.md "给文件的所属用户添加rw权限chmod g -x test.md "给文件的所属组移除x权限chmod go +r test.md "给文件的所属组和其他用户添加r权限chmod a -x test.md "给文件的所属UGO三个模型均移除x权限 df 磁盘空间情况 mount umount 挂载与取消挂载]]></content>
       <categories>
         <category>Linux</category>
       </categories>
@@ -474,19 +504,6 @@
       </tags>
   </entry>
   <entry>
-    <title><![CDATA[mAP for Object Detection]]></title>
-    <url>%2F2018%2F06%2F12%2FmAP%20for%20Object%20Detection%2F</url>
-    <content type="text"><![CDATA[mAP是目标检测任务中衡量检测精度的指标。 mAP定义及相关概念 mAP: mean Average Precision, 即各类别AP的平均值 AP: PR曲线下面积 PR曲线: Precision-Recall曲线 Precision: TP / (TP + FP) Recall: TP / (TP + FN) TP: IoU&gt;0.5的检测框数量（同一Ground Truth只计算一次） FP: IoU&lt;=0.5的检测框，或者是检测到同一个GT的多余检测框的数量 FN: 没有检测到的GT的数量 mAP的具体计算要计算mAP必须先绘出各类别PR曲线，计算出AP。而如何采样PR曲线，VOC采用过两种不同方法。参见：The PASCAL Visual Object Classes Challenge 2012 (VOC2012) Development Kit 在VOC2010以前，只需要选取当Recall &gt;= 0, 0.1, 0.2, …, 1共11个点时的Precision最大值，然后AP就是这11个Precision的平均值。 在VOC2010及以后，需要针对每一个不同的Recall值（包括0和1），选取其大于等于这些Recall值时的Precision最大值，然后计算PR曲线下面积作为AP值。 假设，对于Aeroplane类别，我们网络有以下输出(BB表示BoundingBox序号，IoU&gt;0.5时GT=1)： BB confidence GT BB1 0.9 1 BB2 0.9 1 BB1 0.8 1 BB3 0.7 0 BB4 0.7 0 BB5 0.7 1 BB6 0.7 0 BB7 0.7 0 BB8 0.7 1 BB9 0.7 1 因此，我们有 TP=5 (BB1, BB2, BB5, BB8, BB9), FP=5 (重复检测到的BB1也算FP)。除了表里检测到的5个GT以外，我们还有2个GT没被检测到，因此: FN = 2. 这时我们就可以按照Confidence的顺序给出各处的PR值，如下： rank Precision Recall 1 1.00 0.14 2 1.00 0.29 3 0.66 0.29 4 0.50 0.29 5 0.40 0.29 6 0.50 0.43 7 0.43 0.43 8 0.38 0.43 9 0.44 0.57 10 0.50 0.71 对于上述PR值，如果我们采用： VOC2010之前的方法，我们选取Recall &gt;= 0, 0.1, …, 1的11处Percision的最大值：1, 1, 1, 0.5, 0.5, 0.5, 0.5, 0.5, 0, 0, 0。此时Aeroplane类别的 AP = 5.5 / 11 = 0.5 VOC2010及以后的方法，对于Recall &gt;= 0, 0.14, 0.29, 0.43, 0.57, 0.71, 1，我们选取此时Percision的最大值：1, 1, 1, 0.5, 0.5, 0.5, 0。此时Aeroplane类别的 AP = (0.14-0)*1 + (0.29-0.14)*1 + (0.43-0.29)*0.5 + (0.57-0.43)*0.5 + (0.71-0.57)*0.5 + (1-0.71)*0 = 0.5 mAP就是对每一个类别都计算出AP然后再计算AP平均值就好了 参考文献[1]. mAP (mean Average Precision) for Object Detection[2]. 目标检测中的mAP是什么含义？]]></content>
-      <categories>
-        <category>深度学习</category>
-        <category>目标检测</category>
-      </categories>
-      <tags>
-        <tag>目标检测</tag>
-        <tag>mAP</tag>
-      </tags>
-  </entry>
-  <entry>
     <title><![CDATA[机器学习中常见的评价指标]]></title>
     <url>%2F2018%2F06%2F12%2F%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B8%AD%E5%B8%B8%E8%A7%81%E8%AF%84%E4%BB%B7%E6%8C%87%E6%A0%87%2F</url>
     <content type="text"><![CDATA[本文介绍机器学习中常见的评价指标，如：AUC、ROC曲线、PR曲线等。 AUC与ROC曲线AUC是一个模型评价指标，只能用于二分类模型的评价。定义为ROC曲线下的面积，在0到1之间。 ROC曲线ROC全称是Receive Operating Characteristic。根据预测结果以及真实标记可以得到一个混淆矩阵。 预测为P 预测为N 实际为P TP FN 实际为N FP TN 定义如下两个量: TPR=\frac{TP}{TP+FN} \\ FPR=\frac{FP}{FP+TN}称TPR为真正例率，表示实际为正例的样本中预测为正例的比例；称FPR为假正例率，表示实际为反例的样本中预测为正例的比例。ROC空间就是以FPR作为横轴，以TPR作为纵轴的二维空间。这样对于上面的混淆矩阵，我们计算出的(FPR,TPR)对应ROC空间上一个点，这个点表示的就是对应分类器的性能。在ROC空间中越靠近左上角的分类器，性能越好。 对于输出为正例概率或者得分的分类器，可以按照概率或者得分的大小对实例进行排序，这样排在前面的实例是正例的可能性大，排在后面的实例是正例的可能性小。然后按顺序，每次以当前实例的概率/得分做阈值。概率/得分超过或等于此阈值的实例预测为正例，否则预测为反例（其实就是把所有排在当前实例前面的实例以及当前实例预测为正例；其余预测为反例）。这样当前实例有m种，每一种都对应一次预测，而每一次预测都有对应的混淆矩阵。于是在ROC空间中我们可以得到m个点，这m个点的连线称为分类器的ROC曲线。m越大，曲线越光滑。 ROC曲线选用的两个指标，都不依赖于具体的类别分布。注意TPR用到的TP和FN同属P列，FPR用到的FP和TN同属N列，所以即使P或N的整体数量发生了改变，也不会影响到另一列。也就是说，即使正例与负例的比例发生了很大变化，ROC曲线也不会产生大的变化。 AUC值的意义AUC值为ROC曲线所覆盖的区域面积，显然，AUC越大，分类器分类效果越好。 AUC=\sum_{i=2}^{m}\frac{(x_{i}-x_{i-1})*(y_i+y_{i-1})}{2} AUC = 1，是完美分类器，采用这个预测模型时，不管设定什么阈值都能得出完美预测。绝大多数预测的场合，不存在完美分类器。 0.5 &lt; AUC &lt; 1，优于随机猜测。这个分类器妥善设定阈值的话，能有预测价值。 AUC = 0.5，跟随机猜测一样（例：丢铜板），模型没有预测价值。 AUC &lt; 0.5，比随机猜测还差。 假设分类器的输出是样本属于正类的socre（置信度），则AUC的物理意义为，任取一对（正、负）样本，正样本的score大于负样本的score的概率。AUC值越大，正确率越高。 使用AUC值作为评价标准是因为很多时候ROC曲线并不能清晰的说明哪个分类器的效果更好，而作为一个数值，对应AUC更大的分类器效果更好。 PR曲线与查准率、查全率、F1-MeasurePR曲线是以R为横坐标，P为纵坐标的曲线。 Precision Recall F1-Measure查准率(Precision)P和查全率(Recall)R的定义为： P=\frac{TP}{TP+FP} \\ R = \frac{TP}{TP+FN}Precision就是当前划分到正样本类别中，被正确分类的比例（即正式正样本所占比例），就是我们一般理解意义上所关心的正样本的分类准确率；Recall = TPR，即当前被分到正样本类别中，真实的正样本占所有正样本的比例，即召回率（召回了多少正样本比例）。 F-Measure是Precision和Recall加权调和平均，当参数a=1时，就是最常见的F1了：： F = \frac{(a^2+1)P*R} {a^2(P+R)} \\ F1 = \frac{2PR} {P+R}我们当然希望检索的结果P越高越好，R也越高越好，但事实上这两者在某些情况下是矛盾的。F1综合了P和R的结果，当F1较高时则比较说明实验方法比较理想。 PR曲线这里举例来说明怎么绘制P-R曲线。假设有测试实例$\{x_1,x_2,x_3,x_4,x_5,x_6\}$，其中真实标记为正例的是$x_1,x_2,x_5$，真实标记为反例的是$x_3,x_4,x_6$。 现在根据学习算法A得到了模型，按其预测的为正例的可能性大小对测试样例进行排序，结果如下：$x_5,x_2,x_1,x_3,x_4,x_6$。 把$x_5$预测为正例，其余预测为反例，则$P=1, R=\frac{1}{3}$，其对应的混淆矩阵如下： 预测为P 预测为N 真实为P 1 2 真实为N 0 3 把$x_5,x_2$预测为正例，其余预测为反例，则$P=1, R=\frac{2}{3}$; 把$x_5,x_2,x_1$预测为正例，其余预测为反例，则$P=1, R=1$; 把$x_5,x_2,x_1,x_3$预测为正例，其余预测为反例，则$P=\frac{3}{4}, R=1$; 把$x_5,x_2,x_1,x_3,x_4$预测为正例，其余预测为反例，则$P=\frac{3}{5}, R=1$; 把$x_5,x_2,x_1,x_3,x_4,x_6$预测为正例，则$P=\frac{1}{2}, R=1$。 综上，可画出P—R曲线如下： 若一个学习器的P-R曲线被另一个学习器完全”包住”，则后者的性能优于前者。当存在交叉时，可以计算曲线围住面积，但比较麻烦。这时候就可以计算F1-Measure。 参考文献[1]. 机器学习之类别不平衡问题 (2) —— ROC和PR曲线[2]. 机器学习之分类性能度量指标 : ROC曲线、AUC值、正确率、召回率[3]. 西瓜书《机器学习》阅读笔记3——Chapter2_ROC曲线[4]. 西瓜书《机器学习》阅读笔记2——Chapter2_查准率、查全率与F1]]></content>
@@ -498,6 +515,19 @@
         <tag>Precision</tag>
         <tag>Recall</tag>
         <tag>ROC</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[mAP for Object Detection]]></title>
+    <url>%2F2018%2F06%2F12%2FmAP%20for%20Object%20Detection%2F</url>
+    <content type="text"><![CDATA[mAP是目标检测任务中衡量检测精度的指标。 mAP定义及相关概念 mAP: mean Average Precision, 即各类别AP的平均值 AP: PR曲线下面积 PR曲线: Precision-Recall曲线 Precision: TP / (TP + FP) Recall: TP / (TP + FN) TP: IoU&gt;0.5的检测框数量（同一Ground Truth只计算一次） FP: IoU&lt;=0.5的检测框，或者是检测到同一个GT的多余检测框的数量 FN: 没有检测到的GT的数量 mAP的具体计算要计算mAP必须先绘出各类别PR曲线，计算出AP。而如何采样PR曲线，VOC采用过两种不同方法。参见：The PASCAL Visual Object Classes Challenge 2012 (VOC2012) Development Kit 在VOC2010以前，只需要选取当Recall &gt;= 0, 0.1, 0.2, …, 1共11个点时的Precision最大值，然后AP就是这11个Precision的平均值。 在VOC2010及以后，需要针对每一个不同的Recall值（包括0和1），选取其大于等于这些Recall值时的Precision最大值，然后计算PR曲线下面积作为AP值。 假设，对于Aeroplane类别，我们网络有以下输出(BB表示BoundingBox序号，IoU&gt;0.5时GT=1)： BB confidence GT BB1 0.9 1 BB2 0.9 1 BB1 0.8 1 BB3 0.7 0 BB4 0.7 0 BB5 0.7 1 BB6 0.7 0 BB7 0.7 0 BB8 0.7 1 BB9 0.7 1 因此，我们有 TP=5 (BB1, BB2, BB5, BB8, BB9), FP=5 (重复检测到的BB1也算FP)。除了表里检测到的5个GT以外，我们还有2个GT没被检测到，因此: FN = 2. 这时我们就可以按照Confidence的顺序给出各处的PR值，如下： rank Precision Recall 1 1.00 0.14 2 1.00 0.29 3 0.66 0.29 4 0.50 0.29 5 0.40 0.29 6 0.50 0.43 7 0.43 0.43 8 0.38 0.43 9 0.44 0.57 10 0.50 0.71 对于上述PR值，如果我们采用： VOC2010之前的方法，我们选取Recall &gt;= 0, 0.1, …, 1的11处Percision的最大值：1, 1, 1, 0.5, 0.5, 0.5, 0.5, 0.5, 0, 0, 0。此时Aeroplane类别的 AP = 5.5 / 11 = 0.5 VOC2010及以后的方法，对于Recall &gt;= 0, 0.14, 0.29, 0.43, 0.57, 0.71, 1，我们选取此时Percision的最大值：1, 1, 1, 0.5, 0.5, 0.5, 0。此时Aeroplane类别的 AP = (0.14-0)*1 + (0.29-0.14)*1 + (0.43-0.29)*0.5 + (0.57-0.43)*0.5 + (0.71-0.57)*0.5 + (1-0.71)*0 = 0.5 mAP就是对每一个类别都计算出AP然后再计算AP平均值就好了 参考文献[1]. mAP (mean Average Precision) for Object Detection[2]. 目标检测中的mAP是什么含义？]]></content>
+      <categories>
+        <category>深度学习</category>
+        <category>目标检测</category>
+      </categories>
+      <tags>
+        <tag>目标检测</tag>
+        <tag>mAP</tag>
       </tags>
   </entry>
   <entry>
@@ -557,18 +587,6 @@
       </tags>
   </entry>
   <entry>
-    <title><![CDATA[SVM和LR的对比分析]]></title>
-    <url>%2F2018%2F06%2F08%2FSVM%E5%92%8CLogistic%E5%9B%9E%E5%BD%92%E7%9A%84%E5%AF%B9%E6%AF%94%2F</url>
-    <content type="text"><![CDATA[本文对svm和lr进行对比分析。 SVM和LR的不同 样本点对模型的作用不同。SVM中，只有关键的样本点（支持向量）对模型结果有影响，而LR中，每一个样本点都对模型有影响。 损失函数不同。SVM是hinge损失函数，LR是log损失函数 输出不同。LR可以对每个样本点给出类别判断的概率值，SVM无法做到。 可处理的特征空间维度不同。LR在特征空间维度很高时，表现较差。SVM则可以通过对偶求解高效应对这一挑战。 防过拟合能力不同。SVM模型中内含了L2正则，可有效防止过拟合。LR要自己添加正则项。 处理非线性分类问题能力不同。SVM可通过核函数灵活地将非线性问题转化为线性分类问题。LR如果要做到这一点，需要自己手动地进行特征转换。 处理分类问题能力不同。SVM只能处理二类分类问题，如果要处理多类别分类，需要进行 one VS one 或one VS all建模。LR可以直接进行多类别分类。 计算复杂度不同。对于海量数据，SVM的效率较低，LR效率比较高。 对数据要求不同。SVM依赖于数据表达出的距离测度，所以需要对数据进行标准化处理，而LR不需要。 能力范围不同。 SVM拓展后，可解决回归问题，LR不能。 抗噪声数据能力不同。SVM的损失函数基于距离测度，抗噪声能力要强于LR。 LR和SVM哪个更能对付异常点Outlier？LR的loss function是对数loss L(y_n f(x_n)) = ln(1 + exp(-y_n f(x_n)))SVM的loss function是hinge损失 L(y_n f(x_n)) = max(0, 1-y_n f(x_n))函数图像如下： 当$f$对样本预测正确并且大于一定程度时，确切说就是当$yf(x)$大于1时，二者的行为明显不同，lr的loss还会鼓励$f$继续增大$yf(x)$，而svm则会告诉$f$，对这个样本预测已经非常完美了。 所谓outlier，是怎么产生的，无非有两种情况，一种就是这个样本的标签$y$搞错了，一种就是没搞错，但这个样本是一个个例，不具备统计特性。 不论对于哪一种情况，svm会在$f$将这个out lier预测的比较正确时，就停止，不会一直优化对outlier的预测，因为没有什么太大意义了。而lr则不同，它会继续要求$f$对这个outlier的预测进行优化，并且永不停止，显然，这样的优化很可能会削弱$f$的泛化性能，因为没有必要死磕outlier 。 并且从思想上讲， SVM只使用了支撑向量，而LR使用的全部样本，所以SVM更不容易被outliers影响。 参考文献[1]. 数据挖掘面试题之SVM和LR的不同[2]. 机器学习面试之LR和SVM哪个更能对付异常点out lier？]]></content>
-      <categories>
-        <category>机器学习</category>
-      </categories>
-      <tags>
-        <tag>logistic</tag>
-        <tag>SVM</tag>
-      </tags>
-  </entry>
-  <entry>
     <title><![CDATA[Logistic回归]]></title>
     <url>%2F2018%2F06%2F08%2FLogistic%E5%9B%9E%E5%BD%92%2F</url>
     <content type="text"><![CDATA[Logistics回归也叫对数几率回归，是统计学习中的经典分类方法，属于线性模型。虽然被叫做回归，实际是一个分类方法。 logistics回归模型假设有一个二分类问题，输出为$y \in \{0, 1\}$，而线性回归模型产生的预测值为$z = w^Tx + b$是实数值，我们希望实现 $z$ 值到 $0/1$ 值的转化，最理想的阶跃函数（unit-step function）。 \begin{equation*} y = \begin{cases} 0 & \mbox{z < 0}\\ 0.5 & \mbox{z = 0} \\ 1 & \mbox{z > 0} \end{cases} \end{equation*}若 $z$ 大于0就判为正类，小于0就判为反类，临界值任意。然而阶跃函数不可导，不连续，我们希望有一个单调可微的函数来供我们使用。我们使用Sigmoid function： \phi (z) = \frac{1}{1+e^{-z}}其图像如下： 将 $z = w^Tx + b$ 代入，得： \phi (z) = \frac{1}{1+e^{-(w^Tx+b)}}化简可得： \ln(\frac{\phi (z) }{1-\phi (z) }) = w^Tx+b事件的几率（odds）是指该事件发生的概率与该事件不发生的概率的比值。如果事件发生的概率是 $p$，那么该事件的几率是 \frac{P}{1-P}该事件的对数几率（log odds）： logit(P)=\log\frac{p}{1-p}由此可以看出，sigmoid函数的作用实际上是在用线性回归模型的预测结果去逼近真实标记的对数几率。 我们将$\phi(z)$视为后验概率估计$P(y=1|x)$，则 ln(\frac{P(y=1|x)}{P(y=0|x)}) = w^Tx+b显然有： P(y=1|x)=\frac{e^{w^Tx+b}}{1+e^{w^Tx+b}} \\ P(y=0|x)=\frac{1}{1+e^{w^Tx+b}}这样的模型就是logistics回归模型。 参数估计最大化似然函数即为最小化负的似然函数，从损失函数的视角来看，它就成了log损失函数了： L(Y,P(Y|X)) = -\log P(Y|X)令$z = w^Tx + b$，设： P(y=1|x;w) = \phi(w^Tx + b) = \phi (z) \\ P(y=0|x;w) = 1 - \phi (z) \\将它带入到上式，通过推导可以得到logistic的损失函数表达式，如下： \begin{aligned} L(y,P(Y=y|x)) = \left\{\begin{matrix} \log (1+exp\ (-z\ )) & ,y=1\\ \log (1+exp\ ( z\ )) & ,y=0\\ \end{matrix}\right. \end{aligned}似然函数： L(w)=\prod_{i=1}^{n}p(y_i|x_i;w)=\prod_{i=1}^{n}(\phi(z_i))^{y_i}(1-\phi(z_i))^{1-y_i}对数似然函数： \begin{eqnarray*} l(w)=lnL(w)=\sum_{i = 1}^n [y_iln(\phi(z_i)) + (1 - y_i)ln(1-\phi(z_i))] \end{eqnarray*}损失函数如下： J(w)=-\frac{1}{n}l(w)=-\frac{1}{n}\sum_{i = 1}^n [y_iln(\phi(z_i)) + (1 - y_i)ln(1-\phi(z_i))]其中，$n$为样本个数。 这样，就可以采用梯度下降或拟牛顿法来最小化损失函数。 梯度下降使用梯度下降法来对参数更新。 参数更新如下： w_j := w_j + \Delta w_j,\ \Delta w_j = -\eta \dfrac{\partial J(w)}{\partial w_j}其中，$w_j$表示第$j$个特征的权重；$\eta$为学习率，用来控制步长。 $sigmoid function$有一个很好的性质就是$\phi’(z) = \phi(z)(1 - \phi(z))$ ，这个导数在接下来的 求偏导如下： \begin{align*} \dfrac{\partial J(w)}{w_j} &= -\frac{1}{n}\sum_{i=1}^n (y_i\dfrac{1}{\phi(z_i)}-(1 - y_i)\dfrac{1}{1-\phi(z_i)})\dfrac{\partial \phi(z_i)}{\partial w_j} \\ &=-\frac{1}{n}\sum_{i=1}^n (y_i\dfrac{1}{\phi(z_i)}-(1 - y_i)\dfrac{1}{1-\phi(z_i)})\phi(z_i)(1-\phi(z_i))\dfrac{\partial z_i}{\partial w_j} \\ &=-\frac{1}{n}\sum_{i=1}^n (y_i(1-\phi(z_i))-(1-y_i)\phi(z_i))x_i^{(j)} \\ &=-\frac{1}{n}\sum_{i=1}^n (y_i-\phi(z_i))x_i^{(j)} \end{align*}所以，在使用梯度下降法更新权重时，只要根据下式即可 w_j :=w_j+\eta \frac{1}{n} \sum_{i=1}^n (y_i-\phi(z_i))x_i^{(j)}$x_i^{(j)}$表示第$i$个样本的第$j$个分量。 随机梯度下降在样本量极大的时候，每次更新权重会非常耗费时间，这时可以采用随机梯度下降法，这时每次迭代时需要将样本重新打乱，然后用下式不断更新权重。 for \ i \ in \ range(n) \\ w_j := w_j + \eta (y_i-\phi(z_i))x_i^{(j)},也就是去掉了求和，而是对随机样本点都进行更新。 为什么使用sigmoid函数事实上，我们对logistic回归做了如下假设：假设给定特征$x$和参数，$y$是服从伯努利分布的二值随机变量。我们的任务用数学语言描述就是，寻找一个模型，输入$x$后，可以告诉我们$y$所服从的随机分布的参数，知道参数后，就可以计算$y$的期望作为预测。分布的参数就是$\phi=P(y=1)$，同时也是该分布的期望。 我们的思路如下： 对每一个确定的$x$，$y$仍然是一个随机变量 该随机变量服从某个随机分布 努力求出这个随机分布的参数 求出该随机分布的期望 将期望作为预测值 从更高的层次看伯努利分布如何根据$x$求出$y$所属的伯努利分布的参数$\phi$呢。直接看，似乎没什么思路，我们需要换个角度。 伯努利分布实际上属于某一大类分布中的一种情况。这一大类分布就是指数分布族。这就好比， $x + 1=0$是一个方程，但从更广泛的角度来看，它只是 $ax + b = 0$一次方程的一种具体情况而已。 从指数分布族的角度来分析，我们很容易构建起$x$与伯努利分布参数的联系。 指数分布族指数分布家族是定义的一组分布式，伯努利分布及高斯分布等分布都可以看做指数分布的特殊形式。指数分布的公式如下： p(y;\eta) = b(y)exp(\eta^TT(y)-a(\eta))$p(y;\eta)$表示$y$在$\eta$下概率，但是它不是条件概率，因为$\eta$不是随机变量。 它告诉我们：对于一个随机变量$y$，只要确定三个函数，就可以确定一类分布。这三个函数就是：$b(y)\quad T(y) \quad A(\eta)$，$\eta$用来确定该类分布的具体参数。 对于伯努利分布，首先，我们假设$p(y=1;\phi) = \phi;p(y=0;\phi) = 1-\phi$，这个就是定义。 \begin{aligned} p(y;\phi) &= \phi^y (1-\phi)^{(1-y)} \\ &= exp[yln\phi+(1-y)ln(1-\phi)]\\ &= exp[yln{\phi \over1-\phi}+ln(1-\phi)]\\ \end{aligned}其中从定义来讲 $y=0 || y=1$（因为伯努利分布） 那么我们做下列转化，令$\eta = ln{\phi \over(1-\phi)},\phi = {1\over1+e^{-\eta}}$,自然参数和均值参数之间的转化正好满足sigmoid函数 b(y)=1\\ T(y)=y\\ a(\eta)=-ln(1-\phi)=-ln{1\over1+e^\eta}最后，可以得到： p(y;\eta) = exp[\eta y-ln{1 \over 1+e^\eta}]可以看到，伯努利分布确实可以改写成指数分布族的形式。并且，伯努利分布的参数$\phi$与$\eta$之间，还有一个sigmoid的函数关系。 参考文献[1]. 《机器学习》 周志华[2]. 《统计学习方法》 李航[3]. 逻辑斯蒂回归[4]. 对数几率回归推导[5]. 逻辑回归(logistic regression)的本质——极大似然估计[6]. 机器学习面试之逻辑回归输出的值是真实的概率吗？[7]. 指数分布族和广义线性模型[8]. 数据挖掘面试题之SVM和LR的不同[9]. logistic回归详解(二）：损失函数（cost function）详解[10]. 逻辑回归的常见面试点总结]]></content>
@@ -578,6 +596,18 @@
       <tags>
         <tag>logistic</tag>
         <tag>极大似然估计</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[SVM和LR的对比分析]]></title>
+    <url>%2F2018%2F06%2F08%2FSVM%E5%92%8CLogistic%E5%9B%9E%E5%BD%92%E7%9A%84%E5%AF%B9%E6%AF%94%2F</url>
+    <content type="text"><![CDATA[本文对svm和lr进行对比分析。 SVM和LR的不同 样本点对模型的作用不同。SVM中，只有关键的样本点（支持向量）对模型结果有影响，而LR中，每一个样本点都对模型有影响。 损失函数不同。SVM是hinge损失函数，LR是log损失函数 输出不同。LR可以对每个样本点给出类别判断的概率值，SVM无法做到。 可处理的特征空间维度不同。LR在特征空间维度很高时，表现较差。SVM则可以通过对偶求解高效应对这一挑战。 防过拟合能力不同。SVM模型中内含了L2正则，可有效防止过拟合。LR要自己添加正则项。 处理非线性分类问题能力不同。SVM可通过核函数灵活地将非线性问题转化为线性分类问题。LR如果要做到这一点，需要自己手动地进行特征转换。 处理分类问题能力不同。SVM只能处理二类分类问题，如果要处理多类别分类，需要进行 one VS one 或one VS all建模。LR可以直接进行多类别分类。 计算复杂度不同。对于海量数据，SVM的效率较低，LR效率比较高。 对数据要求不同。SVM依赖于数据表达出的距离测度，所以需要对数据进行标准化处理，而LR不需要。 能力范围不同。 SVM拓展后，可解决回归问题，LR不能。 抗噪声数据能力不同。SVM的损失函数基于距离测度，抗噪声能力要强于LR。 LR和SVM哪个更能对付异常点Outlier？LR的loss function是对数loss L(y_n f(x_n)) = ln(1 + exp(-y_n f(x_n)))SVM的loss function是hinge损失 L(y_n f(x_n)) = max(0, 1-y_n f(x_n))函数图像如下： 当$f$对样本预测正确并且大于一定程度时，确切说就是当$yf(x)$大于1时，二者的行为明显不同，lr的loss还会鼓励$f$继续增大$yf(x)$，而svm则会告诉$f$，对这个样本预测已经非常完美了。 所谓outlier，是怎么产生的，无非有两种情况，一种就是这个样本的标签$y$搞错了，一种就是没搞错，但这个样本是一个个例，不具备统计特性。 不论对于哪一种情况，svm会在$f$将这个out lier预测的比较正确时，就停止，不会一直优化对outlier的预测，因为没有什么太大意义了。而lr则不同，它会继续要求$f$对这个outlier的预测进行优化，并且永不停止，显然，这样的优化很可能会削弱$f$的泛化性能，因为没有必要死磕outlier 。 并且从思想上讲， SVM只使用了支撑向量，而LR使用的全部样本，所以SVM更不容易被outliers影响。 参考文献[1]. 数据挖掘面试题之SVM和LR的不同[2]. 机器学习面试之LR和SVM哪个更能对付异常点out lier？]]></content>
+      <categories>
+        <category>机器学习</category>
+      </categories>
+      <tags>
+        <tag>logistic</tag>
+        <tag>SVM</tag>
       </tags>
   </entry>
   <entry>
@@ -605,7 +635,7 @@
   </entry>
   <entry>
     <title><![CDATA[主成分分析（PCA）]]></title>
-    <url>%2F2018%2F06%2F06%2F%E4%B8%BB%E6%88%90%E5%88%86%E5%88%86%E6%9E%90%EF%BC%88PCA%EF%BC%89%E5%8E%9F%E7%90%86%2F</url>
+    <url>%2F2018%2F06%2F06%2FPrincipal_Component_Analysize(PCA)%2F</url>
     <content type="text"><![CDATA[主成分分析（Principal components analysis，以下简称PCA）是最重要的降维方法之一。在数据压缩消除冗余和数据噪音消除等领域都有广泛的应用。一般我们提到降维最容易想到的算法就是PCA，下面我们就对PCA的原理做一个总结。 PCA的思想PCA就是找出数据里最主要的方面，用数据里最主要的方面来代替原始数据。具体的，假如我们的数据集是 $n$ 维的，共有 $m$ 个数据$(x^{(1)}，x^{(2)}，…，x^{(m)})$。我们希望将这 $m$ 个数据的维度从 $n$ 维降到 $k$ 维，希望这 $m$ 个 $k$ 维的数据集尽可能的代表原始数据集。我们知道数据从 $n$ 维降到 $k$ 维肯定会有损失，但是我们希望损失尽可能的小。那么如何让这 $k$ 维的数据尽可能表示原来的数据呢？ 先看看最简单的情况，也就是 $n=2，k=1$，也就是将数据从二维降维到一维。数据如下图。我们希望找到某一个维度方向，它可以代表这两个维度的数据。图中列了两个向量方向，红色表示的向量和绿色表示的向量。那么哪个向量可以更好的代表原始数据集呢？ 可以很直观地看到，数据点和直线的距离就在降维的过程中丢失掉了。显然，绿线丢失的数据要比红线多。所以，可以判断，使用红线相比绿线会更好。我们也注意到，投影到红线上的蓝点，离散的程度大于投影到绿线上的蓝点，这也从另一个角度说明投影到红线丢失的信息相对更少。 PCA的优点：不需要设定参数，结果仅与数据有关。可以方便的应用到各个场合。 应用：用于降维，可以减少过拟合。从神经科学到计算机图形学都有它的用武之地。被誉为应用线形代数最有价值的结果之一。事实上，第一主分量集中了最大的信息量，常常占80％以上。第二、三主分量的信息量依次很快递减，到了第N分量，信息几乎为零。选择较少的主成分来表示数据不但可以用作特征降维，还可以用来消除数据中的噪声。在信号处理中认为信号具有较大的方差，噪声有较小的方差。在很多情况下，在特征值谱中排列在后面的主成分(次成分)往往反映了数据中的随机噪声。因此，如果把特征值很小的成分置为0，再反变换回原空间，则实现了对原数据的降噪。 有两种方式解释PCA，最大方差理论和最小平方误差理论。 最大方差理论我们希望投影后投影值尽可能分散，而这种分散程度，可以用数学上的方差来表述。最好的 $k$ 维特征是将 $n$ 维样本点转换为 $k$ 维后，每一维上的样本方差都很大。降维的过程即高维向低维映射的过程(向一些轴投影)。 投影的概念向量$\mathbb x^{(i)}=(x_1^{(i)}，x_2^{(i)}，\dots，x_n^{(i)})^T$在单位向量$u=(u_1，u_2，\dots，u_n)^T$(代表某条直线的方向向量)上的投影的长度为:$\langle x^{(i)}，u \rangle ={x^{(i)}}^Tu=u^Tx^{(i)}$。 由于数据预处理后每一维度均值为0，投影后仍为0，因此方差为: {1\over m}\sum_{i=1}^m({x^{(i)}}^Tu)^2 ={1\over m}\sum_{i=1}^m u^Tx^{(i)}{x^{(i)}}^Tu =u^T({1\over m}\sum_{i=1}^mx^{(i)}{x^{(i)}}^T)u最后一个等号后边的二次项的中间部分即为样本特征的协方差矩阵. 用$A$来表示该协方差矩阵，用 $\lambda$ 表示方差(目标函数)，则上式写作: \lambda=u^TAu由于 $u$ 是单位向量，即 $u^Tu=1$，上式两边都左乘 $u$ 得， $u\lambda=\lambda u=uu^TAu=Au$，即 Au=\lambda u可以看出，$\lambda$ 就是 $A$ 的特征值，$u$ 是特征向量。最佳的投影直线是特征值 $λ$ 最大时对应的特征向量，其次是 $λ$ 第二大对应的特征向量，依次类推。因此，我们只需要对协方差矩阵进行特征值分解，得到的前 $k$ 大特征值对应的特征向量就是最佳的 $k$ 维新特征，而且这 $k$ 维新特征是正交的。得到前 $k$ 个 $u$ 以后，样例 $x$ 通过以下变换可以得到新的样本: y^{(i)}= \begin{bmatrix} u_1^Tx^{(i)} \\ u_2^Tx^{(i)} \\ \vdots \\ u_k^Tx^{(i)} \end{bmatrix} \in \mathbb R^kPCA 将 $n$ 个特征降维到 $k$ 个，可以用来进行数据压缩，如果 100 维的向量最后可以用10 维来表示，那么压缩率为 90%。同样图像处理领域的 KL 变换使用 PCA 做图像压缩。但PCA 要保证降维后，还要保证数据的特性损失最小。 PCA步骤 特征中心化。即每一维的数据都减去该维的均值，得到新的矩阵B。这里的“维”指的就是一个特征（或属性），变换之后每一维的均值都变成了0。 计算B的协方差矩阵C。 计算协方差矩阵C的特征值和特征向量。 选取大的特征值对应的特征向量，得到新的数据集。 参考文献[1]. 《机器学习》 周志华[2]. 特征降维之PCA[3]. 主成分分析PCA]]></content>
       <categories>
         <category>机器学习</category>

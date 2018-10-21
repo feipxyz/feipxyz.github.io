@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="启发式算法," />
+  <meta name="keywords" content="hexo," />
 
 
 
@@ -79,20 +79,18 @@
 
 
 
-<meta name="description" content="转自启发式算法（Heuristic Algorithm）">
-<meta name="keywords" content="启发式算法">
+<meta name="description" content="建博客时候的一些记录。">
+<meta name="keywords" content="hexo">
 <meta property="og:type" content="article">
-<meta property="og:title" content="启发式算法【转】">
-<meta property="og:url" content="flyrie.top/2018/07/05/启发式算法/index.html">
+<meta property="og:title" content="Hexo记录">
+<meta property="og:url" content="flyrie.top/2018/08/15/Hexo_Note/index.html">
 <meta property="og:site_name" content="乡间小路">
-<meta property="og:description" content="转自启发式算法（Heuristic Algorithm）">
+<meta property="og:description" content="建博客时候的一些记录。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="/images/启发式算法_1.png">
-<meta property="og:updated_time" content="2018-08-30T02:07:40.156Z">
+<meta property="og:updated_time" content="2018-10-21T16:07:05.576Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="启发式算法【转】">
-<meta name="twitter:description" content="转自启发式算法（Heuristic Algorithm）">
-<meta name="twitter:image" content="/images/启发式算法_1.png">
+<meta name="twitter:title" content="Hexo记录">
+<meta name="twitter:description" content="建博客时候的一些记录。">
 
 
 
@@ -122,13 +120,13 @@
 
 
 
-  <link rel="canonical" href="flyrie.top/2018/07/05/启发式算法/"/>
+  <link rel="canonical" href="flyrie.top/2018/08/15/Hexo_Note/"/>
 
 
 
 
 
-  <title>启发式算法【转】 | 乡间小路</title>
+  <title>Hexo记录 | 乡间小路</title>
   
 
 
@@ -309,7 +307,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="flyrie.top/2018/07/05/启发式算法/">
+    <link itemprop="mainEntityOfPage" href="flyrie.top/2018/08/15/Hexo_Note/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="乡间小路">
@@ -326,7 +324,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">启发式算法【转】</h1>
+          <h1 class="post-title" itemprop="name headline">Hexo记录</h1>
         
 
         <div class="post-meta">
@@ -338,13 +336,25 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-07-05T01:46:15+08:00">
-                2018-07-05
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-08-15T01:46:15+08:00">
+                2018-08-15
               </time>
             
 
             
+              <span class="post-meta-divider">|</span>
+            
 
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">更新于&#58;</span>
+              
+              <time title="更新于" itemprop="dateModified" datetime="2018-10-22T00:07:05+08:00">
+                2018-10-22
+              </time>
             
           </span>
 
@@ -361,8 +371,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/机器学习/" itemprop="url" rel="index">
-                    <span itemprop="name">机器学习</span>
+                  <a href="/categories/杂七杂八/" itemprop="url" rel="index">
+                    <span itemprop="name">杂七杂八</span>
                   </a>
                 </span>
 
@@ -398,8 +408,16 @@
       
 
       
-        <p><img src="/images/启发式算法_1.png" alt="图片"></p>
-<p>转自<a href="https://www.cnblogs.com/sddai/p/5644011.html" target="_blank" rel="noopener">启发式算法（Heuristic Algorithm）</a></p>
+        <p>建博客时候的一些记录。<a id="more"></a></p>
+<h1 id="文章按更新时间排序"><a href="#文章按更新时间排序" class="headerlink" title="文章按更新时间排序"></a>文章按更新时间排序</h1><p>默认按照文章创建时间排序，现在想改成按照更新时间排序。</p>
+<ol>
+<li><p>找到hexo-generator-index/lib/generator.js</p>
+</li>
+<li><p>对posts.data（储存着所有文章数据）进行自定义排序</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">posts.data = posts.data.sort(function(a, b) &#123;</span><br><span class="line">        if(a.top &amp;&amp; b.top) &#123;</span><br><span class="line">            if(a.top == b.top) return b.date - a.date;</span><br><span class="line">            else return b.top - a.top;</span><br><span class="line">        &#125;</span><br><span class="line">        else if(a.top &amp;&amp; !b.top) &#123;</span><br><span class="line">            return -1;</span><br><span class="line">        &#125;</span><br><span class="line">        else if(!a.top &amp;&amp; b.top) &#123;</span><br><span class="line">            return 1;</span><br><span class="line">        &#125;</span><br><span class="line">        else return b.updated - a.updated;</span><br><span class="line">    &#125;);</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>默认为<code>b.date - a.date</code>。</p>
 
       
     </div>
@@ -441,7 +459,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/启发式算法/" rel="tag"># 启发式算法</a>
+            <a href="/tags/hexo/" rel="tag"># hexo</a>
           
         </div>
       
@@ -454,8 +472,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/06/24/图像风格迁移/" rel="next" title="图像风格迁移">
-                <i class="fa fa-chevron-left"></i> 图像风格迁移
+              <a href="/2018/08/15/C++ 11新特性/" rel="next" title="C++11新特性">
+                <i class="fa fa-chevron-left"></i> C++11新特性
               </a>
             
           </div>
@@ -464,8 +482,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2018/07/17/最大熵模型/" rel="prev" title="最大熵模型【转】">
-                最大熵模型【转】 <i class="fa fa-chevron-right"></i>
+              <a href="/2018/08/15/Linux_Mac_Lantern/" rel="prev" title="【转】如何让lantern不限流量（改mac地址）">
+                【转】如何让lantern不限流量（改mac地址） <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -523,8 +541,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -543,7 +570,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">65</span>
+                  <span class="site-state-item-count">68</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -554,7 +581,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">11</span>
+                  <span class="site-state-item-count">12</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -565,7 +592,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">93</span>
+                  <span class="site-state-item-count">95</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -713,6 +740,14 @@
                     <a href="https://blog.csdn.net/jiange_zh" title="jiange_zh" target="_blank">jiange_zh</a>
                   </li>
                 
+                  <li class="links-of-blogroll-item">
+                    <a href="https://blog.csdn.net/bitcs_zt" title="ZSYGOOOD" target="_blank">ZSYGOOOD</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://buptwc.github.io/" title="演员的自我修养" target="_blank">演员的自我修养</a>
+                  </li>
+                
               </ul>
             </div>
           
@@ -722,6 +757,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#文章按更新时间排序"><span class="nav-number">1.</span> <span class="nav-text">文章按更新时间排序</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       

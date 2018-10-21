@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Linux," />
+  <meta name="keywords" content="Linux,gdb," />
 
 
 
@@ -79,18 +79,18 @@
 
 
 
-<meta name="description" content="dpkg 安装软件安装一个Debian软件包1dpkg -i &amp;lt;package.deb&amp;gt;">
-<meta name="keywords" content="Linux">
+<meta name="description" content="GDB 是Linux下一个用来调试 C 和 C++ 程序的强力调试器，它使你能在程序运行时观察程序的内部结构和内存的使用情况。以下是 gdb 所提供的一些功能:">
+<meta name="keywords" content="Linux,gdb">
 <meta property="og:type" content="article">
-<meta property="og:title" content="linux知识积累">
-<meta property="og:url" content="flyrie.top/2018/06/16/linux知识积累/index.html">
+<meta property="og:title" content="Linux下使用GDB调试">
+<meta property="og:url" content="flyrie.top/2018/08/04/Linux_Gdb/index.html">
 <meta property="og:site_name" content="乡间小路">
-<meta property="og:description" content="dpkg 安装软件安装一个Debian软件包1dpkg -i &amp;lt;package.deb&amp;gt;">
+<meta property="og:description" content="GDB 是Linux下一个用来调试 C 和 C++ 程序的强力调试器，它使你能在程序运行时观察程序的内部结构和内存的使用情况。以下是 gdb 所提供的一些功能:">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-10-14T11:04:12.717Z">
+<meta property="og:updated_time" content="2018-08-17T15:46:55.284Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="linux知识积累">
-<meta name="twitter:description" content="dpkg 安装软件安装一个Debian软件包1dpkg -i &amp;lt;package.deb&amp;gt;">
+<meta name="twitter:title" content="Linux下使用GDB调试">
+<meta name="twitter:description" content="GDB 是Linux下一个用来调试 C 和 C++ 程序的强力调试器，它使你能在程序运行时观察程序的内部结构和内存的使用情况。以下是 gdb 所提供的一些功能:">
 
 
 
@@ -120,13 +120,13 @@
 
 
 
-  <link rel="canonical" href="flyrie.top/2018/06/16/linux知识积累/"/>
+  <link rel="canonical" href="flyrie.top/2018/08/04/Linux_Gdb/"/>
 
 
 
 
 
-  <title>linux知识积累 | 乡间小路</title>
+  <title>Linux下使用GDB调试 | 乡间小路</title>
   
 
 
@@ -307,7 +307,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="flyrie.top/2018/06/16/linux知识积累/">
+    <link itemprop="mainEntityOfPage" href="flyrie.top/2018/08/04/Linux_Gdb/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="乡间小路">
@@ -324,7 +324,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">linux知识积累</h1>
+          <h1 class="post-title" itemprop="name headline">Linux下使用GDB调试</h1>
         
 
         <div class="post-meta">
@@ -336,13 +336,25 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-06-16T00:46:15+08:00">
-                2018-06-16
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-08-04T01:46:14+08:00">
+                2018-08-04
               </time>
             
 
             
+              <span class="post-meta-divider">|</span>
+            
 
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">更新于&#58;</span>
+              
+              <time title="更新于" itemprop="dateModified" datetime="2018-08-17T23:46:55+08:00">
+                2018-08-17
+              </time>
             
           </span>
 
@@ -396,36 +408,45 @@
       
 
       
-        <ol>
-<li>dpkg 安装软件<br>安装一个Debian软件包<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dpkg -i &lt;package.deb&gt;</span><br></pre></td></tr></table></figure>
+        <p>GDB 是Linux下一个用来调试 C 和 C++ 程序的强力调试器，它使你能在程序运行时观察程序的内部结构和内存的使用情况。以下是 gdb 所提供的一些功能:<a id="more"></a></p>
+<ul>
+<li>设置断点</li>
+<li>监视程序变量的值</li>
+<li>程序的单步执行</li>
+<li>修改变量的值</li>
+</ul>
+<p>GDB支持C, C++ ,FORTRAN, PACAL, Java, Chill, assembly, Modula2。 一般来说，GDB会根据调试的程序来确定的相应的调试语言，比如说扩展名为.c, GDB should it is a c programme, extern_name is .c, .cc, .cp, .cxx, .cpp, .c++, GDB should they are c++ programme。</p>
+<p>在可以使用GDB调试程序之前，必须使用<code>-g</code>选项编译源文件。例如一个名字命名为<code>test.cpp</code>, 编译时使用如下语句：<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">g++ -o test -g test.cpp</span><br></pre></td></tr></table></figure></p>
+<p><code>-o</code>表示输出的意思</p>
+<p>在命令行上键入<code>gdb</code>并按回车键就可以运行GDB了。</p>
+<p>gdb命令描述：</p>
+<h2 id="启动、退出、帮助"><a href="#启动、退出、帮助" class="headerlink" title="启动、退出、帮助"></a>启动、退出、帮助</h2><ul>
+<li>file FILE 装入想要调试的可执行文件</li>
+<li>kill 终止正在调试的程序</li>
+<li>quit(q) 退出gdb</li>
+</ul>
+<h2 id="执行"><a href="#执行" class="headerlink" title="执行"></a>执行</h2><ul>
+<li>next(n) 执行一行源代码但不进入函数内部</li>
+<li>step(s) 执行一行源代码而且进入函数内部</li>
+<li>run(r) 执行当前被调试的程序</li>
+<li>continue(c) 继续运行</li>
+</ul>
+<h2 id="断点"><a href="#断点" class="headerlink" title="断点"></a>断点</h2><ul>
+<li>break(b) 设置断点 </li>
+<li>delete 删除断点</li>
+<li>disable 禁用断点</li>
+<li>enable  启用断点<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">break 3      # 第3行设置断点</span><br><span class="line">b 3          # 第3行设置断点</span><br><span class="line">br 3         # 第3行设置断点</span><br><span class="line">delete br    # 删除所有断点</span><br><span class="line">delete br 3  # 删除编号为3的断点</span><br><span class="line">disable br 3 # 禁用编号为3的断点</span><br><span class="line">enable br 3  # 启用编号为3的断点</span><br></pre></td></tr></table></figure>
 </li>
-</ol>
-<a id="more"></a>
-<ol>
-<li>mv 移动<br>把多个文件移动到一个目录中，<code>-t</code>后面紧跟将要移动的目录。如<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mv a b c -t d</span><br><span class="line">mv -t d a b c</span><br><span class="line">mv Document/* Download/</span><br></pre></td></tr></table></figure>
+</ul>
+<h2 id="信息、打印、显示"><a href="#信息、打印、显示" class="headerlink" title="信息、打印、显示"></a>信息、打印、显示</h2><ul>
+<li>info(i) 查看一些信息</li>
+<li>print(p) 打印表达式、变量的值</li>
+<li>list(l) 列出附近的代码，继续l或回车列出接下来的代码</li>
+<li>display 显示变量的值</li>
+<li>undisplay 取消显示<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br></pre></td><td class="code"><pre><span class="line">info locals      # 查看局部变量的值</span><br><span class="line">info br          # 查看所有的断点</span><br><span class="line">print mpNums     # 打印mpNums的值</span><br><span class="line">l                # 列出附近的10行代码</span><br><span class="line">l 10, 40         # 列出10-40行的代码</span><br><span class="line">l 30             # 列出30行附近的10行代码</span><br><span class="line">l -              # 列出上一个l命令前的10行代码</span><br><span class="line">l FunName        # 列出这个函数附近的代码</span><br><span class="line">l test.cpp main  # 列出一个文件中某个函数附近的代码</span><br><span class="line">display mpNums   # 每次停下的时候显示mpNums的值</span><br><span class="line">undisplay 2      # 取消显示编号为2的display</span><br><span class="line">``` </span><br><span class="line"></span><br><span class="line"><span class="meta">#</span> watch backtrace</span><br><span class="line">watch通常需要和break，run，continue联合使用。</span><br><span class="line">```shell</span><br><span class="line">(gdb) b main    # 设置断点</span><br><span class="line">Breakpoint 15 at 0x555555554f59: file test.cpp, line 37.</span><br><span class="line">(gdb) r         # 运行</span><br><span class="line">Starting program: /home/pengfei/MyCode/test.out </span><br><span class="line"></span><br><span class="line">Breakpoint 15, main (argc=1, argv=0x7fffffffdca8) at test.cpp:37  # 中断</span><br><span class="line">37	&#123;</span><br><span class="line">(gdb) watch nTest  # 设置观察变量nTest</span><br><span class="line">Hardware watchpoint 16: nTest</span><br><span class="line">(gdb) c</span><br><span class="line">Continuing.</span><br><span class="line">here begin!!!</span><br><span class="line"></span><br><span class="line">Hardware watchpoint 16: nTest</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span> 在40行的时候nTest发生变化</span><br><span class="line">Old value = &#123;-136423008, 32767, 0, 0, 1431665312&#125;</span><br><span class="line">New value = &#123;1, 32767, 0, 0, 1431665312&#125;</span><br><span class="line">0x0000555555554f97 in main (argc=1, argv=0x7fffffffdca8) at test.cpp:40</span><br><span class="line">40	    int nTest[5] = &#123;1, 3, 5, 9, 2&#125;;</span><br><span class="line">(gdb) c</span><br><span class="line">Continuing.</span><br><span class="line"></span><br><span class="line">Hardware watchpoint 16: nTest</span><br><span class="line"></span><br><span class="line">Old value = &#123;1, 32767, 0, 0, 1431665312&#125;</span><br><span class="line">New value = &#123;1, 3, 0, 0, 1431665312&#125;</span><br><span class="line">0x0000555555554f9e in main (argc=1, argv=0x7fffffffdca8) at test.cpp:40</span><br><span class="line">40	    int nTest[5] = &#123;1, 3, 5, 9, 2&#125;;</span><br><span class="line">(gdb) c</span><br><span class="line">Continuing.</span><br><span class="line"></span><br><span class="line">Hardware watchpoint 16: nTest</span><br><span class="line"></span><br><span class="line">Old value = &#123;1, 3, 0, 0, 1431665312&#125;</span><br><span class="line">New value = &#123;1, 3, 5, 0, 1431665312&#125;</span><br><span class="line">0x0000555555554fa5 in main (argc=1, argv=0x7fffffffdca8) at test.cpp:40</span><br><span class="line">40	    int nTest[5] = &#123;1, 3, 5, 9, 2&#125;;</span><br><span class="line">(gdb) c</span><br><span class="line">Continuing.</span><br><span class="line"></span><br><span class="line">Hardware watchpoint 16: nTest</span><br><span class="line"></span><br><span class="line">Old value = &#123;1, 3, 5, 0, 1431665312&#125;</span><br><span class="line">New value = &#123;1, 3, 5, 9, 1431665312&#125;</span><br><span class="line">0x0000555555554fac in main (argc=1, argv=0x7fffffffdca8) at test.cpp:40</span><br><span class="line">40	    int nTest[5] = &#123;1, 3, 5, 9, 2&#125;;</span><br><span class="line">(gdb) c</span><br><span class="line">Continuing.</span><br><span class="line"></span><br><span class="line">Hardware watchpoint 16: nTest</span><br><span class="line"></span><br><span class="line">Old value = &#123;1, 3, 5, 9, 1431665312&#125;</span><br><span class="line">New value = &#123;1, 3, 5, 9, 2&#125;</span><br><span class="line">main (argc=1, argv=0x7fffffffdca8) at test.cpp:41</span><br><span class="line">41	    vector&lt;int&gt; vtTest(nTest, nTest + 5);</span><br><span class="line">(gdb) c</span><br><span class="line">Continuing.</span><br><span class="line">fun begin</span><br><span class="line">return</span><br><span class="line">1 2 here end!!!</span><br><span class="line"></span><br><span class="line">Watchpoint 16 deleted because the program has left the block in</span><br><span class="line">which its expression is valid.</span><br><span class="line">__libc_start_main (main=0x555555554f40 &lt;main(int, char**)&gt;, argc=1, argv=0x7fffffffdca8, </span><br><span class="line">    init=&lt;optimized out&gt;, fini=&lt;optimized out&gt;, rtld_fini=&lt;optimized out&gt;, stack_end=0x7fffffffdc98)</span><br><span class="line">    at ../csu/libc-start.c:344</span><br><span class="line">344	../csu/libc-start.c: 没有那个文件或目录.</span><br></pre></td></tr></table></figure>
 </li>
-</ol>
-<p><code>*</code>表示文件夹下所有文件</p>
-<ol>
-<li><p>rm 删除</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">rm a.txt</span><br><span class="line">rm -r dir</span><br><span class="line">rm -rf dir</span><br></pre></td></tr></table></figure>
-<p><code>-r</code> 就是向下递归，不管有多少级目录，一并删除<br><code>-f</code> 就是直接强行删除，不作任何提示的意思</p>
-</li>
-<li><p>mkdir 新建文件夹</p>
-</li>
-<li>tar 解压<br><code>-c</code>:建立压缩档案<br><code>-x</code>:解压<br><code>-r</code>:向压缩归档文件末尾追加文件<br><code>-z</code>:有gzip属性的<br><code>-j</code>:有bz2属性的<br><code>-v</code>:显示所有过程<br><code>-f</code>:使用档案名字，这个参数是最后一个参数，后面只能接档案名  </li>
-<li><p>touch 新建文件</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">touch test.java</span><br></pre></td></tr></table></figure>
-</li>
-<li><p><code>~/.</code>的意思<br>代表/home/用户明目录，假设用户名是x，那么<code>~/</code>就是/home/x/，<code>.</code>是代表此目录本身，但是一般可以不写, 所以<code>cd ~/.</code> 和<code>cd ~</code> 和<code>cd ~/</code>效果是一样的。但是<code>.</code>后面有东西又是另外一个问题，点在文件名头部，代表一个隐藏文件。<code>~/.local</code>是主目录下一个<code>.local</code>的文件夹的路径，并且从<code>.</code>可以看出，这是一个饮藏文件，如果不用<code>ls -a</code>的话，一般ls是无法看到的</p>
-</li>
-<li>文件权限  <blockquote>
-<p>Linux 权限基于 <code>UGO</code> 模型进行控制：<br>U 代表 User，是文件或文件夹所属用户的权限；G 代表 Group，是文件或文件夹所属组的权限；O 代表 Other，是其他用户对文件或文件夹的权限。<br>每一个文件的权限基于 UGO 模型进行设置。<br>权限三个一组（rwx），对应 UGO 分别设置（总共有 3 个组 9 个权限）。<br>每一个文件拥有一个所属用户和所属组，对应 U、G模型；不属于该文件所属用户和所属组的使用 O（Other）模型对应的权限。使用<code>ls -l</code>查看权限。</p>
-</blockquote>
-</li>
-<li>chmod 权限修改<br><code>u、g、o</code>分别代表用户、组、其他;<code>a</code>代表ugo;<code>+、-</code>代表加入或删除对应权限;<code>r、w、x</code>代表三种权限;<code>-R</code>递归地修改。r = 4 (2 ^ 2); w = 2 (2 ^ 1);x = 1 (2 ^ 0);rw  = 4 + 2 = 6;rwx = 4 + 2 + 1 = 7;r-x = 4 + 1 = 5。<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">chmod u +rw test.md    "给文件的所属用户添加rw权限</span><br><span class="line">chmod g -x test.md     "给文件的所属组移除x权限</span><br><span class="line">chmod go +r test.md    "给文件的所属组和其他用户添加r权限</span><br><span class="line">chmod a -x test.md     "给文件的所属UGO三个模型均移除x权限</span><br></pre></td></tr></table></figure>
-</li>
-</ol>
+</ul>
+<p>backtrace(bt) 查看函数的栈帧</p>
 
       
     </div>
@@ -469,6 +490,8 @@
           
             <a href="/tags/Linux/" rel="tag"># Linux</a>
           
+            <a href="/tags/gdb/" rel="tag"># gdb</a>
+          
         </div>
       
 
@@ -480,8 +503,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/06/15/ResNet总结/" rel="next" title="ResNet解析">
-                <i class="fa fa-chevron-left"></i> ResNet解析
+              <a href="/2018/08/02/Python垃圾回收机制/" rel="next" title="Python的垃圾回收机制">
+                <i class="fa fa-chevron-left"></i> Python的垃圾回收机制
               </a>
             
           </div>
@@ -490,8 +513,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2018/06/17/GluonCV中Faster-RCNN源码解读/" rel="prev" title="GluonCV中Faster-RCNN源码解读">
-                GluonCV中Faster-RCNN源码解读 <i class="fa fa-chevron-right"></i>
+              <a href="/2018/08/08/动态规划总结/" rel="prev" title="动态规划总结">
+                动态规划总结 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -549,8 +572,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -569,7 +601,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">65</span>
+                  <span class="site-state-item-count">68</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -580,7 +612,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">11</span>
+                  <span class="site-state-item-count">12</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -591,7 +623,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">93</span>
+                  <span class="site-state-item-count">95</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -739,6 +771,14 @@
                     <a href="https://blog.csdn.net/jiange_zh" title="jiange_zh" target="_blank">jiange_zh</a>
                   </li>
                 
+                  <li class="links-of-blogroll-item">
+                    <a href="https://blog.csdn.net/bitcs_zt" title="ZSYGOOOD" target="_blank">ZSYGOOOD</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://buptwc.github.io/" title="演员的自我修养" target="_blank">演员的自我修养</a>
+                  </li>
+                
               </ul>
             </div>
           
@@ -748,6 +788,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#启动、退出、帮助"><span class="nav-number">1.</span> <span class="nav-text">启动、退出、帮助</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#执行"><span class="nav-number">2.</span> <span class="nav-text">执行</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#断点"><span class="nav-number">3.</span> <span class="nav-text">断点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#信息、打印、显示"><span class="nav-number">4.</span> <span class="nav-text">信息、打印、显示</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
