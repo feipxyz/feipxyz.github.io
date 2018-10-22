@@ -87,7 +87,7 @@
 <meta property="og:site_name" content="乡间小路">
 <meta property="og:description" content="记录一些算法题目的解题过程。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-10-21T15:50:00.662Z">
+<meta property="og:updated_time" content="2018-10-22T18:27:14.576Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="算法解题">
 <meta name="twitter:description" content="记录一些算法题目的解题过程。">
@@ -352,8 +352,8 @@
               
                 <span class="post-meta-item-text">更新于&#58;</span>
               
-              <time title="更新于" itemprop="dateModified" datetime="2018-10-21T23:50:00+08:00">
-                2018-10-21
+              <time title="更新于" itemprop="dateModified" datetime="2018-10-23T02:27:14+08:00">
+                2018-10-23
               </time>
             
           </span>
@@ -429,18 +429,27 @@
 </ul>
 </li>
 </ol>
-<p>代码中注意动态规划的初始赋值。<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">bool</span> <span class="title">isMatch</span><span class="params">(<span class="built_in">string</span> s, <span class="built_in">string</span> p)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> m = s.size();</span><br><span class="line">        <span class="keyword">int</span> n = p.size();</span><br><span class="line">        <span class="built_in">vector</span>&lt;<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt;&gt; dp(m + <span class="number">1</span>, <span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; (n + <span class="number">1</span>, <span class="number">0</span>));</span><br><span class="line">        dp[<span class="number">0</span>][<span class="number">0</span>] = <span class="literal">true</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt;= n; i++)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">if</span> (p[i - <span class="number">1</span>] == <span class="string">'*'</span> &amp;&amp; i &gt;= <span class="number">2</span>)</span><br><span class="line">                dp[<span class="number">0</span>][i] = dp[<span class="number">0</span>][i - <span class="number">2</span>];</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt;= m; i++)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">1</span>; j &lt;= n; j++)</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">if</span> (s[i - <span class="number">1</span>] == p[j - <span class="number">1</span>] || p[j - <span class="number">1</span>] == <span class="string">'.'</span>)</span><br><span class="line">                &#123;</span><br><span class="line">                    dp[i][j] = dp[i - <span class="number">1</span>][j - <span class="number">1</span>];</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">else</span> <span class="keyword">if</span> (p[j - <span class="number">1</span>] == <span class="string">'*'</span>)</span><br><span class="line">                &#123;</span><br><span class="line">                    <span class="keyword">if</span> (j &gt;= <span class="number">2</span> &amp;&amp; p[j - <span class="number">2</span>] != s[i - <span class="number">1</span>] &amp;&amp; p[j - <span class="number">2</span>] != <span class="string">'.'</span>)</span><br><span class="line">                    &#123;</span><br><span class="line">                        dp[i][j] = dp[i][j - <span class="number">2</span>];</span><br><span class="line">                    &#125;</span><br><span class="line">                    <span class="keyword">else</span></span><br><span class="line">                    &#123;</span><br><span class="line">                        dp[i][j] = ((j &gt;= <span class="number">2</span> &amp;&amp; dp[i][j - <span class="number">2</span>]) || (j &gt;= <span class="number">2</span> &amp;&amp; dp[i - <span class="number">1</span>][j - <span class="number">2</span>]) || dp[i - <span class="number">1</span>][j]);                    </span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">return</span> dp[m][n];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<p>代码中注意动态规划的初始赋值。</p>
+<h2 id="最长有效括号"><a href="#最长有效括号" class="headerlink" title="最长有效括号"></a>最长有效括号</h2><blockquote>
+<p>leetcode 32<br>给定一个只包含 ‘(‘ 和 ‘)’ 的字符串，找出最长的包含有效括号的子串的长度。<br>输入: <code>&quot;)()())&quot;</code><br>输出: 4<br>解释: 最长有效括号子串为 <code>&quot;()()&quot;</code></p>
+</blockquote>
+<p><strong>解法一：动态规划</strong><br><code>dp[i]</code>表示一i索引为结尾的最大匹配长度，</p>
+<ol>
+<li><code>s[i]</code>为<code>(</code>时：<code>dp[i] = 0</code></li>
+<li><code>s[i] == &#39;)&#39; &amp;&amp; s[i-1] == &#39;(&#39;</code>：<code>dp[i] = dp[i - 2] + 2</code>；</li>
+<li><code>s[i] == &#39;)&#39; &amp;&amp; s[i-1] == &#39;)&#39; &amp;&amp; s[i- dp[i-1] - 1] == &#39;(&#39;</code>：<code>dp[i] = dp[i - dp[i-1] - 2] + dp[i-1] + 2</code></li>
+</ol>
+<p><strong>解答二：栈</strong><br>维持一个<code>(</code>索引的栈，当遇到<code>)</code>时弹出。同时维护一个最左端可以匹配的索引，初始为<code>left = -1</code>。当遇到<code>)</code>，做以下判断：</p>
+<ol>
+<li>栈为空时，就<code>left = i</code>，继续遍历，否则执行2；</li>
+<li>栈不为空时，先pop一个index出来，然后判断栈是否为空。栈为空时，<code>nMax = max(nMax, i - nLeft)</code>；栈不空空时，<code>nMax = max(nMax, i - stack.top())</code>。</li>
+</ol>
 <h1 id="双指针"><a href="#双指针" class="headerlink" title="双指针"></a><center>双指针</center></h1><h2 id="有效三角形的个数"><a href="#有效三角形的个数" class="headerlink" title="有效三角形的个数"></a>有效三角形的个数</h2><blockquote>
 <p>leetcode 611<br>给定一个包含非负整数的数组，你的任务是统计其中可以组成三角形三条边的三元组个数。<br>输入: [2,2,3,4]<br>输出: 3</p>
 </blockquote>
 <p><strong>解答</strong>：</p>
 <p>从小到大排序，假定nums[k]是最大边，只需之前的<code>i &lt; j &lt; k</code>满足<code>nums[i] + nums[j] &gt; nums[k]</code>即可，两边之差小于第三边自动满足。</p>
-<h1 id="栈"><a href="#栈" class="headerlink" title="栈"></a><center>栈</center></h1><h2 id="最长有效括号"><a href="#最长有效括号" class="headerlink" title="最长有效括号"></a>最长有效括号</h2><blockquote>
-<p>leetcode 32<br>给定一个只包含 ‘(‘ 和 ‘)’ 的字符串，找出最长的包含有效括号的子串的长度。<br>输入: <code>&quot;)()())&quot;</code><br>输出: 4<br>解释: 最长有效括号子串为 <code>&quot;()()&quot;</code></p>
-</blockquote>
-<p><strong>解答</strong></p>
-<p>动态规划+栈。维持一个<code>(</code>的栈，当遇到<code>)</code>时弹出。同时维护一个最左端可以匹配的索引，初始为<code>left = -1</code>，当遇到<code>)</code>且栈为空时，就<code>left = i</code>。<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">longestValidParentheses</span><span class="params">(<span class="built_in">string</span> s)</span> </span>&#123;</span><br><span class="line">        <span class="built_in">stack</span>&lt;<span class="keyword">int</span>&gt; pstack;</span><br><span class="line">        <span class="keyword">int</span> nMax = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">int</span> nLeft = <span class="number">-1</span>;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; s.size(); i++)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">if</span> (s[i] == <span class="string">'('</span>)</span><br><span class="line">            &#123;</span><br><span class="line">                pstack.push(i);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">else</span></span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">if</span> (pstack.empty())</span><br><span class="line">                &#123;</span><br><span class="line">                    nLeft = i;</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">else</span></span><br><span class="line">                &#123;</span><br><span class="line">                    pstack.pop();</span><br><span class="line">                    <span class="keyword">if</span> (pstack.empty())</span><br><span class="line">                    &#123;</span><br><span class="line">                        nMax = max(nMax, i - nLeft);</span><br><span class="line">                    &#125;</span><br><span class="line">                    <span class="keyword">else</span></span><br><span class="line">                    &#123;</span><br><span class="line">                        nMax = max(nMax, i - pstack.top());</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> nMax;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
-<h1 id="数组"><a href="#数组" class="headerlink" title="数组"></a><center>数组</center></h1><h2 id="旋转数组"><a href="#旋转数组" class="headerlink" title="旋转数组"></a>旋转数组</h2><blockquote>
+<h1 id="栈"><a href="#栈" class="headerlink" title="栈"></a><center>栈</center></h1><h1 id="数组"><a href="#数组" class="headerlink" title="数组"></a><center>数组</center></h1><h2 id="旋转数组"><a href="#旋转数组" class="headerlink" title="旋转数组"></a>旋转数组</h2><blockquote>
 <p>leetocde 188<br>给定一个数组，将数组中的元素向右移动 k 个位置，其中 k 是非负数。<br>输入: [1,2,3,4,5,6,7] 和 k = 3。输出: [5,6,7,1,2,3,4]<br>输入: [-1,-100,3,99] 和 k = 2。输出: [3,99,-1,-100]</p>
 </blockquote>
 <p><strong>解答</strong>：</p>
@@ -501,8 +510,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/08/15/C++_Learning_note/" rel="next" title="C++知识积累">
-                <i class="fa fa-chevron-left"></i> C++知识积累
+              <a href="/2018/08/08/动态规划总结/" rel="next" title="动态规划总结">
+                <i class="fa fa-chevron-left"></i> 动态规划总结
               </a>
             
           </div>
@@ -511,8 +520,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2018/08/15/C++ 11新特性/" rel="prev" title="C++11新特性">
-                C++11新特性 <i class="fa fa-chevron-right"></i>
+              <a href="/2018/08/15/Linux_Mac_Lantern/" rel="prev" title="【转】如何让lantern不限流量（改mac地址）">
+                【转】如何让lantern不限流量（改mac地址） <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -599,7 +608,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">71</span>
+                  <span class="site-state-item-count">74</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -804,7 +813,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#动态规划"><span class="nav-number">1.</span> <span class="nav-text">动态规划</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#正则表达式匹配"><span class="nav-number">1.1.</span> <span class="nav-text">正则表达式匹配</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#双指针"><span class="nav-number">2.</span> <span class="nav-text">双指针</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#有效三角形的个数"><span class="nav-number">2.1.</span> <span class="nav-text">有效三角形的个数</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#栈"><span class="nav-number">3.</span> <span class="nav-text">栈</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#最长有效括号"><span class="nav-number">3.1.</span> <span class="nav-text">最长有效括号</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#数组"><span class="nav-number">4.</span> <span class="nav-text">数组</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#旋转数组"><span class="nav-number">4.1.</span> <span class="nav-text">旋转数组</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#动态规划"><span class="nav-number">1.</span> <span class="nav-text">动态规划</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#正则表达式匹配"><span class="nav-number">1.1.</span> <span class="nav-text">正则表达式匹配</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#最长有效括号"><span class="nav-number">1.2.</span> <span class="nav-text">最长有效括号</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#双指针"><span class="nav-number">2.</span> <span class="nav-text">双指针</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#有效三角形的个数"><span class="nav-number">2.1.</span> <span class="nav-text">有效三角形的个数</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#栈"><span class="nav-number">3.</span> <span class="nav-text">栈</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#数组"><span class="nav-number">4.</span> <span class="nav-text">数组</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#旋转数组"><span class="nav-number">4.1.</span> <span class="nav-text">旋转数组</span></a></li></ol></li></ol></div>
             
 
           </div>
