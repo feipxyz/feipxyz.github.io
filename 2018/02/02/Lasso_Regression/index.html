@@ -87,7 +87,8 @@
 <meta property="og:description" content="Ridge Regression其实就是带了L2正则化的线性回归。Lasso Regression其实就是带了L1正则项的线性回归。">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="/images/l1-ball.svg">
-<meta property="og:updated_time" content="2018-10-22T04:59:27.139Z">
+<meta property="og:image" content="/images/l2-ball.svg">
+<meta property="og:updated_time" content="2018-10-22T05:15:58.631Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="岭回归、Lasso回归与稀疏性">
 <meta name="twitter:description" content="Ridge Regression其实就是带了L2正则化的线性回归。Lasso Regression其实就是带了L1正则项的线性回归。">
@@ -353,7 +354,7 @@
               
                 <span class="post-meta-item-text">更新于&#58;</span>
               
-              <time title="更新于" itemprop="dateModified" datetime="2018-10-22T12:59:27+08:00">
+              <time title="更新于" itemprop="dateModified" datetime="2018-10-22T13:15:58+08:00">
                 2018-10-22
               </time>
             
@@ -464,7 +465,13 @@ min_{w} \sum_{i=1}^{m}(y_{i}-w^{T}x_{i})^{2}+\lambda ||w||_{1}</script><p>LASSO 
 <p>首先，和 ridge regression 类似，上面形式的 LASSO 问题也等价于如下形式：</p>
 <script type="math/tex; mode=display">
 min_{w} \frac {1}{n} ||y - Xw||^2, \quad s.t.\  ||w||_1 \leq C</script><p>也就是说，我们将模型空间限制在 $w$ 的一个$l_1 -ball$ 中。为了便于可视化，我们考虑2维的情况，在 $(w^1, w^2)$ 平面上可以画出目标函数的等高线，而约束条件则成为平面上半径为 $C$ 的一个 norm ball 。等高线与 norm ball 首次相交的地方就是最优解。如图所示：</p>
-<p><img src="/images/l1-ball.svg" alt="图片"></p>
+<table>
+    <tr>
+        <td><center><img src="/images/l1-ball.svg"></center></td>
+        <td><center><img src="/images/l2-ball.svg"></center></td>
+    </tr>
+</table>
+
 <p>可以看到，$l_1-ball$ 与 $l2-ball$ 的不同就在于它与等高线相交的地方大部分时候实在坐标轴上，而相交点就有 $w^1 = 0$  ，而更高维的时候除了坐标轴以外，还有很多边的轮廓也是既有很大的概率成为第一次相交的地方，又会产生稀疏性。</p>
 <p>相比之下，$l_2-ball$ 就没有这样的性质，因为没有角，所以第一次相交的地方出现在具有稀疏性的位置的概率就变得非常小了。这就从直观上来解释了为什么 $l_1$ regularization 能产生稀疏性，而 $l_2$ regularization 不行的原因了。</p>
 <p>更进一步了解稀疏性来源可移步参考文献1。</p>
@@ -611,7 +618,7 @@ min_{w} \frac {1}{n} ||y - Xw||^2, \quad s.t.\  ||w||_1 \leq C</script><p>也就
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">70</span>
+                  <span class="site-state-item-count">71</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
