@@ -87,7 +87,7 @@
 <meta property="og:site_name" content="乡间小路">
 <meta property="og:description" content="记录一些算法题目的解题过程。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-10-22T18:27:14.576Z">
+<meta property="og:updated_time" content="2018-10-23T18:11:18.775Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="算法解题">
 <meta name="twitter:description" content="记录一些算法题目的解题过程。">
@@ -352,8 +352,8 @@
               
                 <span class="post-meta-item-text">更新于&#58;</span>
               
-              <time title="更新于" itemprop="dateModified" datetime="2018-10-23T02:27:14+08:00">
-                2018-10-23
+              <time title="更新于" itemprop="dateModified" datetime="2018-10-24T02:11:18+08:00">
+                2018-10-24
               </time>
             
           </span>
@@ -444,6 +444,36 @@
 <li>栈为空时，就<code>left = i</code>，继续遍历，否则执行2；</li>
 <li>栈不为空时，先pop一个index出来，然后判断栈是否为空。栈为空时，<code>nMax = max(nMax, i - nLeft)</code>；栈不空空时，<code>nMax = max(nMax, i - stack.top())</code>。</li>
 </ol>
+<h2 id="地下城游戏"><a href="#地下城游戏" class="headerlink" title="地下城游戏"></a>地下城游戏</h2><blockquote>
+<p>leetcode 174<br>最初勇士位于左上角，要走到右下角，每次只能向右或向下。格子中的数字表示在这里会补血或者失血多少。正补负失。当血量小于等于0时勇士立即死去，试问确保骑士能够活着到达右下角所需的最低初始血量。<br>例如下表，最佳路径 <code>右 -&gt; 右 -&gt; 下 -&gt; 下</code>，血量至少为7。</p>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th>-2</th>
+<th>-3</th>
+<th>3</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>-5</td>
+<td>-10</td>
+<td>1</td>
+</tr>
+<tr>
+<td>10</td>
+<td>30</td>
+<td>-5</td>
+</tr>
+</tbody>
+</table>
+</div>
+</blockquote>
+<p><strong>解答</strong></p>
+<p>用<code>dp[i][j]</code>表示勇士进入<code>(i,j)</code>时至少需要的点数。</p>
+<p>假设一种情况：勇士位于一个比较中间的位置<code>(i, j)</code>。先来决定从右走还是从下走。如果从右边走，进入右边时点数至少为8才能最终到达终点；如果从下边走至少需要3点才能最终到达终点。那毫无疑问，我们肯定选择从下面走。而在当前位置，需要失血6点，所有进入当前位置时，血量至少为<code>3-(-6)=9</code>。</p>
+<p>从这个过程我们分析可知，当前位置进入时的血量取决于它后面的位置需要的血量和当前位置补血失血情况，所以需要从后往前计算。具体就是<code>dp[i][j] = min(dp[i+1][j], dp[i][j+1]) - current[i][j]</code>，需要注意的是，如果此时计算出来的<code>dp[i][j] &lt;= 0</code>，那就要置为1。</p>
 <h1 id="双指针"><a href="#双指针" class="headerlink" title="双指针"></a><center>双指针</center></h1><h2 id="有效三角形的个数"><a href="#有效三角形的个数" class="headerlink" title="有效三角形的个数"></a>有效三角形的个数</h2><blockquote>
 <p>leetcode 611<br>给定一个包含非负整数的数组，你的任务是统计其中可以组成三角形三条边的三元组个数。<br>输入: [2,2,3,4]<br>输出: 3</p>
 </blockquote>
@@ -510,8 +540,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/08/15/Linux_Mac_Lantern/" rel="next" title="【转】如何让lantern不限流量（改mac地址）">
-                <i class="fa fa-chevron-left"></i> 【转】如何让lantern不限流量（改mac地址）
+              <a href="/2018/08/15/C++_Learning_note/" rel="next" title="C++知识积累">
+                <i class="fa fa-chevron-left"></i> C++知识积累
               </a>
             
           </div>
@@ -813,7 +843,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#动态规划"><span class="nav-number">1.</span> <span class="nav-text">动态规划</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#正则表达式匹配"><span class="nav-number">1.1.</span> <span class="nav-text">正则表达式匹配</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#最长有效括号"><span class="nav-number">1.2.</span> <span class="nav-text">最长有效括号</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#双指针"><span class="nav-number">2.</span> <span class="nav-text">双指针</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#有效三角形的个数"><span class="nav-number">2.1.</span> <span class="nav-text">有效三角形的个数</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#栈"><span class="nav-number">3.</span> <span class="nav-text">栈</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#数组"><span class="nav-number">4.</span> <span class="nav-text">数组</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#旋转数组"><span class="nav-number">4.1.</span> <span class="nav-text">旋转数组</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#动态规划"><span class="nav-number">1.</span> <span class="nav-text">动态规划</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#正则表达式匹配"><span class="nav-number">1.1.</span> <span class="nav-text">正则表达式匹配</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#最长有效括号"><span class="nav-number">1.2.</span> <span class="nav-text">最长有效括号</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#地下城游戏"><span class="nav-number">1.3.</span> <span class="nav-text">地下城游戏</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#双指针"><span class="nav-number">2.</span> <span class="nav-text">双指针</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#有效三角形的个数"><span class="nav-number">2.1.</span> <span class="nav-text">有效三角形的个数</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#栈"><span class="nav-number">3.</span> <span class="nav-text">栈</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#数组"><span class="nav-number">4.</span> <span class="nav-text">数组</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#旋转数组"><span class="nav-number">4.1.</span> <span class="nav-text">旋转数组</span></a></li></ol></li></ol></div>
             
 
           </div>
