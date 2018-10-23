@@ -1,16 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title></title>
-    <url>%2F2018%2F10%2F22%2FC%2B%2B_Overload%2F</url>
-    <content type="text"></content>
-  </entry>
-  <entry>
-    <title></title>
-    <url>%2F2018%2F10%2F22%2FC%2B%2B_Object_Oriented_Programming%2F</url>
-    <content type="text"></content>
-  </entry>
-  <entry>
     <title><![CDATA[Python闭包与装饰器]]></title>
     <url>%2F2018%2F09%2F29%2FPython_Decorator_Closure%2F</url>
     <content type="text"><![CDATA[先说闭包。 闭包闭包指延伸了作用域的函数，其中包含内部函数对外部函数定义域中自由变量的引用。闭包函数执行完成之后，能够保持当前的状态。 下面用闭包实现一个计算历史平均值的函数：1234567891011def make_averager(): series = [] def averager(new_value): series.append(new_value) total = sum(series) return total / len(series) return averageravg = make_averager()avg(10) # 10avg(11) # 10.5 修改这个函数，不保存历史输入1234567891011121314```pythondef make_averager(): count = 0 total = 0 def averager(new_value): count += 1 total += new_value return total / count return averageravg = make_averager()avg(10) 报错，原因如下： 当 count 是数字或任何不可变类型时，count += 1 语句的作用其实与 count = count + 1 一样。因此,我们在 averager 的定义体中为 count 赋值了，这会把count 变成局部变量。total 变量也受这个问题影响。上一例没遇到这个问题，因为我们没有给 series 赋值，我们只是调用series.append，并把它传给 sum 和 len。也就是说，我们利用了列表是可变的对象这一事实。但是对数字、字符串、元组等不可变类型来说，只能读取，不能更新。如果尝试重新绑定，例如 count = count + 1，其实会隐式创建局部变量 count。这样，count 就不是自由变量了，因此不会保存在闭包中。 nonlocal声明nonlocal声明的作用是把变量标记为自由变量，即使在函数中为变量赋予新值了，也会变成自由变量。如果为 nonlocal 声明的变量赋予新值，闭包中保存的绑定会更新。nonlocal清楚的表明：如果在闭包内给该变量赋值，那么修改的其实是闭包外的那个作用域中的变量，nonlocal不能延伸到模块级别。 因此正确的代码应为：123456789101112131415def make_averager(): count = 0 total = 0 def averager(new_value): nonlocal count, total count += 1 total += new_value return total / count return averageravg = make_averager()avg(10) # 10avg(11) # 10.5 装饰器装饰器是可调用的对象，其参数是另一个函数（被装饰的函数），返回值也是一个函数。Gamma 等人写的《设计模式：可复用面向对象软件的基础》一书是这样概述“装饰器”模式的： “动态地给一个对象添加一些额外的职责”。 装饰器的两大特性： 能把被装饰的函数替换成其他函数。 装饰器在加载模块时立即执行。 装饰器用法上有如下特点： 装饰器通常在一个模块中定义，然后应用到其他模块的函数上。 大多数装饰器会在内部定义一个函数，然后将其返回（而不是返回原函数）。 返回原函数这种技术并非没有用处，很多 Python Web 框架使用这样的装饰器把函数添加到某种中央注册处。 1234567891011def deco(func): def inner(): print('run inner()') func() return inner@decodef target(): print('run target()') target() run inner() run target() 1234567891011121314151617181920212223import timedef clock(func): def clocked(*args): t0 = time.perf_counter() result = func(*args) elapsed = time.perf_counter() - t0 name = func.__name__ arg_str = ','.join(repr(arg) for arg in args) print('[%0.8fs] %s(%s) -&gt; %r' % (elapsed, name, arg_str, result)) return result return clocked@clockdef snooze(seconds): time.sleep(seconds) @clockdef factorial(n): return 1 if n &lt; 2 else n * factorial(n-1)snooze(.123)factorial(6) [0.12320082s] snooze(0.123) -&gt; None [0.00000126s] factorial(1) -&gt; 1 [0.00007819s] factorial(2) -&gt; 2 [0.00013763s] factorial(3) -&gt; 6 [0.00018307s] factorial(4) -&gt; 24 [0.00023142s] factorial(5) -&gt; 120 [0.00027923s] factorial(6) -&gt; 720 720]]></content>
@@ -78,6 +68,14 @@
       </tags>
   </entry>
   <entry>
+    <title><![CDATA[C++ Primer：面向对象]]></title>
+    <url>%2F2018%2F08%2F25%2FC%2B%2B_Primer_Object_Oriented_Programming%2F</url>
+    <content type="text"></content>
+      <categories>
+        <category>C++</category>
+      </categories>
+  </entry>
+  <entry>
     <title><![CDATA[朴素贝叶斯]]></title>
     <url>%2F2018%2F08%2F20%2F%E6%9C%B4%E7%B4%A0%E8%B4%9D%E5%8F%B6%E6%96%AF%2F</url>
     <content type="text"><![CDATA[朴素贝叶斯(naive Bayes) 法是基于贝叶斯定理与特征条件独立假设的分类方法。对于给定的训练数据集，首先基于特征条件独立假设学习输入/输出的联合概率分布；然后基于此模型，对给定的输入$x$，利用贝叶斯定理求出后验概率最大的输出$y$。朴素贝叶斯法实现简单，学习与预测的效率都很高，是一种常用的方法。 基本模型假设我们的输入空间 $\chi \subseteq {R^n}$ 为n维向量的集合，输出空间为类标记集合 $\psi = \{ c_1, c_2, \dots, c_k \}$ ，输入特征向量 $ x \in {R^n} $，输出为类标记 $ y \in \psi $，$X$ 是定义在输入空间 $\chi$ 上的随机向量，$Y$ 是定义在输出空间上 $\psi$ 上的随机变量，朴素贝叶斯通过训练数据集学习联合概率分布 $P(X,Y)$。训练数据集为： T = \{ (x_{1}, y_{1}),(x_{2}, y_{2}),...,(x_{N}, y_{N}) \}具体地， 学习数据的先验概率: P(Y=c_k) \quad k=1, 2, \dots,K 和类条件概率分布 P(X=x|Y=c_k)=P(X^{(1)}=x^{(1)}, \dots, X^{(n)}=x^{(n)} |Y=c_k) \quad k=1, 2, \dots,K条件概率分布 $P(X=x|Y=c_{k} )$ 有指数级数量的参数。事实上，假设$x^{(j)}$ 可取值有 $S_{j}$ 个，$j=1,2,…n$，$Y$ 可取值有 $K$ 个，那么参数个数为 $K\prod_{j=1}^{n} S_{j}$ 。 朴素贝叶斯法对条件概率作了条件独立性假设，具体如下： \begin{align*} P(X=x|Y=c_{k} ) &= P(X^{(1)}=x^{(1)} ,...,X^{(n)}=x^{(n)}|Y=c_{k} ) \\ &=\prod_{j=1}^{n} P(X^{(j)}=x^{(j)}|Y=c_{k} ) \end{align*} 条件独立假设等于说用于分类的特征在类确定的条件下都是独立的，这一假设使得朴素贝叶斯变得简单，但有时会牺牲一定的分类准确性 朴素贝叶斯法分类时，对给定的输入$x$，通过学习到的模型计算后验概率分布 $P(Y=c_{k} |X=x)$，将后验概率最大的类作为输出。后验概率计算根据贝叶斯定理进行： P(Y=c_{k}|X=x )=\frac{P(X=x|Y=c_{k} )P(Y=c_{k} )}{\sum_{k=1}^{K}{P(X=x|Y=c_{k} )P(Y=c_{k} )} }将条件独立性假设代入上式得： P(Y=c_{k}|X=x )=\frac{P(Y=c_{k} )\prod_{j=1}^{n} P(X^{(j)}=x^{(j)}|Y=c_{k} )}{\sum_{k=1}^{K}{P(Y=c_{k} )\prod_{j=1}^{n} P(X^{(j)}=x^{(j)}|Y=c_{k} )} }这是朴素贝叶斯分类的基本公式。于是，朴素贝叶斯分类器可表示为： y=f(x)=argmax_{c_{k} } \frac{P(Y=c_{k} )\prod_{j=1}^{n} P(X^{(j)}=x^{(j)}|Y=c_{k} )}{\sum_{k=1}^{K}{P(Y=c_{k} )\prod_{j=1}^{n} P(X^{(j)}=x^{(j)}|Y=c_{k} )} }注意到分母对所有 $c_{k}$ 都是相同的，所以 y=argmax_{c_{k} } P(Y=c_{k} )\prod_{j=1}^{n} P(X^{(j)}=x^{(j)}|Y=c_{k})参数估计朴素贝叶斯参数估计主要包括极大似然估计和贝叶斯估计。 极大似然估计先验概率的极大似然估计先验概率 $P(Y=c_k)$ 的极大似然估计为： P(Y=c_k) = \frac{\sum_{i=1}^{N}I(y_i=c_k)}{N}, k=1,2, \dots, K证明如下：令参数 $P(Y=c_k)=\theta_k$，其中 $k\in \left\{ 1,2..K \right\}$ 。那么随机变量 $Y$ 的概率可以用参数来表示为: P(Y)=\sum_{k=1}^{K}{\theta_k} I(Y=c_k)$I$ 是指示函数 $Y=c_k$ 成立时，$I=1$；否则 $I=0$。极大似然函数 L(y_1,y_2..y_N; \theta_k)=\prod_{i=1}^{N}P(y_i) =\prod_{k=1}^{K}\theta_k^{N_k}其中 $N$ 为样本总数，$N_k$ 为样本中 $Y=c_k$ 的样本数目，取对数得到 l(\theta_k)=ln(L(\theta))=\sum_{k=1}^{K}{N_k ln\theta_k}要求该函数的最大值，注意到约束条件 $\sum_{k=1}^{K}{\theta_k} =1$ 可以用拉格朗日乘子法，即 l(\theta_k,\lambda)=\sum_{k=1}^{K}{N_k ln\theta_k} +\lambda(\sum_{k=1}^{K}{\theta_k} -1)求导就可以得到： \frac{N_k}{\theta_k}+\lambda=0联立所有的 $k$ 以及约束条件得到 $\theta_k=\frac{N_k}{N}$ 条件概率的极大似然估计条件概率 $P(X^{(j)} = a_{jl}| Y=c_k)$ 的极大似然估计是： P(X^{(j)} = a_{jl}| Y=c_k) = \frac{\sum_{i=1}^{N}I(x_i^{(j)} = a_{jl},y_i=c_k)}{\sum_{i=1}^{N}I(y_i=c_k)}其中，$x_i^{(j)}$ 是第 $i$ 个样本的第 $j$ 个属性；$a_{jl}$ 是第j个属性可能取l的值；$I$ 是指示函数。 证明如下：令参数 $\mu_{lk} = p(X = a_t | y=c_k)$，$N$ 个互相独立的样本，$N$ 为样本总数： T = \{ (x_{1}, y_{1}),(x_{2}, y_{2}),...,(x_{N}, y_{N}) \}那么极大似然函数为： \begin{align*} L((x_{1}, y_{1}),...,(x_N, y_N); \mu) &=\prod_{i=1}^{N}P(x_i, y_i) \\ &=\prod_{l=1}^{L} \prod_{k=1}^{K} (\mu_{lk} \cdot \theta_k)^{N_{lk}} \end{align*}其中 $N_{lk}$ 表示 $N$ 个样本中，$X = a_l$ 并且 $Y=c_k$ 的个数，对似然函数取对数，得： l(\mu) = \sum_{l=1}^{L} \sum_{k=1}^{K}{N_{lk}(ln \mu_{lk} + ln \theta_k)}同样，$\mu_{lk}$ 满足约束条件：$\sum_{l=1}^{L} \mu_{lk} = 1$，使用拉格朗日乘子法，得： \begin{align*} F(\mu,\lambda) &= l(\mu) + \lambda \sum_{k=1}^{K}({\mu_{lk}} -1) \\ & = \sum_{l=1}^{L} \sum_{k=1}^{K} N_{lk}(ln \mu_{lk} + ln \theta_k) + \lambda(\sum_{l=1}^{L} \mu_{lk} - 1) \end{align*}对 $F(\mu, \lambda)$ 求偏导，得：$-\lambda =\frac{N_{lk}}{\mu_{lk}}$，联立 $\sum_{l=1}^{L} \mu_{lk} = 1$ 得： \mu_{lk} = \frac{N_{lk}}{N_k}贝叶斯估计极大似然估计可能出现估计的概率为0，这会影响到后验概率的计算结果，使分类产生偏差。可以采用贝叶斯估计代替极大似然估计。 P_\color{red}\lambda(Y=c_k)=\frac {\sum_{i=1}^N I(y_i=c_k)+\color{red}\lambda} {N+\color{red}{K\lambda}},\quad k=1,2,\ldots,K \\ P_\color{red}\lambda(X^{(j)}=a_{jl}|Y=c_k)=\frac {\sum_{i=1}^N I(x_i^{(j)}=a_{jl},y_i=c_k)+\color{red}\lambda} {\sum_{i=1}^N I(y_i=c_k)+\color{red}{S_j\lambda}}式中，$\lambda \ge 0$，等价于在随机变量的各个取值的频数上赋予一个正数 $\lambda &gt; 0$，当 $\lambda = 0$时就是极大似然估计，常取 $\lambda = 1$，这时称为拉普拉斯平滑， 参考文献[1]. 统计学习方法 李航]]></content>
@@ -113,15 +111,14 @@
       </tags>
   </entry>
   <entry>
-    <title><![CDATA[算法解题]]></title>
-    <url>%2F2018%2F08%2F15%2FAlgorithm_Solutions%2F</url>
-    <content type="text"><![CDATA[记录一些算法题目的解题过程。 动态规划正则表达式匹配 leetcode 10给定一个字符串 (s) 和一个字符模式 (p)。实现支持 . 和 * 的正则表达式匹配。. 匹配任意单个字符。* 匹配零个或多个前面的元素。 解答： dp[i][j]表示s的i长度跟p的j长度是否使用匹配。则有一下情况。 dp[0][0]: 表示当s和p都为空，此时肯定是匹配的，dp[0][0] = 1; 当s为空&quot;&quot;，p为&#39;a*&#39;时，唯一可能match的情况是p匹配为空串，取决于dp[0][j-2]。如: 12s: &quot; &quot; p: &quot;a*b*c*&quot; 当s[i-1] == p[j-1] || p[j-1] == &#39;.&#39; : dp[i][j] = dp[i-1][j-1]； 当p[j-1] == &#39;*&#39;，分下面两种情况讨论： 如果p[j-2] != s[i-1] &amp;&amp; p[j-2] != &#39;.&#39;: 只能把它匹配成一个空串，即0个字符，dp[i][j] = dp[i][j-2]； 否则，可能匹配0个字符，1个字符，多个字符，即dp[i][j] = (dp[i][j-2] || dp[i][j-1] || dp[i-1][j])。 代码中注意动态规划的初始赋值。 最长有效括号 leetcode 32给定一个只包含 ‘(‘ 和 ‘)’ 的字符串，找出最长的包含有效括号的子串的长度。输入: &quot;)()())&quot;输出: 4解释: 最长有效括号子串为 &quot;()()&quot; 解法一：动态规划dp[i]表示一i索引为结尾的最大匹配长度， s[i]为(时：dp[i] = 0 s[i] == &#39;)&#39; &amp;&amp; s[i-1] == &#39;(&#39;：dp[i] = dp[i - 2] + 2； s[i] == &#39;)&#39; &amp;&amp; s[i-1] == &#39;)&#39; &amp;&amp; s[i- dp[i-1] - 1] == &#39;(&#39;：dp[i] = dp[i - dp[i-1] - 2] + dp[i-1] + 2 解答二：栈维持一个(索引的栈，当遇到)时弹出。同时维护一个最左端可以匹配的索引，初始为left = -1。当遇到)，做以下判断： 栈为空时，就left = i，继续遍历，否则执行2； 栈不为空时，先pop一个index出来，然后判断栈是否为空。栈为空时，nMax = max(nMax, i - nLeft)；栈不空空时，nMax = max(nMax, i - stack.top())。 双指针有效三角形的个数 leetcode 611给定一个包含非负整数的数组，你的任务是统计其中可以组成三角形三条边的三元组个数。输入: [2,2,3,4]输出: 3 解答： 从小到大排序，假定nums[k]是最大边，只需之前的i &lt; j &lt; k满足nums[i] + nums[j] &gt; nums[k]即可，两边之差小于第三边自动满足。 栈数组旋转数组 leetocde 188给定一个数组，将数组中的元素向右移动 k 个位置，其中 k 是非负数。输入: [1,2,3,4,5,6,7] 和 k = 3。输出: [5,6,7,1,2,3,4]输入: [-1,-100,3,99] 和 k = 2。输出: [3,99,-1,-100] 解答： 123reverse(nums, 0, nums.length - 1);reverse(nums, 0, k - 1);reverse(nums, k, nums.length - 1);]]></content>
+    <title><![CDATA[Hexo记录]]></title>
+    <url>%2F2018%2F08%2F15%2FHexo_Note%2F</url>
+    <content type="text"><![CDATA[建博客时候的一些记录。 文章按更新时间排序默认按照文章创建时间排序，现在想改成按照更新时间排序。 找到hexo-generator-index/lib/generator.js 对posts.data（储存着所有文章数据）进行自定义排序 12345678910111213posts.data = posts.data.sort(function(a, b) &#123; if(a.top &amp;&amp; b.top) &#123; if(a.top == b.top) return b.date - a.date; else return b.top - a.top; &#125; else if(a.top &amp;&amp; !b.top) &#123; return -1; &#125; else if(!a.top &amp;&amp; b.top) &#123; return 1; &#125; else return b.updated - a.updated; &#125;); 默认为b.date - a.date。]]></content>
       <categories>
-        <category>数据结构与算法</category>
+        <category>杂七杂八</category>
       </categories>
       <tags>
-        <tag>leetcode</tag>
-        <tag>lintcode</tag>
+        <tag>hexo</tag>
       </tags>
   </entry>
   <entry>
@@ -133,6 +130,37 @@
       </categories>
       <tags>
         <tag>C++</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[【转】如何让lantern不限流量（改mac地址）]]></title>
+    <url>%2F2018%2F08%2F15%2FLinux_Mac_Lantern%2F</url>
+    <content type="text"><![CDATA[lantern算是比较好的穿墙工具，可每个月只有500M的不限速流量，用完了就很慢，咋办，改Mac地址啊。 ifconfig 列出你的网卡； ifconfig eth0 down #其中eth0是要修改mac地址网卡的名称； 修改mac地址：ifconfig eth0 hw ether 00:00:00:00:00:00 #将后面的一串0替换成你想改成的mac地址即可； 重新启用网卡：ifconfig eth0 up； 上述修改在重启之后就会失效。 如果计算机每次启动都要修改mac地址 下一步任务是修改开机启动项: 在这里就和其他版本系统差别有点大了ubuntu18.04不再使用init.d管理系统，改用了systemd 使用systemd设置开机启动，systemd默认读取/etc/systemd/system下的配置文件，该目录下的文件会链接/lib/systemd/system/下的文件。一般系统安装完/lib/systemd/system/下会有rc-local.service文件，即我们需要的配置文件。 cat /lib/systemd/system/rc-local.service #查看rc-local.service文件 发现[Unit]区块中有个ConditionFileIsExecutable=/etc/rc.local语句rc.local文件和以前的系统很像 去对应目录下找没找到，应该是系统还没创建额外的启动项 创建/etc/rc.local并编辑文件123sudo touch /etc/rc.localsudo chmod 755 /etc/rc.local #赋予可执行权限sudo gedit /etc/rc.local #使用gedit文本编辑器打开此文件进行编辑 在其中增加123sudo /sbin/ifconfig eth0 downsudo /sbin/ifconfig eth0 hw ether 00:AA:BB:CC:DD:EE （你的MAC地址）sudo /sbin/ifconfig eth0 up 到最后以后他就会每次启动计算机的时候自动修改网卡地址。 本文转自ubuntu18.04修改mac地址]]></content>
+      <categories>
+        <category>杂七杂八</category>
+      </categories>
+  </entry>
+  <entry>
+    <title><![CDATA[C++ Primer：重载]]></title>
+    <url>%2F2018%2F08%2F15%2FC%2B%2B_Primer_Overload%2F</url>
+    <content type="text"></content>
+      <categories>
+        <category>C++</category>
+      </categories>
+      <tags>
+        <tag>C++</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[算法解题]]></title>
+    <url>%2F2018%2F08%2F15%2FAlgorithm_Solutions%2F</url>
+    <content type="text"><![CDATA[记录一些算法题目的解题过程。 动态规划正则表达式匹配 leetcode 10给定一个字符串 (s) 和一个字符模式 (p)。实现支持 . 和 * 的正则表达式匹配。. 匹配任意单个字符。* 匹配零个或多个前面的元素。 解答： dp[i][j]表示s的i长度跟p的j长度是否使用匹配。则有一下情况。 dp[0][0]: 表示当s和p都为空，此时肯定是匹配的，dp[0][0] = 1; 当s为空&quot;&quot;，p为&#39;a*&#39;时，唯一可能match的情况是p匹配为空串，取决于dp[0][j-2]。如: 12s: &quot; &quot; p: &quot;a*b*c*&quot; 当s[i-1] == p[j-1] || p[j-1] == &#39;.&#39; : dp[i][j] = dp[i-1][j-1]； 当p[j-1] == &#39;*&#39;，分下面两种情况讨论： 如果p[j-2] != s[i-1] &amp;&amp; p[j-2] != &#39;.&#39;: 只能把它匹配成一个空串，即0个字符，dp[i][j] = dp[i][j-2]； 否则，可能匹配0个字符，1个字符，多个字符，即dp[i][j] = (dp[i][j-2] || dp[i][j-1] || dp[i-1][j])。 代码中注意动态规划的初始赋值。 最长有效括号 leetcode 32给定一个只包含 ‘(‘ 和 ‘)’ 的字符串，找出最长的包含有效括号的子串的长度。输入: &quot;)()())&quot;输出: 4解释: 最长有效括号子串为 &quot;()()&quot; 解法一：动态规划dp[i]表示一i索引为结尾的最大匹配长度， s[i]为(时：dp[i] = 0 s[i] == &#39;)&#39; &amp;&amp; s[i-1] == &#39;(&#39;：dp[i] = dp[i - 2] + 2； s[i] == &#39;)&#39; &amp;&amp; s[i-1] == &#39;)&#39; &amp;&amp; s[i- dp[i-1] - 1] == &#39;(&#39;：dp[i] = dp[i - dp[i-1] - 2] + dp[i-1] + 2 解答二：栈维持一个(索引的栈，当遇到)时弹出。同时维护一个最左端可以匹配的索引，初始为left = -1。当遇到)，做以下判断： 栈为空时，就left = i，继续遍历，否则执行2； 栈不为空时，先pop一个index出来，然后判断栈是否为空。栈为空时，nMax = max(nMax, i - nLeft)；栈不空空时，nMax = max(nMax, i - stack.top())。 双指针有效三角形的个数 leetcode 611给定一个包含非负整数的数组，你的任务是统计其中可以组成三角形三条边的三元组个数。输入: [2,2,3,4]输出: 3 解答： 从小到大排序，假定nums[k]是最大边，只需之前的i &lt; j &lt; k满足nums[i] + nums[j] &gt; nums[k]即可，两边之差小于第三边自动满足。 栈数组旋转数组 leetocde 188给定一个数组，将数组中的元素向右移动 k 个位置，其中 k 是非负数。输入: [1,2,3,4,5,6,7] 和 k = 3。输出: [5,6,7,1,2,3,4]输入: [-1,-100,3,99] 和 k = 2。输出: [3,99,-1,-100] 解答： 123reverse(nums, 0, nums.length - 1);reverse(nums, 0, k - 1);reverse(nums, k, nums.length - 1);]]></content>
+      <categories>
+        <category>数据结构与算法</category>
+      </categories>
+      <tags>
+        <tag>leetcode</tag>
+        <tag>lintcode</tag>
       </tags>
   </entry>
   <entry>
@@ -155,25 +183,6 @@
       </categories>
       <tags>
         <tag>基础算法</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title><![CDATA[【转】如何让lantern不限流量（改mac地址）]]></title>
-    <url>%2F2018%2F08%2F15%2FLinux_Mac_Lantern%2F</url>
-    <content type="text"><![CDATA[lantern算是比较好的穿墙工具，可每个月只有500M的不限速流量，用完了就很慢，咋办，改Mac地址啊。 ifconfig 列出你的网卡； ifconfig eth0 down #其中eth0是要修改mac地址网卡的名称； 修改mac地址：ifconfig eth0 hw ether 00:00:00:00:00:00 #将后面的一串0替换成你想改成的mac地址即可； 重新启用网卡：ifconfig eth0 up； 上述修改在重启之后就会失效。 如果计算机每次启动都要修改mac地址 下一步任务是修改开机启动项: 在这里就和其他版本系统差别有点大了ubuntu18.04不再使用init.d管理系统，改用了systemd 使用systemd设置开机启动，systemd默认读取/etc/systemd/system下的配置文件，该目录下的文件会链接/lib/systemd/system/下的文件。一般系统安装完/lib/systemd/system/下会有rc-local.service文件，即我们需要的配置文件。 cat /lib/systemd/system/rc-local.service #查看rc-local.service文件 发现[Unit]区块中有个ConditionFileIsExecutable=/etc/rc.local语句rc.local文件和以前的系统很像 去对应目录下找没找到，应该是系统还没创建额外的启动项 创建/etc/rc.local并编辑文件123sudo touch /etc/rc.localsudo chmod 755 /etc/rc.local #赋予可执行权限sudo gedit /etc/rc.local #使用gedit文本编辑器打开此文件进行编辑 在其中增加123sudo /sbin/ifconfig eth0 downsudo /sbin/ifconfig eth0 hw ether 00:AA:BB:CC:DD:EE （你的MAC地址）sudo /sbin/ifconfig eth0 up 到最后以后他就会每次启动计算机的时候自动修改网卡地址。 本文转自ubuntu18.04修改mac地址]]></content>
-      <categories>
-        <category>杂七杂八</category>
-      </categories>
-  </entry>
-  <entry>
-    <title><![CDATA[Hexo记录]]></title>
-    <url>%2F2018%2F08%2F15%2FHexo_Note%2F</url>
-    <content type="text"><![CDATA[建博客时候的一些记录。 文章按更新时间排序默认按照文章创建时间排序，现在想改成按照更新时间排序。 找到hexo-generator-index/lib/generator.js 对posts.data（储存着所有文章数据）进行自定义排序 12345678910111213posts.data = posts.data.sort(function(a, b) &#123; if(a.top &amp;&amp; b.top) &#123; if(a.top == b.top) return b.date - a.date; else return b.top - a.top; &#125; else if(a.top &amp;&amp; !b.top) &#123; return -1; &#125; else if(!a.top &amp;&amp; b.top) &#123; return 1; &#125; else return b.updated - a.updated; &#125;); 默认为b.date - a.date。]]></content>
-      <categories>
-        <category>杂七杂八</category>
-      </categories>
-      <tags>
-        <tag>hexo</tag>
       </tags>
   </entry>
   <entry>
@@ -842,8 +851,8 @@
       </categories>
   </entry>
   <entry>
-    <title><![CDATA[C++ 类]]></title>
-    <url>%2F2018%2F02%2F15%2FC%2B%2B_Class%2F</url>
+    <title><![CDATA[C++ Primer：类]]></title>
+    <url>%2F2018%2F02%2F15%2FC%2B%2B_Primer_Class%2F</url>
     <content type="text"><![CDATA[访问权限 private：只能由该类中的函数、其友元函数访问。不能被任何其他访问，该类的对象也不能访问。 protected：可以被该类中的函数、子类的函数、其友元函数访问。但不能被该类的对象访问。 public：可以被该类中的函数、子类的函数、其友元函数访问，也可以由该类的对象访问。 this指针 this指针是一个特殊的隐藏在对象中的指针，每一个处于生存期的对象都有一个this指针，用于指向对象本身。 当类的某个非静态成员函数被调用时，系统通过this指针确定是哪一个对象的该成员函数被调用。实际上，this指针总是作为一个隐含参数传递给类的每一个成员函数。 this只能在非静态成员函数中使用。全局函数、静态函数都不能使用this。实际上，成员函数默认第一个参数为T * const this。 12345678910111213141516class Point &#123;private: int x, y; public: Point(int a, int b) &#123; x=a; y=b;&#125; void MovePoint( int a, int b)&#123; x+=a; y+=b;&#125; void print()&#123; cout&lt;&lt;"x="&lt;&lt;"y="&lt;&lt;y&lt;&lt;endl;&#125; &#125;; void main( ) &#123; Point point1( 10,10); point1.MovePoint(2,2); point1.print( ); &#125; 当对象point1调用MovePoint(2,2)函数时，即将point1对象的地址传递给了this指针MovePoint函数的原型应该是 void MovePoint( Point *this, int a, int b);第一个参数是指向该类对象的一个指针，我们在定义成员函数时没看见是因为这个参数在类中是隐含的。这样point1的地址传递给了this，所以在MovePoint函数中便显式的写成：void MovePoint(int a, int b) { this-&gt;x +=a; this-&gt; y+= b;}。 静态成员一般情况下，同一个类不同对象的数据成员所占用的内存空间是不同的。在有些情况下，类的数据成员的值对每个对象都是相同的，如当前已创建对象的数量，这时可以将该数据成员声明为静态数据成员（占有相同的存储单元）。 静态成员的初始化：放在类定义的外部。int Person::m_nCount = 0 无论类的对象有多少，类的静态数据成员只有一份，存储在同一个内存空间。即使没有创建类的一个对象，类的静态数据成员也是存在的。 使用静态数据成员保证了该数据成员值的唯一性。 子类可以访问父类的静态成员 静态成员无多态特性 静态成员函数也与一个类相关联，而不只与一个特定的对象相关联。区别非静态成员函数，静态成员函数没有this指针，因为类的静态成员函数只有一个运行实例。 静态成员函数只能访问类的静态成员（成员变量和成员函数），而不能访问类的非静态成员。 内联函数如果成员函数的定义放在类体内(该函数声明之处)，这时成员函数将变成内联函数。 友元函数类具有封装性隐藏了对象的数据成员，保证了对象的安全，但有时带来了编程的不方便。C++提供了一种函数，它虽然不是一个类的成员函数，但可以象成员函数一样访问该类的所有成员，包括私有成员和保护成员。这种函数称为友元（friend）函数。 一个函数要成为一个类的友员函数，需要在类的定义中声明该函数，并在函数声明的前面加上关键字friend。 友元函数本身的定义没有什么特殊要求，可以是一般函数，也可以是另一个类的成员函数。 为了能够在友元函数中访问并设置类的私有数据成员，一个类的友元函数一般将该类的引用作为函数参数。 12345class A&#123; friend void display(A); // 友元函数是一个一般函数 friend void B::BMemberFun(A&amp;); // 友元函数是另一个类B的成员函数&#125; 友元类友元的另一种类型是友元类，一个类可以声明另一个类为其友元类，这个友元类的所有成员函数都可以访问声明其为友元的类的所有成员。 由于访问权限控制符不影响友元声明，友元声明可放在类体中任何地方，建议把友元声明放在类体的开始位置。 友元关系是单方向的，不具有交换性和传递性。 使用友元虽然简化了编程，并可避免调用成员函数的开销，但破坏了类的封装性，建议谨慎使用。 继承与派生继承方式 private 属性不能够被继承。 使用private继承，父类的protected和public属性在子类中变为private； 使用protected继承，父类的protected和public属性在子类中变为protected； 使用public继承，父类中的protected和public属性不发生改变; 无论哪种派生方式，派生类都继承了基类的所有成员，包括私有成员。我们虽然不能在派生类Circle中直接访问私有数据成员x和y，但可以通过继承的公有成员函数getX()、getY()和setPoint()访问或设置它们。 基类和派生类的构造函数 一个派生类对象也属于其基类，因此当程序创建一个派生类对象时，系统首先自动创建一个基类对象。 在调用派生类的构造函数构建派生类对象时，系统首先调用基类的构造函数构建基类对象。当派生类对象的生存期结束时，首先调用派生类的析构函数，然后调用基类的析构函数 编译器在对程序编译时，首先生成基类构造函数的调用代码，然后生成派生类构造函数的调用代码。 基类构造函数的调用方式 隐式方式是指在派生类的构造函数中不指定对应的基类的构造函数，调用的是基类的默认构造函数(即含有缺省参数值或不带参数的构造函数)。 显式方式是指在派生类的构造函数中指定要调用的基类构造函数，并将派生类构造函数的部分参数值传递给基类构造函数 除非基类有默认的构造函数，否则必须采用显式调用方式。 123456789101112131415161718192021222324class A&#123;public: A(int x,int y) &#123; a = x; b = y; &#125;private: int a; int b;&#125;;//基类A没有默认的构造函数，其现有的构造函数需要传递参数，通过派生类构造函数调用A构造函数时必须如下显式调用class B:public A&#123;public: B(int x,int y,int z):A(x,y) &#123; c = z; &#125;private: int c;&#125;; 多重继承 处于同一层次的各基类构造函数的执行顺序取决于定义派生类时基类的顺序。多继承下派生类的定义格式如下： 123456789101112class A&#123;\\&#125;;class B&#123;\\&#125;;class C: public A, public B&#123;\\&#125;; 二义性问题 虚基类虚基类并不是一种新的类，而是一种派生方式。采用虚基类方式定义派生类，在创建派生类的对象时，类层次结构中虚基类的成员只出现一次，即基类的一个副本被所有派生类对象所共享。采用虚基类方式定义派生类的方法是在基类的前面加上关键字virtual。图片 图片]]></content>
       <categories>
         <category>C++</category>
