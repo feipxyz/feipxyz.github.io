@@ -87,7 +87,7 @@
 <meta property="og:site_name" content="乡间小路">
 <meta property="og:description" content="记录一些算法题目的解题过程。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-10-24T16:41:20.216Z">
+<meta property="og:updated_time" content="2018-10-24T16:49:22.932Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="算法解题">
 <meta name="twitter:description" content="记录一些算法题目的解题过程。">
@@ -352,7 +352,7 @@
               
                 <span class="post-meta-item-text">更新于&#58;</span>
               
-              <time title="更新于" itemprop="dateModified" datetime="2018-10-25T00:41:20+08:00">
+              <time title="更新于" itemprop="dateModified" datetime="2018-10-25T00:49:22+08:00">
                 2018-10-25
               </time>
             
@@ -416,7 +416,7 @@
 <p><strong>解答：</strong></p>
 <p>用 $dp[i][j]$ 表示前 $i$ 个物品放入 $j$ 容量大小的包里面能装多满，对于 $dp[i][j]$，有两种选择，第一是将 $A[i]$ 不放入，此时，$dp[i][j]=dp[i-1][j]$；第二是将 $A[i]$ 放入，此时 $dp[i][j]=dp[i-1][j-A[i]]+A[i]$。我么当然选择两者中最大的，所以 $dp[i][j]=max(dp[i-1][j], \; dp[i-1][j-A[i]]+A[i])$。</p>
 <p><strong>优化：</strong></p>
-<p>以上揭发空间复杂度为<code>O(n*m)</code>，但是注意递推公式，第 $i$ 轮更新之与上一轮即 $i-1$ 的值有关，所以我们可以将空间复杂度优化到<code>O(m)</code>，$dp[j]$ 表示能容量为 $j$ 的背包能装多满，则 $dp[j] = max(dp[j], \; dp[j - A[i]] + A[i])$。注意此时遍历背包容量的时候要从后往前遍历，因为我们是用上一轮的第 $j-A[i]$ 个元素更新本轮的第 $j$ 个元素，从后往前遍历，则保证没有遍历到某元素的时候，此元素前面的值保持不变。</p>
+<p>想办法优化一些空间复杂度。注意递推公式，第 $i$ 轮更新只与上一轮即 $i-1$ 轮的值有关，所以我们可以将空间复杂度优化到<code>O(m)</code>，$dp[j]$ 表示容量为 $j$ 的背包能装多满，则 $dp[j] = max(dp[j], \; dp[j - A[i]] + A[i])$。注意此时遍历背包容量的时候要从后往前遍历，因为我们是用上一轮的第 $j-A[i]$ 个元素更新本轮的第 $j$ 个元素，从后往前遍历，则保证没有遍历到某元素的时候，此元素之前的元素保持不变。</p>
 <h3 id="能装入的最大价值"><a href="#能装入的最大价值" class="headerlink" title="能装入的最大价值"></a>能装入的最大价值</h3><blockquote>
 <p>lintcode 125<br>题目描述：给出n个物品的体积A[i]和其价值V[i]，将他们装入一个大小为m的背包，最多能装入的总价值有多大？<br>例如：对于物品体积[2, 3, 5, 7]和对应的价值[1, 5, 2, 4], 假设背包大小为10的话，最大能够装入的价值为9。  </p>
 </blockquote>
@@ -485,7 +485,7 @@
 </blockquote>
 <p><strong>解答：</strong></p>
 <p>用<code>dp[i][j]</code>表示勇士进入<code>(i,j)</code>时至少需要的点数。</p>
-<p>假设一种情况：勇士位于一个比较中间的位置<code>(i, j)</code>。先来决定从右走还是从下走。如果从右边走，进入右边时点数至少为8才能最终到达终点；如果从下边走至少需要3点才能最终到达终点。那毫无疑问，我们肯定选择从下面走。而在当前位置，需要失血6点，所有进入当前位置时，血量至少为<code>3-(-6)=9</code>。</p>
+<p>假设一种情况：勇士位于一个比较中间的位置<code>(i, j)</code>。先来决定从右走还是从下走。如果从右边走，进入右边时点数至少为8才能最终到达终点；如果从下边走至少需要3点才能最终到达终点。那毫无疑问，我们肯定选择从下面走。而在当前位置，需要失血6点，所以进入当前位置时，血量至少为<code>3-(-6)=9</code>。</p>
 <p>从这个过程我们分析可知，当前位置进入时的血量取决于它后面的位置需要的血量和当前位置补血失血情况，所以需要从后往前计算。具体就是<code>dp[i][j] = min(dp[i+1][j], dp[i][j+1]) - current[i][j]</code>，需要注意的是，如果此时计算出来的<code>dp[i][j] &lt;= 0</code>，那就要置为1。</p>
 <h2 id="Coin-Change"><a href="#Coin-Change" class="headerlink" title="Coin Change"></a>Coin Change</h2><blockquote>
 <p>leetcode 322<br>给定不同面额的硬币 coins 和一个总金额 amount。编写一个函数来计算可以凑成总金额所需的最少的硬币个数。如果没有任何一种硬币组合能组成总金额，返回 -1。<br>输入: coins = [1, 2, 5], amount = 11<br>输出: 3<br>解释: 11 = 5 + 5 + 1  </p>
@@ -576,8 +576,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/08/08/动态规划总结/" rel="next" title="动态规划总结">
-                <i class="fa fa-chevron-left"></i> 动态规划总结
+              <a href="/2018/08/15/C++_Primer_Overload/" rel="next" title="C++ Primer：重载">
+                <i class="fa fa-chevron-left"></i> C++ Primer：重载
               </a>
             
           </div>
@@ -586,8 +586,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2018/08/15/Hexo_Note/" rel="prev" title="Hexo记录">
-                Hexo记录 <i class="fa fa-chevron-right"></i>
+              <a href="/2018/08/15/C++ 11新特性/" rel="prev" title="C++11新特性">
+                C++11新特性 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
