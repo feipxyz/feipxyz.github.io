@@ -87,7 +87,7 @@
 <meta property="og:site_name" content="乡间小路">
 <meta property="og:description" content="记录一些算法题目的解题过程。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-10-24T12:20:11.968Z">
+<meta property="og:updated_time" content="2018-10-24T16:41:20.216Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="算法解题">
 <meta name="twitter:description" content="记录一些算法题目的解题过程。">
@@ -352,8 +352,8 @@
               
                 <span class="post-meta-item-text">更新于&#58;</span>
               
-              <time title="更新于" itemprop="dateModified" datetime="2018-10-24T20:20:11+08:00">
-                2018-10-24
+              <time title="更新于" itemprop="dateModified" datetime="2018-10-25T00:41:20+08:00">
+                2018-10-25
               </time>
             
           </span>
@@ -492,6 +492,24 @@
 </blockquote>
 <p><strong>解答：</strong></p>
 <p>用<code>dp[i]</code>表示钱数为i时需要的硬币数，<code>coin[j]</code>表示硬币面值，那么显然<code>dp[i] = min(dp[i - coin[j]]) + 1</code>。可见只需从前往后遍历，依次求出<code>dp[i]</code>，最后一个即为所求。注意初始条件<code>dp[coin[j]] = 1</code>。</p>
+<h2 id="Coin-Change-2"><a href="#Coin-Change-2" class="headerlink" title="Coin Change 2"></a>Coin Change 2</h2><blockquote>
+<p>leetcode 518<br>给定不同面额的硬币和一个总金额。写出函数来计算可以凑成总金额的硬币组合数。假设每一种面额的硬币有无限个。<br>输入: amount = 5, coins = [1, 2, 5]<br>输出: 4<br>解释: 有四种方式可以凑成总金额:<br>5=5<br>5=2+2+1<br>5=2+1+1+1<br>5=1+1+1+1+1  </p>
+</blockquote>
+<p><strong>解答：</strong></p>
+<p>思路跟背包问题很像。<br>定义子问题 $dp[i][j]$ : 用前 $i$ 种硬币组成金额 $j$ 的总组合数;<br>最终目标：$dp[n][amount]$<br>求 $dp[i][j]$ 时：</p>
+<ol>
+<li><p>不用第 $i$ 种硬币。</p>
+<ul>
+<li>用不了：$j &lt; coins[i]$; </li>
+<li>能用但不用。 两种情况都只用前 $i-1$ 种硬币去组成 $j$， 此时共有 $dp[i-1][j]$ 种组合；</li>
+</ul>
+</li>
+<li><p>用第 $i$ 种硬币, 此时因为硬币无限，所以它的前一个状态仍能用 $i$ 种硬币，即此时共有 $dp[i][j-coins[i]]$ 种组合。</p>
+</li>
+</ol>
+<p>因此总的组合数是两种情况的和：$dp[i][j] = dp[i-1][j] + dp[i][j-coins[i-1]]$。</p>
+<p><strong>优化：</strong></p>
+<p>优化空间，$dp[j]$ 表示用前 $i$ 种银币组成金额 $j$ 的总组合数，在迭代时 $dp[j] = dp[j] + dp[j - coins[i]]$。</p>
 <h1 id="双指针"><a href="#双指针" class="headerlink" title="双指针"></a><center>双指针</center></h1><h2 id="有效三角形的个数"><a href="#有效三角形的个数" class="headerlink" title="有效三角形的个数"></a>有效三角形的个数</h2><blockquote>
 <p>leetcode 611<br>给定一个包含非负整数的数组，你的任务是统计其中可以组成三角形三条边的三元组个数。<br>输入: [2,2,3,4]<br>输出: 3</p>
 </blockquote>
@@ -558,8 +576,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/08/15/Linux_Mac_Lantern/" rel="next" title="【转】如何让lantern不限流量（改mac地址）">
-                <i class="fa fa-chevron-left"></i> 【转】如何让lantern不限流量（改mac地址）
+              <a href="/2018/08/08/动态规划总结/" rel="next" title="动态规划总结">
+                <i class="fa fa-chevron-left"></i> 动态规划总结
               </a>
             
           </div>
@@ -568,8 +586,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2018/08/15/C++_Primer_Overload/" rel="prev" title="C++ Primer：重载">
-                C++ Primer：重载 <i class="fa fa-chevron-right"></i>
+              <a href="/2018/08/15/Hexo_Note/" rel="prev" title="Hexo记录">
+                Hexo记录 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -861,7 +879,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#动态规划"><span class="nav-number">1.</span> <span class="nav-text">动态规划</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#背包问题"><span class="nav-number">1.1.</span> <span class="nav-text">背包问题</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#能装多满"><span class="nav-number">1.1.1.</span> <span class="nav-text">能装多满</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#能装入的最大价值"><span class="nav-number">1.1.2.</span> <span class="nav-text">能装入的最大价值</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#正则表达式匹配"><span class="nav-number">1.2.</span> <span class="nav-text">正则表达式匹配</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#最长有效括号"><span class="nav-number">1.3.</span> <span class="nav-text">最长有效括号</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#地下城游戏"><span class="nav-number">1.4.</span> <span class="nav-text">地下城游戏</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Coin-Change"><span class="nav-number">1.5.</span> <span class="nav-text">Coin Change</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#双指针"><span class="nav-number">2.</span> <span class="nav-text">双指针</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#有效三角形的个数"><span class="nav-number">2.1.</span> <span class="nav-text">有效三角形的个数</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#栈"><span class="nav-number">3.</span> <span class="nav-text">栈</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#数组"><span class="nav-number">4.</span> <span class="nav-text">数组</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#旋转数组"><span class="nav-number">4.1.</span> <span class="nav-text">旋转数组</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#动态规划"><span class="nav-number">1.</span> <span class="nav-text">动态规划</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#背包问题"><span class="nav-number">1.1.</span> <span class="nav-text">背包问题</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#能装多满"><span class="nav-number">1.1.1.</span> <span class="nav-text">能装多满</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#能装入的最大价值"><span class="nav-number">1.1.2.</span> <span class="nav-text">能装入的最大价值</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#正则表达式匹配"><span class="nav-number">1.2.</span> <span class="nav-text">正则表达式匹配</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#最长有效括号"><span class="nav-number">1.3.</span> <span class="nav-text">最长有效括号</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#地下城游戏"><span class="nav-number">1.4.</span> <span class="nav-text">地下城游戏</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Coin-Change"><span class="nav-number">1.5.</span> <span class="nav-text">Coin Change</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Coin-Change-2"><span class="nav-number">1.6.</span> <span class="nav-text">Coin Change 2</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#双指针"><span class="nav-number">2.</span> <span class="nav-text">双指针</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#有效三角形的个数"><span class="nav-number">2.1.</span> <span class="nav-text">有效三角形的个数</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#栈"><span class="nav-number">3.</span> <span class="nav-text">栈</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#数组"><span class="nav-number">4.</span> <span class="nav-text">数组</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#旋转数组"><span class="nav-number">4.1.</span> <span class="nav-text">旋转数组</span></a></li></ol></li></ol></div>
             
 
           </div>
