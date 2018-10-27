@@ -1,6 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[【转】自适应学习率算法]]></title>
+    <url>%2F2018%2F10%2F26%2FAlgorithms_With_Adaptive_Learning_Rates%2F</url>
+    <content type="text"><![CDATA[神经网络研究员早就意识到学习率肯定是难以设置的超参数之一，因为它对模型的性能有显著的影响。损失通常高度敏感于参数空间中的某些方向，而不敏感于其他。动量算法可以在一定程度缓解这些问题，但这样做的代价是引入了另一个超参数。在这种情况下，自然会问有没有其他好的方法。如果我们相信方向敏感度在某种程度上是轴对齐的，那么每个参数设置不同的学习率，在整个学习过程中自动适应这些学习率便是有道理的。本节将简要说明这些自适应参数学习率的算法。 AdaGrad优化算法中，无论是梯度下降、随机梯度下降、小批量随机梯度下降还是使用动量法，目标函数自变量的每一个元素在相同时刻都使用同一个学习率来自我迭代。 举个例子，假设目标函数为 $f$，自变量为一个多维向量 $[x_1, x_2]^\top$，该向量中每一个元素在更新时都使用相同的学习率。例如在学习率为 $\eta$ 的梯度下降中，元素 $x_1$ 和 $x_2$ 都使用相同的学习率$\eta$来自我迭代： x_1 \leftarrow x_1 - \eta \frac{\partial{f}}{\partial{x_1}}, \ x_2 \leftarrow x_2 - \eta \frac{\partial{f}}{\partial{x_2}}如何让 $x_1$ 和 $x_2$ 使用不同的学习率自我迭代？Adagrad就是一个在迭代过程中不断自我调整学习率，并让模型参数中每个元素都使用不同学习率的优化算法。 Adagrad的算法会使用一个小批量随机梯度 $\boldsymbol{g}_t$ 按元素平方的累加变量 $\boldsymbol{s}_t$ 。在时间步0，adagrad将 $\boldsymbol{s}_0$ 中每个元素初始化为0。在时间步 $t$，首先将小批量随机梯度 $\boldsymbol{g}_t$ 按元素平方后累加到变量 $\boldsymbol{s}_t$： \boldsymbol{s}_t \leftarrow \boldsymbol{s}_{t-1} + \boldsymbol{g}_t \odot \boldsymbol{g}_t \\ \boldsymbol{x}_t \leftarrow \boldsymbol{x}_{t-1} - \frac{\eta}{\sqrt{\boldsymbol{s}_t + \epsilon}} \odot \boldsymbol{g}_t其中 $\eta$ 是初始学习率且 $\eta &gt; 0$，$\epsilon$ 是为了维持数值稳定性而添加的常数，例如 $10^{-7}$。需要注意其中按元素开方、除法和乘法的运算。这些按元素运算使得目标函数自变量中每个元素都分别拥有自己的学习率。 在凸优化背景中,AdaGrad 算法具有一些令人满意的理论性质。然而，经验上已经发现，对于训练深度神经网络模型而言，从训练开始时积累梯度平方会导致有效学习速率过早和过量的减小。AdaGrad 在某些深度学习模型上效果不错,但不是全部。 RMSProp在AdaGrad中，由于调整学习率时分母上的变量 $\boldsymbol{s}_t$ 一直在累加按元素平方的小批量随机梯度，目标函数自变量每个元素的学习率在迭代过程中一直在降低（或不变）。所以，当学习率在迭代早期降得较快且当前解依然不佳时，Adagrad在迭代后期由于学习率过小，可能较难找到一个有用的解。为了应对这一问题，RMSProp算法对Adagrad做了一点小小的修改。 不同于Adagrad里状态变量 $\boldsymbol{s}_t$ 是截至时间步 $t$ 所有小批量随机梯度 $\boldsymbol{g}_t$ 按元素平方和，RMSProp将这些梯度按元素平方做指数加权移动平均。具体来说，给定超参数 $0 \leq \gamma &lt; 1$，RMSProp在时间步 $t&gt;0$ 计算： \boldsymbol{s}_t \leftarrow \gamma \boldsymbol{s}_{t-1} + (1 - \gamma) \boldsymbol{g}_t \odot \boldsymbol{g}_t \\ \boldsymbol{x}_t \leftarrow \boldsymbol{x}_{t-1} - \frac{\eta}{\sqrt{\boldsymbol{s}_t + \epsilon}} \odot \boldsymbol{g}_t其中 $\eta$ 是初始学习率且 $\eta &gt; 0$，$\epsilon$ 是为了维持数值稳定性而添加的常数，例如 $10^{-8}$ 。 RMSProp只在Adagrad的基础上修改了变量 $\boldsymbol{s}$ 的更新方法：对平方项 $\boldsymbol{g}_t \odot \boldsymbol{g}_t$ 从累加变成了指数加权移动平均。由于变量 $\boldsymbol{s}$ 可看作是最近 $1/(1-\gamma)$ 个时刻的平方项 $\boldsymbol{g}_t \odot \boldsymbol{g}_t$ 的加权平均，自变量每个元素的学习率在迭代过程中避免了“只降不升”的问题。 经验上,RMSProp 已被证明是一种有效且实用的深度神经网络优化算法。目前它是深度学习从业者经常采用的优化方法之一。 AdamAdam是一个组合了动量法和RMSProp的优化算法，使用了动量变量 $\boldsymbol{v}$ 和RMSProp中变量 $\boldsymbol{s}$，并将它们中每个元素初始化为0。在每次迭代中，时刻 $t$ 的小批量随机梯度记作 $\boldsymbol{g}_t$。 和动量法类似，给定超参数 $\beta_1$ 且满足 $0 \leq \beta_1 &lt; 1$（算法作者建议设为0.9），将小批量随机梯度的指数加权移动平均记作动量变量 $\boldsymbol{v}$，并将它在时刻 $t$ 的值记作 $\boldsymbol{v}_t$： \boldsymbol{v}_t \leftarrow \beta_1 \boldsymbol{v}_{t-1} + (1 - \beta_1) \boldsymbol{g}_t和RMSProp中一样，给定超参数 $\beta_2$ 且满足 $0 \leq \beta_2 &lt; 1$（算法作者建议设为0.999）， 将小批量随机梯度按元素平方后做指数加权移动平均得到 $\boldsymbol{s}$ ，并将它在时刻 $t$ 的值记作 $\boldsymbol{s}_t$： \boldsymbol{s}_t \leftarrow \beta_2 \boldsymbol{s}_{t-1} + (1 - \beta_2) \boldsymbol{g}_t \odot \boldsymbol{g}_t需要注意的是，当 $t$ 较小时，过去各时刻小批量随机梯度权值之和会较小。例如当 $\beta_1 = 0.9$ 时，$\boldsymbol{v}_1 = 0.1\boldsymbol{g}_1$。为了消除这样的影响，对于任意时刻 $t$ ，我们可以将 $\boldsymbol{v}_t$ 再除以 $1 - \beta_1^t$ ，从而使得过去各时刻小批量随机梯度权值之和为1。这也叫做偏差修正。在Adam算法中，我们对变量 $\boldsymbol{v}$ 和 $\boldsymbol{s}$ 均作偏差修正： \hat{\boldsymbol{v}}_t \leftarrow \frac{\boldsymbol{v}_t}{1 - \beta_1^t} \\ \hat{\boldsymbol{s}}_t \leftarrow \frac{\boldsymbol{s}_t}{1 - \beta_2^t}接下来，Adam算法使用以上偏差修正后的变量 $\hat{\boldsymbol{v}}_t$ 和 $\hat{\boldsymbol{s}}_t$，将模型参数中每个元素的学习率通过按元素运算重新调整： \boldsymbol{g}_t^\prime \leftarrow \frac{\eta \hat{\boldsymbol{v}}_t}{\sqrt{\hat{\boldsymbol{s}}_t + \epsilon}}其中 $\eta$ 是初始学习率且 $\eta &gt; 0$，$\epsilon$ 是为了维持数值稳定性而添加的常数，例如 $10^{-8}$。和Adagrad、RMSProp以及Adadelta一样，目标函数自变量中每个元素都分别拥有自己的学习率。 最后，时刻 $t$ 的自变量 $\boldsymbol{x}_t$ 的迭代步骤与小批量随机梯度下降类似： \boldsymbol{x}_t \leftarrow \boldsymbol{x}_{t-1} - \boldsymbol{g}_t^\prime本文转自动手深度学习。]]></content>
+      <categories>
+        <category>优化算法</category>
+      </categories>
+      <tags>
+        <tag>优化算法</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[Python闭包与装饰器]]></title>
     <url>%2F2018%2F09%2F29%2FPython_Decorator_Closure%2F</url>
     <content type="text"><![CDATA[先说闭包。 闭包闭包指延伸了作用域的函数，其中包含内部函数对外部函数定义域中自由变量的引用。闭包函数执行完成之后，能够保持当前的状态。 下面用闭包实现一个计算历史平均值的函数：1234567891011def make_averager(): series = [] def averager(new_value): series.append(new_value) total = sum(series) return total / len(series) return averageravg = make_averager()avg(10) # 10avg(11) # 10.5 修改这个函数，不保存历史输入1234567891011121314```pythondef make_averager(): count = 0 total = 0 def averager(new_value): count += 1 total += new_value return total / count return averageravg = make_averager()avg(10) 报错，原因如下： 当 count 是数字或任何不可变类型时，count += 1 语句的作用其实与 count = count + 1 一样。因此,我们在 averager 的定义体中为 count 赋值了，这会把count 变成局部变量。total 变量也受这个问题影响。上一例没遇到这个问题，因为我们没有给 series 赋值，我们只是调用series.append，并把它传给 sum 和 len。也就是说，我们利用了列表是可变的对象这一事实。但是对数字、字符串、元组等不可变类型来说，只能读取，不能更新。如果尝试重新绑定，例如 count = count + 1，其实会隐式创建局部变量 count。这样，count 就不是自由变量了，因此不会保存在闭包中。 nonlocal声明nonlocal声明的作用是把变量标记为自由变量，即使在函数中为变量赋予新值了，也会变成自由变量。如果为 nonlocal 声明的变量赋予新值，闭包中保存的绑定会更新。nonlocal清楚的表明：如果在闭包内给该变量赋值，那么修改的其实是闭包外的那个作用域中的变量，nonlocal不能延伸到模块级别。 因此正确的代码应为：123456789101112131415def make_averager(): count = 0 total = 0 def averager(new_value): nonlocal count, total count += 1 total += new_value return total / count return averageravg = make_averager()avg(10) # 10avg(11) # 10.5 装饰器装饰器是可调用的对象，其参数是另一个函数（被装饰的函数），返回值也是一个函数。Gamma 等人写的《设计模式：可复用面向对象软件的基础》一书是这样概述“装饰器”模式的： “动态地给一个对象添加一些额外的职责”。 装饰器的两大特性： 能把被装饰的函数替换成其他函数。 装饰器在加载模块时立即执行。 装饰器用法上有如下特点： 装饰器通常在一个模块中定义，然后应用到其他模块的函数上。 大多数装饰器会在内部定义一个函数，然后将其返回（而不是返回原函数）。 返回原函数这种技术并非没有用处，很多 Python Web 框架使用这样的装饰器把函数添加到某种中央注册处。 1234567891011def deco(func): def inner(): print('run inner()') func() return inner@decodef target(): print('run target()') target() run inner() run target() 1234567891011121314151617181920212223import timedef clock(func): def clocked(*args): t0 = time.perf_counter() result = func(*args) elapsed = time.perf_counter() - t0 name = func.__name__ arg_str = ','.join(repr(arg) for arg in args) print('[%0.8fs] %s(%s) -&gt; %r' % (elapsed, name, arg_str, result)) return result return clocked@clockdef snooze(seconds): time.sleep(seconds) @clockdef factorial(n): return 1 if n &lt; 2 else n * factorial(n-1)snooze(.123)factorial(6) [0.12320082s] snooze(0.123) -&gt; None [0.00000126s] factorial(1) -&gt; 1 [0.00007819s] factorial(2) -&gt; 2 [0.00013763s] factorial(3) -&gt; 6 [0.00018307s] factorial(4) -&gt; 24 [0.00023142s] factorial(5) -&gt; 120 [0.00027923s] factorial(6) -&gt; 720 720]]></content>
@@ -20,17 +31,6 @@
       </categories>
       <tags>
         <tag>C++</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title><![CDATA[【转】自适应学习率算法]]></title>
-    <url>%2F2018%2F09%2F26%2FAlgorithms_With_Adaptive_Learning_Rates%2F</url>
-    <content type="text"><![CDATA[神经网络研究员早就意识到学习率肯定是难以设置的超参数之一，因为它对模型的性能有显著的影响。损失通常高度敏感于参数空间中的某些方向，而不敏感于其他。动量算法可以在一定程度缓解这些问题，但这样做的代价是引入了另一个超参数。在这种情况下，自然会问有没有其他好的方法。如果我们相信方向敏感度在某种程度上是轴对齐的，那么每个参数设置不同的学习率，在整个学习过程中自动适应这些学习率便是有道理的。本节将简要说明这些自适应参数学习率的算法。 AdaGrad优化算法中，无论是梯度下降、随机梯度下降、小批量随机梯度下降还是使用动量法，目标函数自变量的每一个元素在相同时刻都使用同一个学习率来自我迭代。 举个例子，假设目标函数为 $f$，自变量为一个多维向量 $[x_1, x_2]^\top$，该向量中每一个元素在更新时都使用相同的学习率。例如在学习率为 $\eta$ 的梯度下降中，元素 $x_1$ 和 $x_2$ 都使用相同的学习率$\eta$来自我迭代： x_1 \leftarrow x_1 - \eta \frac{\partial{f}}{\partial{x_1}}, \ x_2 \leftarrow x_2 - \eta \frac{\partial{f}}{\partial{x_2}}如何让 $x_1$ 和 $x_2$ 使用不同的学习率自我迭代？Adagrad就是一个在迭代过程中不断自我调整学习率，并让模型参数中每个元素都使用不同学习率的优化算法。 Adagrad的算法会使用一个小批量随机梯度 $\boldsymbol{g}_t$ 按元素平方的累加变量 $\boldsymbol{s}_t$ 。在时间步0，adagrad将 $\boldsymbol{s}_0$ 中每个元素初始化为0。在时间步 $t$，首先将小批量随机梯度 $\boldsymbol{g}_t$ 按元素平方后累加到变量 $\boldsymbol{s}_t$： \boldsymbol{s}_t \leftarrow \boldsymbol{s}_{t-1} + \boldsymbol{g}_t \odot \boldsymbol{g}_t \\ \boldsymbol{x}_t \leftarrow \boldsymbol{x}_{t-1} - \frac{\eta}{\sqrt{\boldsymbol{s}_t + \epsilon}} \odot \boldsymbol{g}_t其中 $\eta$ 是初始学习率且 $\eta &gt; 0$，$\epsilon$ 是为了维持数值稳定性而添加的常数，例如 $10^{-7}$。需要注意其中按元素开方、除法和乘法的运算。这些按元素运算使得目标函数自变量中每个元素都分别拥有自己的学习率。 在凸优化背景中,AdaGrad 算法具有一些令人满意的理论性质。然而，经验上已经发现，对于训练深度神经网络模型而言，从训练开始时积累梯度平方会导致有效学习速率过早和过量的减小。AdaGrad 在某些深度学习模型上效果不错,但不是全部。 RMSProp在AdaGrad中，由于调整学习率时分母上的变量 $\boldsymbol{s}_t$ 一直在累加按元素平方的小批量随机梯度，目标函数自变量每个元素的学习率在迭代过程中一直在降低（或不变）。所以，当学习率在迭代早期降得较快且当前解依然不佳时，Adagrad在迭代后期由于学习率过小，可能较难找到一个有用的解。为了应对这一问题，RMSProp算法对Adagrad做了一点小小的修改。 不同于Adagrad里状态变量 $\boldsymbol{s}_t$ 是截至时间步 $t$ 所有小批量随机梯度 $\boldsymbol{g}_t$ 按元素平方和，RMSProp将这些梯度按元素平方做指数加权移动平均。具体来说，给定超参数 $0 \leq \gamma &lt; 1$，RMSProp在时间步 $t&gt;0$ 计算： \boldsymbol{s}_t \leftarrow \gamma \boldsymbol{s}_{t-1} + (1 - \gamma) \boldsymbol{g}_t \odot \boldsymbol{g}_t \\ \boldsymbol{x}_t \leftarrow \boldsymbol{x}_{t-1} - \frac{\eta}{\sqrt{\boldsymbol{s}_t + \epsilon}} \odot \boldsymbol{g}_t其中 $\eta$ 是初始学习率且 $\eta &gt; 0$，$\epsilon$ 是为了维持数值稳定性而添加的常数，例如 $10^{-8}$ 。 RMSProp只在Adagrad的基础上修改了变量 $\boldsymbol{s}$ 的更新方法：对平方项 $\boldsymbol{g}_t \odot \boldsymbol{g}_t$ 从累加变成了指数加权移动平均。由于变量 $\boldsymbol{s}$ 可看作是最近 $1/(1-\gamma)$ 个时刻的平方项 $\boldsymbol{g}_t \odot \boldsymbol{g}_t$ 的加权平均，自变量每个元素的学习率在迭代过程中避免了“只降不升”的问题。 经验上,RMSProp 已被证明是一种有效且实用的深度神经网络优化算法。目前它是深度学习从业者经常采用的优化方法之一。 AdamAdam是一个组合了动量法和RMSProp的优化算法，使用了动量变量 $\boldsymbol{v}$ 和RMSProp中变量 $\boldsymbol{s}$，并将它们中每个元素初始化为0。在每次迭代中，时刻 $t$ 的小批量随机梯度记作 $\boldsymbol{g}_t$。 和动量法类似，给定超参数 $\beta_1$ 且满足 $0 \leq \beta_1 &lt; 1$（算法作者建议设为0.9），将小批量随机梯度的指数加权移动平均记作动量变量 $\boldsymbol{v}$，并将它在时刻 $t$ 的值记作 $\boldsymbol{v}_t$： \boldsymbol{v}_t \leftarrow \beta_1 \boldsymbol{v}_{t-1} + (1 - \beta_1) \boldsymbol{g}_t和RMSProp中一样，给定超参数 $\beta_2$ 且满足 $0 \leq \beta_2 &lt; 1$（算法作者建议设为0.999）， 将小批量随机梯度按元素平方后做指数加权移动平均得到 $\boldsymbol{s}$ ，并将它在时刻 $t$ 的值记作 $\boldsymbol{s}_t$： \boldsymbol{s}_t \leftarrow \beta_2 \boldsymbol{s}_{t-1} + (1 - \beta_2) \boldsymbol{g}_t \odot \boldsymbol{g}_t需要注意的是，当 $t$ 较小时，过去各时刻小批量随机梯度权值之和会较小。例如当 $\beta_1 = 0.9$ 时，$\boldsymbol{v}_1 = 0.1\boldsymbol{g}_1$。为了消除这样的影响，对于任意时刻 $t$ ，我们可以将 $\boldsymbol{v}_t$ 再除以 $1 - \beta_1^t$ ，从而使得过去各时刻小批量随机梯度权值之和为1。这也叫做偏差修正。在Adam算法中，我们对变量 $\boldsymbol{v}$ 和 $\boldsymbol{s}$ 均作偏差修正： \hat{\boldsymbol{v}}_t \leftarrow \frac{\boldsymbol{v}_t}{1 - \beta_1^t} \\ \hat{\boldsymbol{s}}_t \leftarrow \frac{\boldsymbol{s}_t}{1 - \beta_2^t}接下来，Adam算法使用以上偏差修正后的变量 $\hat{\boldsymbol{v}}_t$ 和 $\hat{\boldsymbol{s}}_t$，将模型参数中每个元素的学习率通过按元素运算重新调整： \boldsymbol{g}_t^\prime \leftarrow \frac{\eta \hat{\boldsymbol{v}}_t}{\sqrt{\hat{\boldsymbol{s}}_t + \epsilon}}其中 $\eta$ 是初始学习率且 $\eta &gt; 0$，$\epsilon$ 是为了维持数值稳定性而添加的常数，例如 $10^{-8}$。和Adagrad、RMSProp以及Adadelta一样，目标函数自变量中每个元素都分别拥有自己的学习率。 最后，时刻 $t$ 的自变量 $\boldsymbol{x}_t$ 的迭代步骤与小批量随机梯度下降类似： \boldsymbol{x}_t \leftarrow \boldsymbol{x}_{t-1} - \boldsymbol{g}_t^\prime本文转自动手深度学习。]]></content>
-      <categories>
-        <category>优化算法</category>
-      </categories>
-      <tags>
-        <tag>优化算法</tag>
       </tags>
   </entry>
   <entry>
@@ -102,6 +102,14 @@
       </tags>
   </entry>
   <entry>
+    <title><![CDATA[C++ Primer：面向对象]]></title>
+    <url>%2F2018%2F08%2F25%2FC%2B%2B_Primer_Object_Oriented_Programming%2F</url>
+    <content type="text"></content>
+      <categories>
+        <category>C++</category>
+      </categories>
+  </entry>
+  <entry>
     <title><![CDATA[C++ STL学习笔记]]></title>
     <url>%2F2018%2F08%2F25%2FC%2B%2B%20STL%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%2F</url>
     <content type="text"><![CDATA[本文记录C++ STL学习过程中的一些知识。 std::pairpair 实质上是一个结构体，其主要的两个成员变量是 first 和 second。 pair的应用std::pair 主要的作用是将两个数据组合成一个数据，两个数据可以是同一类型或者不同类型。当一个函数需要返回2个数据的时候，可以选择 pair。 12345pair&lt;int,float&gt; p1; //使用默认构造函数pair&lt;double,double&gt; p2(1.0, 2.4) //用给定值初始化pair&lt;int, float&gt; p3(p0) //使用拷贝构造函数p1.first = 1;p1.second = 2; make_pair函数初始化一个 pair 可以使用构造函数，也可以使用 std::make_pair 函数，make_pair 函数的定义如下： 1234template pair make_pair(T1 a, T2 b) &#123; return pair(a, b); &#125; 一般 make_pair都使用在需要 pair 做参数的位置，可以直接调用 make_pair 生成 pair 对象。 另一个使用的方面就是 pair 可以接受隐式的类型转换，这样可以获得更高的灵活度。但是这样会出现如下问题：例如有如下两个定义： 12pair&lt;int, float&gt;(1, 1.1);make_pair(1, 1.1); 其中第一个的 second 变量是 float 类型，而 make_pair 函数会将 second 变量都转换成 double 类型。这个问题在编程是需要引起注意。 priority_queue优先队列容器与队列一样，只能从队尾插入，从队首删除。但它在此基础上内部添加了的一个排序，所以出队时，并非按照先进先出的原则进行，而是将当前队列中最大的元素或最小元素出队。 定义priority_queue&lt;Type, Container, Functional&gt;Type 就是数据类型，Container 就是容器类型（Container必须是用数组实现的容器，比如vector,deque等等，但不能用 list。STL里面默认用的是vector），Functional 就是比较的方式，当需要用自定义的数据类型时才需要传入这三个参数，使用基本数据类型时，只需要传入数据类型，默认是大顶堆 123456//升序队列priority_queue &lt;int,vector&lt;int&gt;,greater&lt;int&gt; &gt; q;//降序队列priority_queue &lt;int,vector&lt;int&gt;,less&lt;int&gt; &gt;q;//greater和less是std实现的两个仿函数（就是使一个类的使用看上去像一个函数。其实现就是类中实现一个operator()，这个类就有了类似函数的行为，就是一个仿函数类了)priority_queue&lt;int&gt; a; //等同于 priority_queue&lt;int, vector&lt;int&gt;, less&lt;int&gt; &gt; a; 基本成员函数empty() pop() push() size() top() 优先级声明方式 123456789101112131415161718192021//自定义优先级：struct cmp &#123; operator bool ()(int x, int y) &#123; return x &gt; y; // x小的优先级高 //也可以写成其他方式，如： return p[x] &gt; p[y];表示p[i]小的优先级高 &#125;&#125;;priority_queue&lt;int, vector&lt;int&gt;, cmp&gt; q; //定义方法//结构体声明方式：struct node &#123; int x, y; friend bool operator &lt; (node a, node b) &#123; return a.x &gt; b.x; //结构体中，x小的优先级高 &#125;&#125;;priority_queue&lt;node&gt;q; //定义方法//在该结构中，y为值, x为优先级。//通过自定义operator&lt;操作符来比较元素中的优先级。//在重载”&lt;”时，最好不要重载”&gt;”，可能会发生编译错误]]></content>
@@ -112,14 +120,6 @@
         <tag>C++</tag>
         <tag>STL</tag>
       </tags>
-  </entry>
-  <entry>
-    <title><![CDATA[C++ Primer：面向对象]]></title>
-    <url>%2F2018%2F08%2F25%2FC%2B%2B_Primer_Object_Oriented_Programming%2F</url>
-    <content type="text"></content>
-      <categories>
-        <category>C++</category>
-      </categories>
   </entry>
   <entry>
     <title><![CDATA[权重衰减（Weight Decay）]]></title>
@@ -169,25 +169,15 @@
       </tags>
   </entry>
   <entry>
-    <title><![CDATA[LeetCode与LintCode上没有的基础算法题目]]></title>
-    <url>%2F2018%2F08%2F15%2FLeetCode%E4%B8%8ELintCode%E4%B8%8A%E6%B2%A1%E6%9C%89%E7%9A%84%E5%9F%BA%E7%A1%80%E7%AE%97%E6%B3%95%E9%A2%98%E7%9B%AE%2F</url>
-    <content type="text"><![CDATA[本人一直在leetcode和lintcode上刷题，但有些经典的题目这两个平台都没有，遂将题目记录在博客。 贪心算法 汽车加油 Description一辆汽车加满油后可行驶n公里。旅途中有若干个加油站。设计一个有效算法，指出应在哪些加油站停靠加油，使沿途加油次数最少。Input第一行有2个正整数n和k，表示汽车加满油后可行驶n公里，且旅途中有k个加油站。接下来的1 行中，有k+1个整数，表示第k个加油站与第k-1个加油站之间的距离。第0个加油站表示出发地，汽车已加满油。第k+1个加油站表示目的地。Output将计算出的最少加油次数输出。如果无法到达目的地，则输出”No Solution”。Sample Input7 71 2 3 4 5 1 6 6Sample Output4 12345678910111213141516171819int MinRefuelingNum(int n, vector&lt;int&gt; nums)&#123; int res = 0; int nCanReach = 0; for (int i = 1; i &lt; nums.size(); i++) &#123; if (nums[i] &gt; n) &#123; return -1; &#125; nCanReach += nums[i]; if (nCanReach &gt; n) &#123; res++; nCanReach = nums[i]; &#125; &#125; return res;&#125;]]></content>
+    <title><![CDATA[双指针解题（持续更新）]]></title>
+    <url>%2F2018%2F08%2F15%2FTwo_Pointers_Algorithm_Solutions%2F</url>
+    <content type="text"><![CDATA[记录一些双指针题目的解题思路，持续更新。 有效三角形的个数 leetcode 611给定一个包含非负整数的数组，你的任务是统计其中可以组成三角形三条边的三元组个数。输入: [2,2,3,4]输出: 3 解答： 从小到大排序，假定nums[k]是最大边，只需之前的i &lt; j &lt; k满足nums[i] + nums[j] &gt; nums[k]即可，两边之差小于第三边自动满足。]]></content>
       <categories>
         <category>数据结构与算法</category>
       </categories>
       <tags>
-        <tag>基础算法</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title><![CDATA[C++ Primer：重载]]></title>
-    <url>%2F2018%2F08%2F15%2FC%2B%2B_Primer_Overload%2F</url>
-    <content type="text"></content>
-      <categories>
-        <category>C++</category>
-      </categories>
-      <tags>
-        <tag>C++</tag>
+        <tag>leetcode</tag>
+        <tag>lintcode</tag>
       </tags>
   </entry>
   <entry>
@@ -203,27 +193,25 @@
       </tags>
   </entry>
   <entry>
-    <title><![CDATA[动态规划解题（持续更新）]]></title>
-    <url>%2F2018%2F08%2F15%2FDynamic_Programming_Algorithm_Solutions%2F</url>
-    <content type="text"><![CDATA[记录一些动态规划问题的解题思路，会一直持续更新。 背包问题背包问题是动态规划里面的一个大类，包括01背包，完全背包，多重背包等。N 件物品放入容量为 V 的包里，第 i 件物品占用空间 C_i，价值是 W_i。核心递推公式为 dp[i][j] = max(dp[i-1][j], dp[i-1][j-C_i]+W_i)，基本上所有问题都是由这个公式衍生而来。 能装多满 lintcode 92在n个物品中挑选若干物品装入背包，最多能装多满？背包的大小为m，每个物品的小为A[i]。例如：有4个物品[2, 3, 5, 7]，如果背包的大小为11，可以选择[2, 3, 5]装入背包，最多可以装满10的空间。 解答： 用 dp[i][j] 表示前 i 个物品放入 j 容量大小的包里面能装多满，对于 dp[i][j]，有两种选择，第一是将 A[i] 不放入，此时，dp[i][j]=dp[i-1][j]；第二是将 A[i] 放入，此时 dp[i][j]=dp[i-1][j-A[i]]+A[i]。我么当然选择两者中最大的，所以 dp[i][j]=max(dp[i-1][j], dp[i-1][j-A[i]]+A[i])。 优化： 想办法优化一些空间复杂度。注意递推公式，第 i 轮更新只与上一轮即 i-1 轮的值有关，所以我们可以将空间复杂度优化到O(m)，dp[j] 表示容量为 j 的背包能装多满，则 dp[j] = max(dp[j], dp[j - A[i]] + A[i])。注意此时遍历背包容量的时候要从后往前遍历，因为我们是用上一轮的第 j-A[i] 个元素更新本轮的第 j 个元素，从后往前遍历，则保证没有遍历到某元素的时候，此元素之前的元素保持不变。 能装入的最大价值 lintcode 125题目描述：给出n个物品的体积A[i]和其价值V[i]，将他们装入一个大小为m的背包，最多能装入的总价值有多大？例如：对于物品体积[2, 3, 5, 7]和对应的价值[1, 5, 2, 4], 假设背包大小为10的话，最大能够装入的价值为9。 解答： 跟I问题思路一样，更新公式稍作改变：dp[i][j] = max(dp[i-1][j], dp[i-1][j-C_i]+V_i)， Coin Change leetcode 322给定不同面额的硬币 coins 和一个总金额 amount。编写一个函数来计算可以凑成总金额所需的最少的硬币个数。如果没有任何一种硬币组合能组成总金额，返回 -1。输入: coins = [1, 2, 5], amount = 11输出: 3解释: 11 = 5 + 5 + 1 解答： 背包问题。用dp[i]表示钱数为i时需要的硬币数，coin[j]表示硬币面值，那么显然dp[i] = min(dp[i], dp[i - coin[j]]) + 1。可见只需从前往后遍历，依次求出dp[i]，最后一个即为所求。注意初始条件dp[coin[j]] = 1。 Coin Change 2 leetcode 518给定不同面额的硬币和一个总金额。写出函数来计算可以凑成总金额的硬币组合数。假设每一种面额的硬币有无限个。输入: amount = 5, coins = [1, 2, 5]输出: 4解释: 有四种方式可以凑成总金额:5=55=2+2+15=2+1+1+15=1+1+1+1+1 解答： 思路跟背包问题很像。定义子问题 dp[i][j] : 用前 i 种硬币组成金额 j 的总组合数;最终目标：dp[n][amount]求 dp[i][j] 时： 不用第 i 种硬币。 用不了：j &lt; coins[i]; 能用但不用。 两种情况都只用前 i-1 种硬币去组成 j， 此时共有 dp[i-1][j] 种组合； 用第 i 种硬币, 此时因为硬币无限，所以它的前一个状态仍能用 i 种硬币，即此时共有 dp[i][j-coins[i]] 种组合。 因此总的组合数是两种情况的和：dp[i][j] = dp[i-1][j] + dp[i][j-coins[i-1]]。 优化： 优化空间，dp[j] 表示用前 i 种银币组成金额 j 的总组合数，在迭代时 dp[j] = dp[j] + dp[j - coins[i]]。 正则表达式匹配 leetcode 10给定一个字符串 (s) 和一个字符模式 (p)。实现支持 . 和 * 的正则表达式匹配。. 匹配任意单个字符。* 匹配零个或多个前面的元素。 解答： dp[i][j]表示s的i长度跟p的j长度是否使用匹配。则有一下情况。 dp[0][0]: 表示当s和p都为空，此时肯定是匹配的，dp[0][0] = 1; 当s为空&quot;&quot;，p为&#39;a*&#39;时，唯一可能match的情况是p匹配为空串，取决于dp[0][j-2]。如: 12s: &quot; &quot; p: &quot;a*b*c*&quot; 当s[i-1] == p[j-1] || p[j-1] == &#39;.&#39; : dp[i][j] = dp[i-1][j-1]； 当p[j-1] == &#39;*&#39;，分下面两种情况讨论： 如果p[j-2] != s[i-1] &amp;&amp; p[j-2] != &#39;.&#39;: 只能把它匹配成一个空串，即0个字符，dp[i][j] = dp[i][j-2]； 否则，可能匹配0个字符，1个字符，多个字符，即dp[i][j] = (dp[i][j-2] || dp[i][j-1] || dp[i-1][j])。 代码中注意动态规划的初始赋值。 最长有效括号 leetcode 32给定一个只包含 ‘(‘ 和 ‘)’ 的字符串，找出最长的包含有效括号的子串的长度。输入: &quot;)()())&quot;输出: 4解释: 最长有效括号子串为 &quot;()()&quot; 解法一：动态规划dp[i]表示一i索引为结尾的最大匹配长度， s[i]为(时：dp[i] = 0 s[i] == &#39;)&#39; &amp;&amp; s[i-1] == &#39;(&#39;：dp[i] = dp[i - 2] + 2； s[i] == &#39;)&#39; &amp;&amp; s[i-1] == &#39;)&#39; &amp;&amp; s[i- dp[i-1] - 1] == &#39;(&#39;：dp[i] = dp[i - dp[i-1] - 2] + dp[i-1] + 2 解答二：栈维持一个(索引的栈，当遇到)时弹出。同时维护一个最左端可以匹配的索引，初始为left = -1。当遇到)，做以下判断： 栈为空时，就left = i，继续遍历，否则执行2； 栈不为空时，先pop一个index出来，然后判断栈是否为空。栈为空时，nMax = max(nMax, i - nLeft)；栈不空空时，nMax = max(nMax, i - stack.top())。 地下城游戏 leetcode 174最初勇士位于左上角，要走到右下角，每次只能向右或向下。格子中的数字表示在这里会补血或者失血多少。正补负失。当血量小于等于0时勇士立即死去，试问确保骑士能够活着到达右下角所需的最低初始血量。例如下表，最佳路径 右 -&gt; 右 -&gt; 下 -&gt; 下，血量至少为7。 -2 -3 3 -5 -10 1 10 30 -5 解答： 用dp[i][j]表示勇士进入(i,j)时至少需要的点数。 假设一种情况：勇士位于一个比较中间的位置(i, j)。先来决定从右走还是从下走。如果从右边走，进入右边时点数至少为8才能最终到达终点；如果从下边走至少需要3点才能最终到达终点。那毫无疑问，我们肯定选择从下面走。而在当前位置，需要失血6点，所以进入当前位置时，血量至少为3-(-6)=9。 从这个过程我们分析可知，当前位置进入时的血量取决于它后面的位置需要的血量和当前位置补血失血情况，所以需要从后往前计算。具体就是dp[i][j] = min(dp[i+1][j], dp[i][j+1]) - current[i][j]，需要注意的是，如果此时计算出来的dp[i][j] &lt;= 0，那就要置为1。 打家劫舍 leetcode 198你是一个专业的小偷，计划偷窃沿街的房屋。每间房内都藏有一定的现金，影响你偷窃的唯一制约因素就是相邻的房屋装有相互连通的防盗系统，如果两间相邻的房屋在同一晚上被小偷闯入，系统会自动报警。给定一个代表每个房屋存放金额的非负整数数组，计算你在不触动警报装置的情况下，能够偷窃到的最高金额。输入: [1,2,3,1]输出: 4 解答： dp[i]表示小偷光顾第i个房屋后总共获取的最大金额。显然，第i个房间可以进行两种选择，偷或者不偷。不偷：dp[i] = dp[i-1]；偷：dp[i] = dp[i-2] + nums[i]。当然我们选择金额最大的。则：dp[i] = max(dp[i-1], dp[i-2] + nums[i])。 优化： 观察递推公式，发现下一个值只和上一个、上两个值相关，所以可以将空间优化到O(1)。]]></content>
+    <title><![CDATA[C++ Primer：重载]]></title>
+    <url>%2F2018%2F08%2F15%2FC%2B%2B_Primer_Overload%2F</url>
+    <content type="text"></content>
       <categories>
-        <category>数据结构与算法</category>
+        <category>C++</category>
       </categories>
       <tags>
-        <tag>leetcode</tag>
-        <tag>lintcode</tag>
+        <tag>C++</tag>
       </tags>
   </entry>
   <entry>
-    <title><![CDATA[双指针解题（持续更新）]]></title>
-    <url>%2F2018%2F08%2F15%2FTwo_Pointers_Algorithm_Solutions%2F</url>
-    <content type="text"><![CDATA[记录一些双指针题目的解题思路，持续更新。 有效三角形的个数 leetcode 611给定一个包含非负整数的数组，你的任务是统计其中可以组成三角形三条边的三元组个数。输入: [2,2,3,4]输出: 3 解答： 从小到大排序，假定nums[k]是最大边，只需之前的i &lt; j &lt; k满足nums[i] + nums[j] &gt; nums[k]即可，两边之差小于第三边自动满足。]]></content>
+    <title><![CDATA[LeetCode与LintCode上没有的基础算法题目]]></title>
+    <url>%2F2018%2F08%2F15%2FLeetCode%E4%B8%8ELintCode%E4%B8%8A%E6%B2%A1%E6%9C%89%E7%9A%84%E5%9F%BA%E7%A1%80%E7%AE%97%E6%B3%95%E9%A2%98%E7%9B%AE%2F</url>
+    <content type="text"><![CDATA[本人一直在leetcode和lintcode上刷题，但有些经典的题目这两个平台都没有，遂将题目记录在博客。 贪心算法 汽车加油 Description一辆汽车加满油后可行驶n公里。旅途中有若干个加油站。设计一个有效算法，指出应在哪些加油站停靠加油，使沿途加油次数最少。Input第一行有2个正整数n和k，表示汽车加满油后可行驶n公里，且旅途中有k个加油站。接下来的1 行中，有k+1个整数，表示第k个加油站与第k-1个加油站之间的距离。第0个加油站表示出发地，汽车已加满油。第k+1个加油站表示目的地。Output将计算出的最少加油次数输出。如果无法到达目的地，则输出”No Solution”。Sample Input7 71 2 3 4 5 1 6 6Sample Output4 12345678910111213141516171819int MinRefuelingNum(int n, vector&lt;int&gt; nums)&#123; int res = 0; int nCanReach = 0; for (int i = 1; i &lt; nums.size(); i++) &#123; if (nums[i] &gt; n) &#123; return -1; &#125; nCanReach += nums[i]; if (nCanReach &gt; n) &#123; res++; nCanReach = nums[i]; &#125; &#125; return res;&#125;]]></content>
       <categories>
         <category>数据结构与算法</category>
       </categories>
       <tags>
-        <tag>leetcode</tag>
-        <tag>lintcode</tag>
+        <tag>基础算法</tag>
       </tags>
   </entry>
   <entry>
@@ -254,6 +242,18 @@
       </categories>
       <tags>
         <tag>hexo</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[动态规划解题（持续更新）]]></title>
+    <url>%2F2018%2F08%2F15%2FDynamic_Programming_Algorithm_Solutions%2F</url>
+    <content type="text"><![CDATA[记录一些动态规划问题的解题思路，会一直持续更新。 背包问题背包问题是动态规划里面的一个大类，包括01背包，完全背包，多重背包等。N 件物品放入容量为 V 的包里，第 i 件物品占用空间 C_i，价值是 W_i。核心递推公式为 dp[i][j] = max(dp[i-1][j], dp[i-1][j-C_i]+W_i)，基本上所有问题都是由这个公式衍生而来。 能装多满 lintcode 92在n个物品中挑选若干物品装入背包，最多能装多满？背包的大小为m，每个物品的小为A[i]。例如：有4个物品[2, 3, 5, 7]，如果背包的大小为11，可以选择[2, 3, 5]装入背包，最多可以装满10的空间。 解答： 用 dp[i][j] 表示前 i 个物品放入 j 容量大小的包里面能装多满，对于 dp[i][j]，有两种选择，第一是将 A[i] 不放入，此时，dp[i][j]=dp[i-1][j]；第二是将 A[i] 放入，此时 dp[i][j]=dp[i-1][j-A[i]]+A[i]。我么当然选择两者中最大的，所以 dp[i][j]=max(dp[i-1][j], dp[i-1][j-A[i]]+A[i])。 优化： 想办法优化一些空间复杂度。注意递推公式，第 i 轮更新只与上一轮即 i-1 轮的值有关，所以我们可以将空间复杂度优化到O(m)，dp[j] 表示容量为 j 的背包能装多满，则 dp[j] = max(dp[j], dp[j - A[i]] + A[i])。注意此时遍历背包容量的时候要从后往前遍历，因为我们是用上一轮的第 j-A[i] 个元素更新本轮的第 j 个元素，从后往前遍历，则保证没有遍历到某元素的时候，此元素之前的元素保持不变。 能装入的最大价值 lintcode 125题目描述：给出n个物品的体积A[i]和其价值V[i]，将他们装入一个大小为m的背包，最多能装入的总价值有多大？例如：对于物品体积[2, 3, 5, 7]和对应的价值[1, 5, 2, 4], 假设背包大小为10的话，最大能够装入的价值为9。 解答： 跟I问题思路一样，更新公式稍作改变：dp[i][j] = max(dp[i-1][j], dp[i-1][j-C_i]+V_i)， Coin Change leetcode 322给定不同面额的硬币 coins 和一个总金额 amount。编写一个函数来计算可以凑成总金额所需的最少的硬币个数。如果没有任何一种硬币组合能组成总金额，返回 -1。输入: coins = [1, 2, 5], amount = 11输出: 3解释: 11 = 5 + 5 + 1 解答： 背包问题。用dp[i]表示钱数为i时需要的硬币数，coin[j]表示硬币面值，那么显然dp[i] = min(dp[i], dp[i - coin[j]]) + 1。可见只需从前往后遍历，依次求出dp[i]，最后一个即为所求。注意初始条件dp[coin[j]] = 1。 Coin Change 2 leetcode 518给定不同面额的硬币和一个总金额。写出函数来计算可以凑成总金额的硬币组合数。假设每一种面额的硬币有无限个。输入: amount = 5, coins = [1, 2, 5]输出: 4解释: 有四种方式可以凑成总金额:5=55=2+2+15=2+1+1+15=1+1+1+1+1 解答： 思路跟背包问题很像。定义子问题 dp[i][j] : 用前 i 种硬币组成金额 j 的总组合数;最终目标：dp[n][amount]求 dp[i][j] 时： 不用第 i 种硬币。 用不了：j &lt; coins[i]; 能用但不用。 两种情况都只用前 i-1 种硬币去组成 j， 此时共有 dp[i-1][j] 种组合； 用第 i 种硬币, 此时因为硬币无限，所以它的前一个状态仍能用 i 种硬币，即此时共有 dp[i][j-coins[i]] 种组合。 因此总的组合数是两种情况的和：dp[i][j] = dp[i-1][j] + dp[i][j-coins[i-1]]。 优化： 优化空间，dp[j] 表示用前 i 种银币组成金额 j 的总组合数，在迭代时 dp[j] = dp[j] + dp[j - coins[i]]。 正则表达式匹配 leetcode 10给定一个字符串 (s) 和一个字符模式 (p)。实现支持 . 和 * 的正则表达式匹配。. 匹配任意单个字符。* 匹配零个或多个前面的元素。 解答： dp[i][j]表示s的i长度跟p的j长度是否使用匹配。则有一下情况。 dp[0][0]: 表示当s和p都为空，此时肯定是匹配的，dp[0][0] = 1; 当s为空&quot;&quot;，p为&#39;a*&#39;时，唯一可能match的情况是p匹配为空串，取决于dp[0][j-2]。如: 12s: &quot; &quot; p: &quot;a*b*c*&quot; 当s[i-1] == p[j-1] || p[j-1] == &#39;.&#39; : dp[i][j] = dp[i-1][j-1]； 当p[j-1] == &#39;*&#39;，分下面两种情况讨论： 如果p[j-2] != s[i-1] &amp;&amp; p[j-2] != &#39;.&#39;: 只能把它匹配成一个空串，即0个字符，dp[i][j] = dp[i][j-2]； 否则，可能匹配0个字符，1个字符，多个字符，即dp[i][j] = (dp[i][j-2] || dp[i][j-1] || dp[i-1][j])。 代码中注意动态规划的初始赋值。 最长有效括号 leetcode 32给定一个只包含 ‘(‘ 和 ‘)’ 的字符串，找出最长的包含有效括号的子串的长度。输入: &quot;)()())&quot;输出: 4解释: 最长有效括号子串为 &quot;()()&quot; 解法一：动态规划dp[i]表示一i索引为结尾的最大匹配长度， s[i]为(时：dp[i] = 0 s[i] == &#39;)&#39; &amp;&amp; s[i-1] == &#39;(&#39;：dp[i] = dp[i - 2] + 2； s[i] == &#39;)&#39; &amp;&amp; s[i-1] == &#39;)&#39; &amp;&amp; s[i- dp[i-1] - 1] == &#39;(&#39;：dp[i] = dp[i - dp[i-1] - 2] + dp[i-1] + 2 解答二：栈维持一个(索引的栈，当遇到)时弹出。同时维护一个最左端可以匹配的索引，初始为left = -1。当遇到)，做以下判断： 栈为空时，就left = i，继续遍历，否则执行2； 栈不为空时，先pop一个index出来，然后判断栈是否为空。栈为空时，nMax = max(nMax, i - nLeft)；栈不空空时，nMax = max(nMax, i - stack.top())。 地下城游戏 leetcode 174最初勇士位于左上角，要走到右下角，每次只能向右或向下。格子中的数字表示在这里会补血或者失血多少。正补负失。当血量小于等于0时勇士立即死去，试问确保骑士能够活着到达右下角所需的最低初始血量。例如下表，最佳路径 右 -&gt; 右 -&gt; 下 -&gt; 下，血量至少为7。 -2 -3 3 -5 -10 1 10 30 -5 解答： 用dp[i][j]表示勇士进入(i,j)时至少需要的点数。 假设一种情况：勇士位于一个比较中间的位置(i, j)。先来决定从右走还是从下走。如果从右边走，进入右边时点数至少为8才能最终到达终点；如果从下边走至少需要3点才能最终到达终点。那毫无疑问，我们肯定选择从下面走。而在当前位置，需要失血6点，所以进入当前位置时，血量至少为3-(-6)=9。 从这个过程我们分析可知，当前位置进入时的血量取决于它后面的位置需要的血量和当前位置补血失血情况，所以需要从后往前计算。具体就是dp[i][j] = min(dp[i+1][j], dp[i][j+1]) - current[i][j]，需要注意的是，如果此时计算出来的dp[i][j] &lt;= 0，那就要置为1。 打家劫舍 leetcode 198你是一个专业的小偷，计划偷窃沿街的房屋。每间房内都藏有一定的现金，影响你偷窃的唯一制约因素就是相邻的房屋装有相互连通的防盗系统，如果两间相邻的房屋在同一晚上被小偷闯入，系统会自动报警。给定一个代表每个房屋存放金额的非负整数数组，计算你在不触动警报装置的情况下，能够偷窃到的最高金额。输入: [1,2,3,1]输出: 4 解答： dp[i]表示小偷光顾第i个房屋后总共获取的最大金额。显然，第i个房间可以进行两种选择，偷或者不偷。不偷：dp[i] = dp[i-1]；偷：dp[i] = dp[i-2] + nums[i]。当然我们选择金额最大的。则：dp[i] = max(dp[i-1], dp[i-2] + nums[i])。 优化： 观察递推公式，发现下一个值只和上一个、上两个值相关，所以可以将空间优化到O(1)。]]></content>
+      <categories>
+        <category>数据结构与算法</category>
+      </categories>
+      <tags>
+        <tag>leetcode</tag>
+        <tag>lintcode</tag>
       </tags>
   </entry>
   <entry>
@@ -353,9 +353,9 @@
       </tags>
   </entry>
   <entry>
-    <title><![CDATA[Python序列化]]></title>
-    <url>%2F2018%2F07%2F20%2FPython%E5%BA%8F%E5%88%97%E5%8C%96%2F</url>
-    <content type="text"><![CDATA[我们把对象(变量)从内存中变成可存储或传输的过程称之为序列化，在Python中叫pickling，在其他语言中也被称之为serialization，marshalling，flattening等等，都是一个意思。序列化之后，就可以把序列化后的内容写入磁盘，或者通过网络传输到别的机器上。反过来，把变量内容从序列化的对象重新读到内存里称之为反序列化，即unpickling。 json：用于实现Python数据类型与通用（JSON）字符串之间的转换。 pickle: 用于实现Python数据类型与Python特定二进制格式之间的转换 ·json只能处理基本数据类型。pickle`能处理所有Python的数据类型。 json用于各种语言之间的字符转换。pickle用于Python程序对象的持久化或者Python程序间对象网络传输，但不同版本的Python序列化可能还有差异。 Python中，序列化模块包括json和pickle。强调注意：damps、damp、loads，这3个用法要掌握，在json和pickle中3者都是一样的用法。 json如果我们要在不同的编程语言之间传递对象，就必须把对象序列化为标准格式，比如XML，但更好的方法是序列化为JSON，因为JSON表示出来就是一个字符串，可以被所有语言读取，也可以方便地存储到磁盘或者通过网络传输。JSON不仅是标准格式，并且比XML更快，而且可以直接在Web页面中读取，非常方便。 dumps 序列化一个对象1234import jsoni = 10json.dumps(i) &#39;10&#39; 12s = 'hello'json.dumps(s) &#39;&quot;hello&quot;&#39; 12t = (1, 2, 3)json.dumps(t) &#39;[1, 2, 3]&#39; 12l = [1, 2, 3]json.dumps(l) &#39;[1, 2, 3]&#39; 123d = &#123;'name': 'LiMing', 'age': 23&#125;data = json.dumps(d)data &#39;{&quot;name&quot;: &quot;LiMing&quot;, &quot;age&quot;: 23}&#39; 123456789101112# 写入f = open('json序列化对象', 'w')f.write(data)f.close()del f# 读出f = open('json序列化对象')new_data = json.loads(f.read())f.close()new_data {&#39;name&#39;: &#39;LiMing&#39;, &#39;age&#39;: 23} dump 序列化并存入文件1234567891011# 写入f = open('json序列化对象', 'w')d = &#123;'name': 'LiMing', 'age': 25&#125;json.dump(d, f)# 读取del ff = open('json序列化对象')new_data = json.loads(f.read())f.close()new_data {&#39;name&#39;: &#39;LiMing&#39;, &#39;age&#39;: 25} pickle12345import pickleperson = &#123;'name': 'alvin', 'age': 23, 'sex': 'male'&#125;j = pickle.dumps(person)j b&#39;\x80\x03}q\x00(X\x04\x00\x00\x00nameq\x01X\x05\x00\x00\x00alvinq\x02X\x03\x00\x00\x00ageq\x03K\x17X\x03\x00\x00\x00sexq\x04X\x04\x00\x00\x00maleq\x05u.&#39;]]></content>
+    <title><![CDATA[Python中的深拷贝与浅拷贝]]></title>
+    <url>%2F2018%2F07%2F20%2FPython_Copy_Deepcopy%2F</url>
+    <content type="text"><![CDATA[Python默认复制的副本共享可能引发意想不到的结果。 默认做浅复制 =直接赋值，传递的是对象的引用，相当于一个别名，其中一个改变另一个也会跟着变。 构造方法或[:]做的是浅复制（即复制了最外层容器），如果所有元素都是不可变的，那么这样没有问题，还能节省内存。但是，如果有可变的元素，可能就会导致意想不到的问题。 copy模块提供的deepcopy和copy函数能为任意对象做深复制和浅复制。 深复制有时可能太深了。例如，对象可能会引用不该复制的外部资源或单例值。我们可以实现特殊方法 __copy__() 和 __deepcopy__()，控制 copy 和 deepcopy 的行为。 复制列表（或多数内置的可变集合）最简单的方式是使用内置的类型构造方法或[:]。例如： 123456l1 = [3, [66, 55, 44], (7, 8, 9)]l2 = list(l1)l2 == l1 # Truel2 is l1 # Falseid(l1) # 140027414483080id(l2) # 140027413720392 140027413719624 可以看出，副本与源列表相等，但是二者指代不同的对象。 下面看看这段代码的效果： 1234567891011l1 = [3, [66, 55, 44], (7, 8, 9)]l2 = list(l1) # ➊l1.append(100) # ➋l1[1].remove(55) # ➌print('l1:', l1)print('l2:', l2)l2[1] += [33, 22] # ➍l2[2] += (10, 11) # ➎print('l1:', l1)print('l2:', l2) l1: [3, [66, 44], (7, 8, 9), 100] l2: [3, [66, 44], (7, 8, 9)] l1: [3, [66, 44, 33, 22], (7, 8, 9), 100] l2: [3, [66, 44, 33, 22], (7, 8, 9, 10, 11)] ➊ l2 是 l1 的浅复制副本。此时的状态如图。➋ 把 100 追加到 l1 中，对 l2 没有影响。➌ 把内部列表 l1[1] 中的 55 删除。这对 l2 有影响，因为 l2[1] 绑定的列表与 l1[1]是同一个。➍ 对可变的对象来说，如 l2[1] 引用的列表， += 运算符就地修改列表。这次修改在l1[1] 中也有体现，因为它是 l2[1] 的别名。➎ 对元组来说， += 运算符创建一个新元组，然后重新绑定给变量 l2[2]。现在， l1 和 l2 中最后位置上的元组不是同一个对象。 为任意对象做深复制和浅复制12345678910111213141516171819import copyclass Bus: def __init__(self, passengers=None): if passengers is None: self.passengers = [] else: self.passengers = list(passengers) def pick(self, name): self.passengers.append(name) def drop(self, name): self.passengers.remove(name) bus1 = Bus(['Alice', 'Bill', 'David'])bus2 = copy.copy(bus1)bus3 = copy.deepcopy(bus1)id(bus1), id(bus2), id(bus3) # ➊ (140027413487568, 140027413487400, 140027413569776) 1id(bus1.passengers), id(bus2.passengers), id(bus3.passengers) # ➋ (140027413574216, 140027413574216, 140027413866632) 1bus1.drop('Bill') 1bus2.passengers # ❸ [&#39;Alice&#39;, &#39;David&#39;] 1bus3.passengers # ❹ [&#39;Alice&#39;, &#39;Bill&#39;, &#39;David&#39;] ➊ 使用 copy 和 deepcopy，创建 3 个不同的 Bus 实例。➋ 审查 passengers 属性后发现，bus1 和 bus2 共享同一个列表对象，因为 bus2 是bus1 的浅复制副本。❸ bus1 中的 ‘Bill’ 下车后，bus2 中也没有他了。❹ bus3 是 bus1 的深复制副本，因此它的 passengers 属性指代另一个列表。]]></content>
       <categories>
         <category>Python</category>
       </categories>
@@ -364,9 +364,9 @@
       </tags>
   </entry>
   <entry>
-    <title><![CDATA[Python中的深拷贝与浅拷贝]]></title>
-    <url>%2F2018%2F07%2F20%2FPython_Copy_Deepcopy%2F</url>
-    <content type="text"><![CDATA[Python默认复制的副本共享可能引发意想不到的结果。 默认做浅复制 =直接赋值，传递的是对象的引用，相当于一个别名，其中一个改变另一个也会跟着变。 构造方法或[:]做的是浅复制（即复制了最外层容器），如果所有元素都是不可变的，那么这样没有问题，还能节省内存。但是，如果有可变的元素，可能就会导致意想不到的问题。 copy模块提供的deepcopy和copy函数能为任意对象做深复制和浅复制。 深复制有时可能太深了。例如，对象可能会引用不该复制的外部资源或单例值。我们可以实现特殊方法 __copy__() 和 __deepcopy__()，控制 copy 和 deepcopy 的行为。 复制列表（或多数内置的可变集合）最简单的方式是使用内置的类型构造方法或[:]。例如： 123456l1 = [3, [66, 55, 44], (7, 8, 9)]l2 = list(l1)l2 == l1 # Truel2 is l1 # Falseid(l1) # 140027414483080id(l2) # 140027413720392 140027413719624 可以看出，副本与源列表相等，但是二者指代不同的对象。 下面看看这段代码的效果： 1234567891011l1 = [3, [66, 55, 44], (7, 8, 9)]l2 = list(l1) # ➊l1.append(100) # ➋l1[1].remove(55) # ➌print('l1:', l1)print('l2:', l2)l2[1] += [33, 22] # ➍l2[2] += (10, 11) # ➎print('l1:', l1)print('l2:', l2) l1: [3, [66, 44], (7, 8, 9), 100] l2: [3, [66, 44], (7, 8, 9)] l1: [3, [66, 44, 33, 22], (7, 8, 9), 100] l2: [3, [66, 44, 33, 22], (7, 8, 9, 10, 11)] ➊ l2 是 l1 的浅复制副本。此时的状态如图。➋ 把 100 追加到 l1 中，对 l2 没有影响。➌ 把内部列表 l1[1] 中的 55 删除。这对 l2 有影响，因为 l2[1] 绑定的列表与 l1[1]是同一个。➍ 对可变的对象来说，如 l2[1] 引用的列表， += 运算符就地修改列表。这次修改在l1[1] 中也有体现，因为它是 l2[1] 的别名。➎ 对元组来说， += 运算符创建一个新元组，然后重新绑定给变量 l2[2]。现在， l1 和 l2 中最后位置上的元组不是同一个对象。 为任意对象做深复制和浅复制12345678910111213141516171819import copyclass Bus: def __init__(self, passengers=None): if passengers is None: self.passengers = [] else: self.passengers = list(passengers) def pick(self, name): self.passengers.append(name) def drop(self, name): self.passengers.remove(name) bus1 = Bus(['Alice', 'Bill', 'David'])bus2 = copy.copy(bus1)bus3 = copy.deepcopy(bus1)id(bus1), id(bus2), id(bus3) # ➊ (140027413487568, 140027413487400, 140027413569776) 1id(bus1.passengers), id(bus2.passengers), id(bus3.passengers) # ➋ (140027413574216, 140027413574216, 140027413866632) 1bus1.drop('Bill') 1bus2.passengers # ❸ [&#39;Alice&#39;, &#39;David&#39;] 1bus3.passengers # ❹ [&#39;Alice&#39;, &#39;Bill&#39;, &#39;David&#39;] ➊ 使用 copy 和 deepcopy，创建 3 个不同的 Bus 实例。➋ 审查 passengers 属性后发现，bus1 和 bus2 共享同一个列表对象，因为 bus2 是bus1 的浅复制副本。❸ bus1 中的 ‘Bill’ 下车后，bus2 中也没有他了。❹ bus3 是 bus1 的深复制副本，因此它的 passengers 属性指代另一个列表。]]></content>
+    <title><![CDATA[Python序列化]]></title>
+    <url>%2F2018%2F07%2F20%2FPython%E5%BA%8F%E5%88%97%E5%8C%96%2F</url>
+    <content type="text"><![CDATA[我们把对象(变量)从内存中变成可存储或传输的过程称之为序列化，在Python中叫pickling，在其他语言中也被称之为serialization，marshalling，flattening等等，都是一个意思。序列化之后，就可以把序列化后的内容写入磁盘，或者通过网络传输到别的机器上。反过来，把变量内容从序列化的对象重新读到内存里称之为反序列化，即unpickling。 json：用于实现Python数据类型与通用（JSON）字符串之间的转换。 pickle: 用于实现Python数据类型与Python特定二进制格式之间的转换 ·json只能处理基本数据类型。pickle`能处理所有Python的数据类型。 json用于各种语言之间的字符转换。pickle用于Python程序对象的持久化或者Python程序间对象网络传输，但不同版本的Python序列化可能还有差异。 Python中，序列化模块包括json和pickle。强调注意：damps、damp、loads，这3个用法要掌握，在json和pickle中3者都是一样的用法。 json如果我们要在不同的编程语言之间传递对象，就必须把对象序列化为标准格式，比如XML，但更好的方法是序列化为JSON，因为JSON表示出来就是一个字符串，可以被所有语言读取，也可以方便地存储到磁盘或者通过网络传输。JSON不仅是标准格式，并且比XML更快，而且可以直接在Web页面中读取，非常方便。 dumps 序列化一个对象1234import jsoni = 10json.dumps(i) &#39;10&#39; 12s = 'hello'json.dumps(s) &#39;&quot;hello&quot;&#39; 12t = (1, 2, 3)json.dumps(t) &#39;[1, 2, 3]&#39; 12l = [1, 2, 3]json.dumps(l) &#39;[1, 2, 3]&#39; 123d = &#123;'name': 'LiMing', 'age': 23&#125;data = json.dumps(d)data &#39;{&quot;name&quot;: &quot;LiMing&quot;, &quot;age&quot;: 23}&#39; 123456789101112# 写入f = open('json序列化对象', 'w')f.write(data)f.close()del f# 读出f = open('json序列化对象')new_data = json.loads(f.read())f.close()new_data {&#39;name&#39;: &#39;LiMing&#39;, &#39;age&#39;: 23} dump 序列化并存入文件1234567891011# 写入f = open('json序列化对象', 'w')d = &#123;'name': 'LiMing', 'age': 25&#125;json.dump(d, f)# 读取del ff = open('json序列化对象')new_data = json.loads(f.read())f.close()new_data {&#39;name&#39;: &#39;LiMing&#39;, &#39;age&#39;: 25} pickle12345import pickleperson = &#123;'name': 'alvin', 'age': 23, 'sex': 'male'&#125;j = pickle.dumps(person)j b&#39;\x80\x03}q\x00(X\x04\x00\x00\x00nameq\x01X\x05\x00\x00\x00alvinq\x02X\x03\x00\x00\x00ageq\x03K\x17X\x03\x00\x00\x00sexq\x04X\x04\x00\x00\x00maleq\x05u.&#39;]]></content>
       <categories>
         <category>Python</category>
       </categories>
