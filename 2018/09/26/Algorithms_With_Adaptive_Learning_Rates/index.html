@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="过拟合,正则化," />
+  <meta name="keywords" content="优化算法," />
 
 
 
@@ -79,18 +79,18 @@
 
 
 
-<meta name="description" content="权重衰减(weight decay)等价于 $L2$ 范数正则化（regularization）。正则化通过为模型损失函数添加惩罚项使得学出的模型参数值较小，是应对过拟合的常用手段。我们先描述 $L2$ 范数正则化，再解释它为何与权重衰减等价。">
-<meta name="keywords" content="过拟合,正则化">
+<meta name="description" content="神经网络研究员早就意识到学习率肯定是难以设置的超参数之一，因为它对模型的性能有显著的影响。损失通常高度敏感于参数空间中的某些方向，而不敏感于其他。动量算法可以在一定程度缓解这些问题，但这样做的代价是引入了另一个超参数。在这种情况下，自然会问有没有其他好的方法。如果我们相信方向敏感度在某种程度上是轴对齐的，那么每个参数设置不同的学习率，在整个学习过程中自动适应这些学习率便是有道理的。本节将简要说明这">
+<meta name="keywords" content="优化算法">
 <meta property="og:type" content="article">
-<meta property="og:title" content="权重衰减">
-<meta property="og:url" content="flyrie.top/2018/06/11/Weight_Decay/index.html">
+<meta property="og:title" content="【转】自适应学习率算法">
+<meta property="og:url" content="flyrie.top/2018/09/26/Algorithms_With_Adaptive_Learning_Rates/index.html">
 <meta property="og:site_name" content="乡间小路">
-<meta property="og:description" content="权重衰减(weight decay)等价于 $L2$ 范数正则化（regularization）。正则化通过为模型损失函数添加惩罚项使得学出的模型参数值较小，是应对过拟合的常用手段。我们先描述 $L2$ 范数正则化，再解释它为何与权重衰减等价。">
+<meta property="og:description" content="神经网络研究员早就意识到学习率肯定是难以设置的超参数之一，因为它对模型的性能有显著的影响。损失通常高度敏感于参数空间中的某些方向，而不敏感于其他。动量算法可以在一定程度缓解这些问题，但这样做的代价是引入了另一个超参数。在这种情况下，自然会问有没有其他好的方法。如果我们相信方向敏感度在某种程度上是轴对齐的，那么每个参数设置不同的学习率，在整个学习过程中自动适应这些学习率便是有道理的。本节将简要说明这">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-10-26T07:19:14.998Z">
+<meta property="og:updated_time" content="2018-09-25T17:45:15.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="权重衰减">
-<meta name="twitter:description" content="权重衰减(weight decay)等价于 $L2$ 范数正则化（regularization）。正则化通过为模型损失函数添加惩罚项使得学出的模型参数值较小，是应对过拟合的常用手段。我们先描述 $L2$ 范数正则化，再解释它为何与权重衰减等价。">
+<meta name="twitter:title" content="【转】自适应学习率算法">
+<meta name="twitter:description" content="神经网络研究员早就意识到学习率肯定是难以设置的超参数之一，因为它对模型的性能有显著的影响。损失通常高度敏感于参数空间中的某些方向，而不敏感于其他。动量算法可以在一定程度缓解这些问题，但这样做的代价是引入了另一个超参数。在这种情况下，自然会问有没有其他好的方法。如果我们相信方向敏感度在某种程度上是轴对齐的，那么每个参数设置不同的学习率，在整个学习过程中自动适应这些学习率便是有道理的。本节将简要说明这">
 
 
 
@@ -120,13 +120,13 @@
 
 
 
-  <link rel="canonical" href="flyrie.top/2018/06/11/Weight_Decay/"/>
+  <link rel="canonical" href="flyrie.top/2018/09/26/Algorithms_With_Adaptive_Learning_Rates/"/>
 
 
 
 
 
-  <title>权重衰减 | 乡间小路</title>
+  <title>【转】自适应学习率算法 | 乡间小路</title>
   
 
 
@@ -307,7 +307,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="flyrie.top/2018/06/11/Weight_Decay/">
+    <link itemprop="mainEntityOfPage" href="flyrie.top/2018/09/26/Algorithms_With_Adaptive_Learning_Rates/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="乡间小路">
@@ -324,7 +324,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">权重衰减</h1>
+          <h1 class="post-title" itemprop="name headline">【转】自适应学习率算法</h1>
         
 
         <div class="post-meta">
@@ -336,8 +336,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-06-11T01:46:15+08:00">
-                2018-06-11
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-09-26T01:45:15+08:00">
+                2018-09-26
               </time>
             
 
@@ -352,8 +352,8 @@
               
                 <span class="post-meta-item-text">更新于&#58;</span>
               
-              <time title="更新于" itemprop="dateModified" datetime="2018-10-26T15:19:14+08:00">
-                2018-10-26
+              <time title="更新于" itemprop="dateModified" datetime="2018-09-26T01:45:15+08:00">
+                2018-09-26
               </time>
             
           </span>
@@ -371,8 +371,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/深度学习/" itemprop="url" rel="index">
-                    <span itemprop="name">深度学习</span>
+                  <a href="/categories/优化算法/" itemprop="url" rel="index">
+                    <span itemprop="name">优化算法</span>
                   </a>
                 </span>
 
@@ -408,24 +408,37 @@
       
 
       
-        <p>权重衰减(weight decay)等价于 $L2$ 范数正则化（regularization）。正则化通过为模型损失函数添加惩罚项使得学出的模型参数值较小，是应对过拟合的常用手段。我们先描述 $L2$ 范数正则化，再解释它为何与权重衰减等价。<a id="more"></a></p>
-<p>$L2$ 正则化就是在代价函数后面再加上一个正则化项：</p>
+        <p>神经网络研究员早就意识到学习率肯定是难以设置的超参数之一，因为它对模型的性能有显著的影响。损失通常高度敏感于参数空间中的某些方向，而不敏感于其他。动量算法可以在一定程度缓解这些问题，但这样做的代价是引入了另一个超参数。在这种情况下，自然会问有没有其他好的方法。如果我们相信方向敏感度在某种程度上是轴对齐的，那么每个参数设置不同的学习率，在整个学习过程中自动适应这些学习率便是有道理的。本节将简要说明这些自适应参数学习率的算法。<a id="more"></a></p>
+<h1 id="AdaGrad"><a href="#AdaGrad" class="headerlink" title="AdaGrad"></a>AdaGrad</h1><p>优化算法中，无论是梯度下降、随机梯度下降、小批量随机梯度下降还是使用动量法，目标函数自变量的每一个元素在相同时刻都使用同一个学习率来自我迭代。</p>
+<p>举个例子，假设目标函数为 $f$，自变量为一个多维向量 $[x_1, x_2]^\top$，该向量中每一个元素在更新时都使用相同的学习率。例如在学习率为 $\eta$ 的梯度下降中，元素 $x_1$ 和 $x_2$ 都使用相同的学习率$\eta$来自我迭代：</p>
 <script type="math/tex; mode=display">
-\begin{eqnarray}  
-C = C_0 + \frac{\lambda}{2n} \sum_w w^2
-\end{eqnarray}</script><p>$C_0$ 代表原始的代价函数，后面那一项就是 $L2$ 正则化项，$\lambda$ 就是正则项系数。</p>
-<p>我们对权重和bias求导如下：</p>
+x_1 \leftarrow x_1 - \eta \frac{\partial{f}}{\partial{x_1}}, \ x_2 \leftarrow x_2 - \eta \frac{\partial{f}}{\partial{x_2}}</script><p>如何让 $x_1$ 和 $x_2$ 使用不同的学习率自我迭代？Adagrad就是一个在迭代过程中不断自我调整学习率，并让模型参数中每个元素都使用不同学习率的优化算法。</p>
+<p>Adagrad的算法会使用一个小批量随机梯度 $\boldsymbol{g}_t$ 按元素平方的累加变量 $\boldsymbol{s}_t$ 。在时间步0，adagrad将 $\boldsymbol{s}_0$ 中每个元素初始化为0。在时间步 $t$，首先将小批量随机梯度 $\boldsymbol{g}_t$ 按元素平方后累加到变量 $\boldsymbol{s}_t$：</p>
 <script type="math/tex; mode=display">
-\begin{eqnarray} 
-  \frac{\partial C}{\partial w} &=& \frac{\partial C_0}{\partial w} + 
-  \frac{\lambda}{n} w \\ 
-  \frac{\partial C}{\partial b} &=& \frac{\partial C_0}{\partial b}
-\end{eqnarray}</script><p>权重和偏差更新如下：</p>
+\boldsymbol{s}_t \leftarrow \boldsymbol{s}_{t-1} + \boldsymbol{g}_t \odot \boldsymbol{g}_t \\
+\boldsymbol{x}_t \leftarrow \boldsymbol{x}_{t-1} - \frac{\eta}{\sqrt{\boldsymbol{s}_t + \epsilon}} \odot \boldsymbol{g}_t</script><p>其中 $\eta$ 是初始学习率且 $\eta &gt; 0$，$\epsilon$ 是为了维持数值稳定性而添加的常数，例如 $10^{-7}$。需要注意其中按元素开方、除法和乘法的运算。这些按元素运算使得目标函数自变量中每个元素都分别拥有自己的学习率。</p>
+<p>在凸优化背景中,AdaGrad 算法具有一些令人满意的理论性质。然而，经验上已经发现，对于训练深度神经网络模型而言，从训练开始时积累梯度平方会导致有效学习速率过早和过量的减小。AdaGrad 在某些深度学习模型上效果不错,但不是全部。</p>
+<h1 id="RMSProp"><a href="#RMSProp" class="headerlink" title="RMSProp"></a>RMSProp</h1><p>在AdaGrad中，由于调整学习率时分母上的变量 $\boldsymbol{s}_t$ 一直在累加按元素平方的小批量随机梯度，目标函数自变量每个元素的学习率在迭代过程中一直在降低（或不变）。所以，当学习率在迭代早期降得较快且当前解依然不佳时，Adagrad在迭代后期由于学习率过小，可能较难找到一个有用的解。为了应对这一问题，RMSProp算法对Adagrad做了一点小小的修改。</p>
+<p>不同于Adagrad里状态变量 $\boldsymbol{s}_t$ 是截至时间步 $t$ 所有小批量随机梯度 $\boldsymbol{g}_t$ 按元素平方和，RMSProp将这些梯度按元素平方做指数加权移动平均。具体来说，给定超参数 $0 \leq \gamma &lt; 1$，RMSProp在时间步 $t&gt;0$ 计算：</p>
 <script type="math/tex; mode=display">
-\begin{eqnarray} 
-b & \rightarrow & b -\eta \frac{\partial C_0}{\partial b} \\
-w & \rightarrow & w-\eta \frac{\partial C_0}{\partial w}-\frac{\eta \lambda}{n} w  =  \left(1-\frac{\eta \lambda}{n}\right) w -\eta \frac{\partial C_0}{\partial w}
-\end{eqnarray}</script><p>可以发现 $L2$ 正则化对b的更新没有影响，但是对 $w$ 的更新有影响。现在 $w$ 前面系数为 $1-\frac{\eta \lambda}{n}$，因为 $\eta\; \lambda \; n$ 都是正的，它的效果是减小 $w$，这也就是权重衰减（weight decay）的由来。</p>
+\boldsymbol{s}_t \leftarrow \gamma \boldsymbol{s}_{t-1} + (1 - \gamma) \boldsymbol{g}_t \odot \boldsymbol{g}_t \\
+\boldsymbol{x}_t \leftarrow \boldsymbol{x}_{t-1} - \frac{\eta}{\sqrt{\boldsymbol{s}_t + \epsilon}} \odot \boldsymbol{g}_t</script><p>其中 $\eta$ 是初始学习率且 $\eta &gt; 0$，$\epsilon$ 是为了维持数值稳定性而添加的常数，例如 $10^{-8}$ 。</p>
+<p>RMSProp只在Adagrad的基础上修改了变量 $\boldsymbol{s}$ 的更新方法：对平方项 $\boldsymbol{g}_t \odot \boldsymbol{g}_t$ 从累加变成了指数加权移动平均。由于变量 $\boldsymbol{s}$ 可看作是最近 $1/(1-\gamma)$ 个时刻的平方项 $\boldsymbol{g}_t \odot \boldsymbol{g}_t$ 的加权平均，自变量每个元素的学习率在迭代过程中避免了“只降不升”的问题。</p>
+<p>经验上,RMSProp 已被证明是一种有效且实用的深度神经网络优化算法。目前它是深度学习从业者经常采用的优化方法之一。</p>
+<h1 id="Adam"><a href="#Adam" class="headerlink" title="Adam"></a>Adam</h1><p>Adam是一个组合了动量法和RMSProp的优化算法，使用了动量变量 $\boldsymbol{v}$ 和RMSProp中变量 $\boldsymbol{s}$，并将它们中每个元素初始化为0。在每次迭代中，时刻 $t$ 的小批量随机梯度记作 $\boldsymbol{g}_t$。</p>
+<p>和动量法类似，给定超参数 $\beta_1$ 且满足 $0 \leq \beta_1 &lt; 1$（算法作者建议设为0.9），将小批量随机梯度的指数加权移动平均记作动量变量 $\boldsymbol{v}$，并将它在时刻 $t$ 的值记作 $\boldsymbol{v}_t$：</p>
+<script type="math/tex; mode=display">
+\boldsymbol{v}_t \leftarrow \beta_1 \boldsymbol{v}_{t-1} + (1 - \beta_1) \boldsymbol{g}_t</script><p>和RMSProp中一样，给定超参数 $\beta_2$ 且满足 $0 \leq \beta_2 &lt; 1$（算法作者建议设为0.999）， 将小批量随机梯度按元素平方后做指数加权移动平均得到 $\boldsymbol{s}$ ，并将它在时刻 $t$ 的值记作 $\boldsymbol{s}_t$：</p>
+<script type="math/tex; mode=display">
+\boldsymbol{s}_t \leftarrow \beta_2 \boldsymbol{s}_{t-1} + (1 - \beta_2) \boldsymbol{g}_t \odot \boldsymbol{g}_t</script><p>需要注意的是，当 $t$ 较小时，过去各时刻小批量随机梯度权值之和会较小。例如当 $\beta_1 = 0.9$ 时，$\boldsymbol{v}_1 = 0.1\boldsymbol{g}_1$。为了消除这样的影响，对于任意时刻 $t$ ，我们可以将 $\boldsymbol{v}_t$ 再除以 $1 - \beta_1^t$ ，从而使得过去各时刻小批量随机梯度权值之和为1。这也叫做偏差修正。在Adam算法中，我们对变量 $\boldsymbol{v}$ 和 $\boldsymbol{s}$ 均作偏差修正：</p>
+<script type="math/tex; mode=display">
+\hat{\boldsymbol{v}}_t \leftarrow \frac{\boldsymbol{v}_t}{1 - \beta_1^t} \\
+\hat{\boldsymbol{s}}_t \leftarrow \frac{\boldsymbol{s}_t}{1 - \beta_2^t}</script><p>接下来，Adam算法使用以上偏差修正后的变量 $\hat{\boldsymbol{v}}_t$ 和 $\hat{\boldsymbol{s}}_t$，将模型参数中每个元素的学习率通过按元素运算重新调整：</p>
+<script type="math/tex; mode=display">
+\boldsymbol{g}_t^\prime \leftarrow \frac{\eta \hat{\boldsymbol{v}}_t}{\sqrt{\hat{\boldsymbol{s}}_t + \epsilon}}</script><p>其中 $\eta$ 是初始学习率且 $\eta &gt; 0$，$\epsilon$ 是为了维持数值稳定性而添加的常数，例如 $10^{-8}$。和Adagrad、RMSProp以及Adadelta一样，目标函数自变量中每个元素都分别拥有自己的学习率。</p>
+<p>最后，时刻 $t$ 的自变量 $\boldsymbol{x}_t$ 的迭代步骤与小批量随机梯度下降类似：</p>
+<script type="math/tex; mode=display">
+\boldsymbol{x}_t \leftarrow \boldsymbol{x}_{t-1} - \boldsymbol{g}_t^\prime</script><p>本文转自<a href="https://zh.gluon.ai/index.html" target="_blank" rel="noopener">动手深度学习</a>。</p>
 
       
     </div>
@@ -467,9 +480,7 @@ w & \rightarrow & w-\eta \frac{\partial C_0}{\partial w}-\frac{\eta \lambda}{n} 
       
         <div class="post-tags">
           
-            <a href="/tags/过拟合/" rel="tag"># 过拟合</a>
-          
-            <a href="/tags/正则化/" rel="tag"># 正则化</a>
+            <a href="/tags/优化算法/" rel="tag"># 优化算法</a>
           
         </div>
       
@@ -482,8 +493,8 @@ w & \rightarrow & w-\eta \frac{\partial C_0}{\partial w}-\frac{\eta \lambda}{n} 
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/06/11/Dropout/" rel="next" title="Dropout">
-                <i class="fa fa-chevron-left"></i> Dropout
+              <a href="/2018/09/25/Gradient_Descent/" rel="next" title="【转】梯度下降详解">
+                <i class="fa fa-chevron-left"></i> 【转】梯度下降详解
               </a>
             
           </div>
@@ -492,8 +503,8 @@ w & \rightarrow & w-\eta \frac{\partial C_0}{\partial w}-\frac{\eta \lambda}{n} 
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2018/06/12/机器学习中常见评价指标/" rel="prev" title="机器学习中常见的评价指标">
-                机器学习中常见的评价指标 <i class="fa fa-chevron-right"></i>
+              <a href="/2018/09/27/C++_Primer_Class2/" rel="prev" title="C++ Prime：类">
+                C++ Prime：类 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -551,8 +562,17 @@ w & \rightarrow & w-\eta \frac{\partial C_0}{\partial w}-\frac{\eta \lambda}{n} 
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -571,7 +591,7 @@ w & \rightarrow & w-\eta \frac{\partial C_0}{\partial w}-\frac{\eta \lambda}{n} 
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">76</span>
+                  <span class="site-state-item-count">79</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -582,7 +602,7 @@ w & \rightarrow & w-\eta \frac{\partial C_0}{\partial w}-\frac{\eta \lambda}{n} 
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">13</span>
+                  <span class="site-state-item-count">14</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -593,7 +613,7 @@ w & \rightarrow & w-\eta \frac{\partial C_0}{\partial w}-\frac{\eta \lambda}{n} 
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">95</span>
+                  <span class="site-state-item-count">92</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -766,6 +786,22 @@ w & \rightarrow & w-\eta \frac{\partial C_0}{\partial w}-\frac{\eta \lambda}{n} 
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#AdaGrad"><span class="nav-number">1.</span> <span class="nav-text">AdaGrad</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#RMSProp"><span class="nav-number">2.</span> <span class="nav-text">RMSProp</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Adam"><span class="nav-number">3.</span> <span class="nav-text">Adam</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
