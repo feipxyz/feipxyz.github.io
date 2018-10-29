@@ -147,6 +147,14 @@
       </tags>
   </entry>
   <entry>
+    <title><![CDATA[C++ Primer：面向对象]]></title>
+    <url>%2F2018%2F08%2F25%2FC%2B%2B_Primer_Object_Oriented_Programming%2F</url>
+    <content type="text"></content>
+      <categories>
+        <category>C++</category>
+      </categories>
+  </entry>
+  <entry>
     <title><![CDATA[C++ STL学习笔记]]></title>
     <url>%2F2018%2F08%2F25%2FC%2B%2B%20STL%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%2F</url>
     <content type="text"><![CDATA[本文记录C++ STL学习过程中的一些知识。 std::pairpair 实质上是一个结构体，其主要的两个成员变量是 first 和 second。 pair的应用std::pair 主要的作用是将两个数据组合成一个数据，两个数据可以是同一类型或者不同类型。当一个函数需要返回2个数据的时候，可以选择 pair。 12345pair&lt;int,float&gt; p1; //使用默认构造函数pair&lt;double,double&gt; p2(1.0, 2.4) //用给定值初始化pair&lt;int, float&gt; p3(p0) //使用拷贝构造函数p1.first = 1;p1.second = 2; make_pair函数初始化一个 pair 可以使用构造函数，也可以使用 std::make_pair 函数，make_pair 函数的定义如下： 1234template pair make_pair(T1 a, T2 b) &#123; return pair(a, b); &#125; 一般 make_pair都使用在需要 pair 做参数的位置，可以直接调用 make_pair 生成 pair 对象。 另一个使用的方面就是 pair 可以接受隐式的类型转换，这样可以获得更高的灵活度。但是这样会出现如下问题：例如有如下两个定义： 12pair&lt;int, float&gt;(1, 1.1);make_pair(1, 1.1); 其中第一个的 second 变量是 float 类型，而 make_pair 函数会将 second 变量都转换成 double 类型。这个问题在编程是需要引起注意。 priority_queue优先队列容器与队列一样，只能从队尾插入，从队首删除。但它在此基础上内部添加了的一个排序，所以出队时，并非按照先进先出的原则进行，而是将当前队列中最大的元素或最小元素出队。 定义priority_queue&lt;Type, Container, Functional&gt;Type 就是数据类型，Container 就是容器类型（Container必须是用数组实现的容器，比如vector,deque等等，但不能用 list。STL里面默认用的是vector），Functional 就是比较的方式，当需要用自定义的数据类型时才需要传入这三个参数，使用基本数据类型时，只需要传入数据类型，默认是大顶堆 123456//升序队列priority_queue &lt;int,vector&lt;int&gt;,greater&lt;int&gt; &gt; q;//降序队列priority_queue &lt;int,vector&lt;int&gt;,less&lt;int&gt; &gt;q;//greater和less是std实现的两个仿函数（就是使一个类的使用看上去像一个函数。其实现就是类中实现一个operator()，这个类就有了类似函数的行为，就是一个仿函数类了)priority_queue&lt;int&gt; a; //等同于 priority_queue&lt;int, vector&lt;int&gt;, less&lt;int&gt; &gt; a; 基本成员函数empty() pop() push() size() top() 优先级声明方式 123456789101112131415161718192021//自定义优先级：struct cmp &#123; operator bool ()(int x, int y) &#123; return x &gt; y; // x小的优先级高 //也可以写成其他方式，如： return p[x] &gt; p[y];表示p[i]小的优先级高 &#125;&#125;;priority_queue&lt;int, vector&lt;int&gt;, cmp&gt; q; //定义方法//结构体声明方式：struct node &#123; int x, y; friend bool operator &lt; (node a, node b) &#123; return a.x &gt; b.x; //结构体中，x小的优先级高 &#125;&#125;;priority_queue&lt;node&gt;q; //定义方法//在该结构中，y为值, x为优先级。//通过自定义operator&lt;操作符来比较元素中的优先级。//在重载”&lt;”时，最好不要重载”&gt;”，可能会发生编译错误]]></content>
@@ -157,14 +165,6 @@
         <tag>C++</tag>
         <tag>STL</tag>
       </tags>
-  </entry>
-  <entry>
-    <title><![CDATA[C++ Primer：面向对象]]></title>
-    <url>%2F2018%2F08%2F25%2FC%2B%2B_Primer_Object_Oriented_Programming%2F</url>
-    <content type="text"></content>
-      <categories>
-        <category>C++</category>
-      </categories>
   </entry>
   <entry>
     <title><![CDATA[权重衰减（Weight Decay）]]></title>
@@ -225,9 +225,9 @@
       </tags>
   </entry>
   <entry>
-    <title><![CDATA[双指针解题（持续更新）]]></title>
-    <url>%2F2018%2F08%2F15%2FTwo_Pointers_Algorithm_Solutions%2F</url>
-    <content type="text"><![CDATA[记录一些双指针题目的解题思路，持续更新。 有效三角形的个数 leetcode 611给定一个包含非负整数的数组，你的任务是统计其中可以组成三角形三条边的三元组个数。输入: [2,2,3,4]输出: 3 解答： 从小到大排序，假定nums[k]是最大边，只需之前的i &lt; j &lt; k满足nums[i] + nums[j] &gt; nums[k]即可，两边之差小于第三边自动满足。]]></content>
+    <title><![CDATA[数组解题（持续更新）]]></title>
+    <url>%2F2018%2F08%2F15%2FArray_Algorithm_Solutions%2F</url>
+    <content type="text"><![CDATA[旋转数组 leetocde 188给定一个数组，将数组中的元素向右移动 k 个位置，其中 k 是非负数。输入: [1,2,3,4,5,6,7] 和 k = 3。输出: [5,6,7,1,2,3,4]输入: [-1,-100,3,99] 和 k = 2。输出: [3,99,-1,-100] 解答： 123reverse(nums, 0, nums.length - 1);reverse(nums, 0, k - 1);reverse(nums, k, nums.length - 1);]]></content>
       <categories>
         <category>数据结构与算法</category>
       </categories>
@@ -237,9 +237,9 @@
       </tags>
   </entry>
   <entry>
-    <title><![CDATA[数组解题（持续更新）]]></title>
-    <url>%2F2018%2F08%2F15%2FArray_Algorithm_Solutions%2F</url>
-    <content type="text"><![CDATA[旋转数组 leetocde 188给定一个数组，将数组中的元素向右移动 k 个位置，其中 k 是非负数。输入: [1,2,3,4,5,6,7] 和 k = 3。输出: [5,6,7,1,2,3,4]输入: [-1,-100,3,99] 和 k = 2。输出: [3,99,-1,-100] 解答： 123reverse(nums, 0, nums.length - 1);reverse(nums, 0, k - 1);reverse(nums, k, nums.length - 1);]]></content>
+    <title><![CDATA[双指针解题（持续更新）]]></title>
+    <url>%2F2018%2F08%2F15%2FTwo_Pointers_Algorithm_Solutions%2F</url>
+    <content type="text"><![CDATA[记录一些双指针题目的解题思路，持续更新。 有效三角形的个数 leetcode 611给定一个包含非负整数的数组，你的任务是统计其中可以组成三角形三条边的三元组个数。输入: [2,2,3,4]输出: 3 解答： 从小到大排序，假定nums[k]是最大边，只需之前的i &lt; j &lt; k满足nums[i] + nums[j] &gt; nums[k]即可，两边之差小于第三边自动满足。]]></content>
       <categories>
         <category>数据结构与算法</category>
       </categories>
