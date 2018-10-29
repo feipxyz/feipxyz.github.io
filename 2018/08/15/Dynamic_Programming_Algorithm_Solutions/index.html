@@ -87,7 +87,7 @@
 <meta property="og:site_name" content="乡间小路">
 <meta property="og:description" content="记录一些动态规划问题的解题思路，会一直持续更新。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-10-26T16:32:44.600Z">
+<meta property="og:updated_time" content="2018-10-27T17:46:15.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="动态规划解题（持续更新）">
 <meta name="twitter:description" content="记录一些动态规划问题的解题思路，会一直持续更新。">
@@ -352,8 +352,8 @@
               
                 <span class="post-meta-item-text">更新于&#58;</span>
               
-              <time title="更新于" itemprop="dateModified" datetime="2018-10-27T00:32:44+08:00">
-                2018-10-27
+              <time title="更新于" itemprop="dateModified" datetime="2018-10-28T01:46:15+08:00">
+                2018-10-28
               </time>
             
           </span>
@@ -427,7 +427,7 @@
 </blockquote>
 <p><strong>解答：</strong></p>
 <p>背包问题。用<code>dp[i]</code>表示钱数为i时需要的硬币数，<code>coin[j]</code>表示硬币面值，那么显然<code>dp[i] = min(dp[i], dp[i - coin[j]]) + 1</code>。可见只需从前往后遍历，依次求出<code>dp[i]</code>，最后一个即为所求。注意初始条件<code>dp[coin[j]] = 1</code>。</p>
-<h1 id="Coin-Change-2"><a href="#Coin-Change-2" class="headerlink" title="Coin Change 2"></a>Coin Change 2</h1><blockquote>
+<h2 id="Coin-Change-2"><a href="#Coin-Change-2" class="headerlink" title="Coin Change 2"></a>Coin Change 2</h2><blockquote>
 <p>leetcode 518<br>给定不同面额的硬币和一个总金额。写出函数来计算可以凑成总金额的硬币组合数。假设每一种面额的硬币有无限个。<br>输入: amount = 5, coins = [1, 2, 5]<br>输出: 4<br>解释: 有四种方式可以凑成总金额:<br>5=5<br>5=2+2+1<br>5=2+1+1+1<br>5=1+1+1+1+1  </p>
 </blockquote>
 <p><strong>解答：</strong></p>
@@ -517,6 +517,17 @@
 <p><code>dp[i]</code>表示小偷光顾第i个房屋后总共获取的最大金额。显然，第i个房间可以进行两种选择，偷或者不偷。不偷：<code>dp[i] = dp[i-1]</code>；偷：<code>dp[i] = dp[i-2] + nums[i]</code>。当然我们选择金额最大的。则：<code>dp[i] = max(dp[i-1], dp[i-2] + nums[i])</code>。</p>
 <p><strong>优化：</strong></p>
 <p>观察递推公式，发现下一个值只和上一个、上两个值相关，所以可以将空间优化到<code>O(1)</code>。</p>
+<h1 id="Paint-House-I"><a href="#Paint-House-I" class="headerlink" title="Paint House I"></a>Paint House I</h1><blockquote>
+<p>lintcode 515<br>这里有n个房子在一列直线上，现在我们需要给房屋染色，分别有红色蓝色和绿色。每个房屋染不同的颜色费用也不同，你需要设计一种染色方案使得相邻的房屋颜色不同，并且费用最小。<br>费用通过一个 nx3 的矩阵给出，比如<code>cost[0][0]</code>表示房屋0染红色的费用，<code>cost[1][2]</code>表示房屋1染绿色的费用。<br>输入：costs = [[14,2,11],[11,14,5],[14,3,10]]<br>输出：10</p>
+</blockquote>
+<p><strong>解答：</strong></p>
+<p><code>dp[i][j]</code>表示第i个房屋使用第j中颜色时所花费的最少费用，显然<code>dp[i][j] = costs[i][j] + min(dp[i][n != j])</code></p>
+<h1 id="Paint-House-II"><a href="#Paint-House-II" class="headerlink" title="Paint House II"></a>Paint House II</h1><blockquote>
+<p>lintcode 516<br>这里有n个房子在一列直线上，现在我们需要给房屋染色，共有k种颜色。每个房屋染不同的颜色费用也不同，你需要设计一种染色方案使得相邻的房屋颜色不同，并且费用最小。<br>费用通过一个nxk 的矩阵给出，比如<code>cost[0][0]</code>表示房屋0染颜色0的费用，<code>cost[1][2]</code>表示房屋1染颜色2的费用。<br>输入：costs = [[14,2,11],[11,14,5],[14,3,10]]<br>输出：10<br>限制：用<code>O(nk)</code>的时间复杂度来解题  </p>
+</blockquote>
+<p><strong>解答：</strong>  </p>
+<p>这道题是之前那道 Paint House I 的拓展，那道题只让用红绿蓝三种颜色来粉刷房子，而这道题让我们用k种颜色，这道题不能用之前那题的解法，会TLE。这题的解法的思路还是用DP，但是在找不同颜色的最小值不是遍历所有不同颜色，而是用<code>min1</code>和<code>min2</code>来记录之前房子的最小和第二小的花费的颜色，如果当前房子颜色和<code>min1</code>相同，那么我们用<code>min2</code>对应的值计算，反之我们用<code>min1</code>对应的值，这种解法实际上也包含了求次小值的方法，感觉也是一种很棒的解题思路。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">minCostII</span><span class="params">(<span class="built_in">vector</span>&lt;<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt;&gt;&amp; costs)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (costs.empty() || costs[<span class="number">0</span>].empty()) <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        <span class="built_in">vector</span>&lt;<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt;&gt; dp = costs;</span><br><span class="line">        <span class="keyword">int</span> min1 = <span class="number">-1</span>, </span><br><span class="line">        <span class="keyword">int</span> min2 = <span class="number">-1</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; dp.size(); ++i)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">int</span> last1 = min1, </span><br><span class="line">            <span class="keyword">int</span> last2 = min2;</span><br><span class="line">            min1 = <span class="number">-1</span>; </span><br><span class="line">            min2 = <span class="number">-1</span>;</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; dp[i].size(); ++j) </span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">if</span> (j != last1) </span><br><span class="line">                &#123;</span><br><span class="line">                    dp[i][j] += last1 &lt; <span class="number">0</span> ? <span class="number">0</span> : dp[i - <span class="number">1</span>][last1];</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">else</span> </span><br><span class="line">                &#123;</span><br><span class="line">                    dp[i][j] += last2 &lt; <span class="number">0</span> ? <span class="number">0</span> : dp[i - <span class="number">1</span>][last2];</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">if</span> (min1 &lt; <span class="number">0</span> || dp[i][j] &lt; dp[i][min1]) </span><br><span class="line">                &#123;</span><br><span class="line">                    min2 = min1; min1 = j;</span><br><span class="line">                &#125; </span><br><span class="line">                <span class="keyword">else</span> <span class="keyword">if</span> (min2 &lt; <span class="number">0</span> || dp[i][j] &lt; dp[i][min2]) </span><br><span class="line">                &#123;</span><br><span class="line">                    min2 = j;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> dp.back()[min1];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
 
       
     </div>
@@ -573,8 +584,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/08/15/C++ 11新特性/" rel="next" title="C++11新特性">
-                <i class="fa fa-chevron-left"></i> C++11新特性
+              <a href="/2018/08/15/Two_Pointers_Algorithm_Solutions/" rel="next" title="双指针解题（持续更新）">
+                <i class="fa fa-chevron-left"></i> 双指针解题（持续更新）
               </a>
             
           </div>
@@ -671,7 +682,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">82</span>
+                  <span class="site-state-item-count">83</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -857,6 +868,10 @@
                     <a href="https://me.csdn.net/icefire_tyh" title="四去六进一" target="_blank">四去六进一</a>
                   </li>
                 
+                  <li class="links-of-blogroll-item">
+                    <a href="https://www.cnblogs.com/guoyaohua/" title="郭耀华's Blog" target="_blank">郭耀华's Blog</a>
+                  </li>
+                
               </ul>
             </div>
           
@@ -876,7 +891,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#背包问题"><span class="nav-number">1.</span> <span class="nav-text">背包问题</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#能装多满"><span class="nav-number">1.1.</span> <span class="nav-text">能装多满</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#能装入的最大价值"><span class="nav-number">1.2.</span> <span class="nav-text">能装入的最大价值</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Coin-Change"><span class="nav-number">1.3.</span> <span class="nav-text">Coin Change</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Coin-Change-2"><span class="nav-number">2.</span> <span class="nav-text">Coin Change 2</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#正则表达式匹配"><span class="nav-number">3.</span> <span class="nav-text">正则表达式匹配</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#最长有效括号"><span class="nav-number">4.</span> <span class="nav-text">最长有效括号</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#地下城游戏"><span class="nav-number">5.</span> <span class="nav-text">地下城游戏</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#打家劫舍"><span class="nav-number">6.</span> <span class="nav-text">打家劫舍</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#背包问题"><span class="nav-number">1.</span> <span class="nav-text">背包问题</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#能装多满"><span class="nav-number">1.1.</span> <span class="nav-text">能装多满</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#能装入的最大价值"><span class="nav-number">1.2.</span> <span class="nav-text">能装入的最大价值</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Coin-Change"><span class="nav-number">1.3.</span> <span class="nav-text">Coin Change</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Coin-Change-2"><span class="nav-number">1.4.</span> <span class="nav-text">Coin Change 2</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#正则表达式匹配"><span class="nav-number">2.</span> <span class="nav-text">正则表达式匹配</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#最长有效括号"><span class="nav-number">3.</span> <span class="nav-text">最长有效括号</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#地下城游戏"><span class="nav-number">4.</span> <span class="nav-text">地下城游戏</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#打家劫舍"><span class="nav-number">5.</span> <span class="nav-text">打家劫舍</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Paint-House-I"><span class="nav-number">6.</span> <span class="nav-text">Paint House I</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Paint-House-II"><span class="nav-number">7.</span> <span class="nav-text">Paint House II</span></a></li></ol></div>
             
 
           </div>
