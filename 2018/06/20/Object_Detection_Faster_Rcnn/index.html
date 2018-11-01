@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="ResNet," />
+  <meta name="keywords" content="RCNN,Faster RCNN,目标检测,ROI,RPN," />
 
 
 
@@ -79,24 +79,26 @@
 
 
 
-<meta name="description" content="ResNet在2015年被提出，在ImageNet比赛classification任务上获得第一名，因为它“简单与实用”并存，之后很多方法都建立在ResNet50或者ResNet101的基础上完成的，检测，分割，识别等领域都纷纷使用ResNet，Alpha zero也使用了ResNet。">
-<meta name="keywords" content="ResNet">
+<meta name="description" content="本文介绍目标检测算法Faster RCNN。">
+<meta name="keywords" content="RCNN,Faster RCNN,目标检测,ROI,RPN">
 <meta property="og:type" content="article">
-<meta property="og:title" content="ResNet解析">
-<meta property="og:url" content="flyrie.top/2018/06/15/ResNet总结/index.html">
+<meta property="og:title" content="目标检测之Faster RCNN">
+<meta property="og:url" content="flyrie.top/2018/06/20/Object_Detection_Faster_Rcnn/index.html">
 <meta property="og:site_name" content="乡间小路">
-<meta property="og:description" content="ResNet在2015年被提出，在ImageNet比赛classification任务上获得第一名，因为它“简单与实用”并存，之后很多方法都建立在ResNet50或者ResNet101的基础上完成的，检测，分割，识别等领域都纷纷使用ResNet，Alpha zero也使用了ResNet。">
+<meta property="og:description" content="本文介绍目标检测算法Faster RCNN。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="/images/ResNet解析_2.png">
-<meta property="og:image" content="/images/ResNet解析_5.png">
-<meta property="og:image" content="/images/ResNet解析_6.png">
-<meta property="og:image" content="/images/ResNet解析_3.png">
-<meta property="og:image" content="/images/ResNet解析_4.png">
-<meta property="og:updated_time" content="2018-07-09T16:00:05.070Z">
+<meta property="og:image" content="/images/Faster%20RCNN_1.png">
+<meta property="og:image" content="/images/Faster%20RCNN_2.png">
+<meta property="og:image" content="/images/Faster%20RCNN_3.png">
+<meta property="og:image" content="/images/Faster%20RCNN_4.png">
+<meta property="og:image" content="/images/Faster%20RCNN_5.png">
+<meta property="og:image" content="/images/Faster%20RCNN_5.png">
+<meta property="og:image" content="/images/Faster%20RCNN_7.png">
+<meta property="og:updated_time" content="2018-06-19T17:46:14.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="ResNet解析">
-<meta name="twitter:description" content="ResNet在2015年被提出，在ImageNet比赛classification任务上获得第一名，因为它“简单与实用”并存，之后很多方法都建立在ResNet50或者ResNet101的基础上完成的，检测，分割，识别等领域都纷纷使用ResNet，Alpha zero也使用了ResNet。">
-<meta name="twitter:image" content="/images/ResNet解析_2.png">
+<meta name="twitter:title" content="目标检测之Faster RCNN">
+<meta name="twitter:description" content="本文介绍目标检测算法Faster RCNN。">
+<meta name="twitter:image" content="/images/Faster%20RCNN_1.png">
 
 
 
@@ -126,13 +128,13 @@
 
 
 
-  <link rel="canonical" href="flyrie.top/2018/06/15/ResNet总结/"/>
+  <link rel="canonical" href="flyrie.top/2018/06/20/Object_Detection_Faster_Rcnn/"/>
 
 
 
 
 
-  <title>ResNet解析 | 乡间小路</title>
+  <title>目标检测之Faster RCNN | 乡间小路</title>
   
 
 
@@ -313,7 +315,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="flyrie.top/2018/06/15/ResNet总结/">
+    <link itemprop="mainEntityOfPage" href="flyrie.top/2018/06/20/Object_Detection_Faster_Rcnn/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="乡间小路">
@@ -330,7 +332,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">ResNet解析</h1>
+          <h1 class="post-title" itemprop="name headline">目标检测之Faster RCNN</h1>
         
 
         <div class="post-meta">
@@ -342,8 +344,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-06-15T01:36:15+08:00">
-                2018-06-15
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-06-20T01:46:14+08:00">
+                2018-06-20
               </time>
             
 
@@ -358,8 +360,8 @@
               
                 <span class="post-meta-item-text">更新于&#58;</span>
               
-              <time title="更新于" itemprop="dateModified" datetime="2018-07-10T00:00:05+08:00">
-                2018-07-10
+              <time title="更新于" itemprop="dateModified" datetime="2018-06-20T01:46:14+08:00">
+                2018-06-20
               </time>
             
           </span>
@@ -379,6 +381,17 @@
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
                   <a href="/categories/深度学习/" itemprop="url" rel="index">
                     <span itemprop="name">深度学习</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/深度学习/目标检测/" itemprop="url" rel="index">
+                    <span itemprop="name">目标检测</span>
                   </a>
                 </span>
 
@@ -414,74 +427,89 @@
       
 
       
-        <p>ResNet在2015年被提出，在ImageNet比赛classification任务上获得第一名，因为它“简单与实用”并存，之后很多方法都建立在ResNet50或者ResNet101的基础上完成的，检测，分割，识别等领域都纷纷使用ResNet，Alpha zero也使用了ResNet。<a id="more"></a></p>
-<h1 id="残差块"><a href="#残差块" class="headerlink" title="残差块"></a>残差块</h1><p>ResNet的基础块叫做残差块。一般有两种形式BasicBlock和Bottleneck。</p>
+        <p>本文介绍目标检测算法Faster RCNN。<a id="more"></a></p>
+<h1 id="网络结构"><a href="#网络结构" class="headerlink" title="网络结构"></a>网络结构</h1><p>网络结构如图所示。</p>
+<p><img src="/images/Faster RCNN_1.png" alt="图片"></p>
 <ol>
-<li><p>BasicBlock结构中，主要使用了两个$3\times3$的卷积核。 残差residual分支为：<code>OUT = CONV3*3 + BN + RELU + CONV3*3 + BN</code>，然后与恒等映射identity相加再做relu <code>OUT + X + RELU</code>。</p>
-</li>
-<li><p>Bottleneck结构中。分别使用$1\times1，3\times3，1\times1$的卷积核，残差residual分支为：<code>OUT = CONV1*1 + BN + RELU + CONV3*3 + BN + RELU + CONV1*1 + BN</code>，然后与恒等映射identity相加再做relu <code>OUT + X + RELU</code>。使用Bottleneck结构可以减少网络参数数量。</p>
-</li>
+<li><strong>Conv Layers</strong><br>Faster R-CNN首先使用一组基础的conv+relu+pooling层提取image的feature maps。该feature maps被共享用于后续RPN层和全连接层。</li>
+<li><strong>Region Proposal Networks(RPN)</strong><br>RPN网络用于生成region proposals。该层通过softmax判断anchors属于foreground或者background，再利用bounding box regression修正anchors获得比较精确的proposals。</li>
+<li><strong>ROI Pooling</strong><br>该层收集输入的feature maps和proposals，综合这些信息后提取proposal feature maps，送入后续全连接层判定目标类别。  </li>
+<li><strong>Classification</strong><br>利用proposal feature maps计算proposal的类别，同时再次bounding box regression获得检测框最终的精确位置。</li>
 </ol>
-<p>如下图所示(直接粘贴论文中的原图，原图没有画BN结构）：</p>
-<p><img src="/images/ResNet解析_2.png" alt="图片"></p>
-<p>这两种结构分别针对ResNet34（左图）和ResNet50/101/152（右图），目的一目了然，就是为了降低参数的数目，第一个1x1的卷积把256维channel降到64维，然后在最后通过1x1卷积恢复，整体上用的参数数目：1x1x256x64 + 3x3x64x64 + 1x1x64x256 = 69632，而不使用bottleneck的话就是两个3x3x256的卷积，参数数目: 3x3x256x256x2 = 1179648，差了16.94倍。<br>对于BasicBlock，可以用于34层或者更少的网络中，对于Bottleneck Design的ResNet通常用于更深的如101这样的网络中，目的是减少计算和参数。</p>
-<p>在之后的《Identity Mappings in Deep Residual Networks》中，又提出了一种更优的残差块结构，并且作者分析了什么样的残差结构才work。主要改变是将<code>BN</code>和<code>RELU</code>放在了<code>CONV</code>之前，对比如下：</p>
-<p><img src="/images/ResNet解析_5.png" alt="图片"><br>实验结果表明，新的残差结构要优于之前的残差结构。</p>
-<h1 id="什么样的残差块work？"><a href="#什么样的残差块work？" class="headerlink" title="什么样的残差块work？"></a>什么样的残差块work？</h1><p>下面(a)到(e)的结构哪个是我们常用的ResNet结构？ 答案是(a)和(e）。</p>
-<p><img src="/images/ResNet解析_6.png" alt="图片">  </p>
-<p>对于每个图右侧部分我们称作“residual”分支，左侧部分我们称作“identity”分支。</p>
-<p>ResNet原文中使用的结构是(a），（a)的特点有两个：  </p>
-<ul>
-<li>BN和ReLU在weight的后面；  </li>
-<li>最后的ReLU在addition的后面。</li>
-</ul>
-<p>对于特点(1)，属于常规范畴，我们平时也都这个顺序：Conv-&gt;BN-&gt;ReLU；对于特点(2），为什么ReLU放在addition后面呢？</p>
-<p><strong>图(c)的结构work么？</strong><br>答案是不work。如果ReLU作为“residual”分支的结尾，不难发现“residual”分支的结果永远非负，这样前向的时候输入会单调递增，从而会影响特征的表达能力，所以我们希望“residual”分支的结果应该在 $(-\infty, +\infty)$。这点也是我们以后设计网络时所要注意的。</p>
-<p><strong>图(b)的结构work么？</strong><br>答案是不work。这里BN改变了“identity”分支的分布，影响了信息的传递，在训练的时候会阻碍loss的下降。</p>
-<p><strong>为什么“identity”分支发生变化，会影响信息传递，从而影响训练？</strong><br>回顾ResNet的公式：</p>
+<p>首先对于一副任意大小 $P \times Q$ 的图像，首先缩放至固定大小 $M\times N$ ，然后将 $M\times N$ 图像送入网络；卷积层可以使用ResNet或者VGG提取特征；RPN网络首先经过 $3\times 3$ 卷积，再分别生成foreground anchors与bounding box regression偏移量，然后计算出proposals；而ROI Pooling则从proposals提取固定大小的proposal feature送入后续全连接和softmax网络作classification。</p>
+<h1 id="特征提取"><a href="#特征提取" class="headerlink" title="特征提取"></a>特征提取</h1><p>一般使用VGG或ResNet进行特征提取。本文以VGG为例。</p>
+<h2 id="VGG"><a href="#VGG" class="headerlink" title="VGG"></a>VGG</h2><p>这里以 VGG16 为例。</p>
+<p><img src="/images/Faster RCNN_2.png" alt="图片"></p>
+<p>VGG16 图片分类时，输入为 $224×224×3$ 的张量。网络结构最后采用FC层(而不是Conv层)得到固定长度的向量，以进行图片分类。对最后一个卷积层的输出拉伸为rank 1的张量，然后送入FC层。</p>
+<p>Faster RCNN 采用 VGG16 的中间卷积层的输出，即最后一个Max Pooling前的部分，因此不用关心输入的尺寸。 卷积特征图保持相对于原始图片所编码“things”的位置。 例如，如果在图片的左上角存在一个红色正方形，而且卷积层有激活响应，那么该红色正方形的信息被卷积层编码后，仍在卷积特征图的左上角。但其空间维度降低，即分辨率比原图小得多。</p>
+<h2 id="ResNet"><a href="#ResNet" class="headerlink" title="ResNet"></a>ResNet</h2><p>ResNet结构逐渐取代VGG作为基础网络，用于提取特征。ResNet相对于VGG的明显优势是，网络更大，因此具有更强的学习能力，而且训练比较容易。 </p>
+<h1 id="区域建议"><a href="#区域建议" class="headerlink" title="区域建议"></a>区域建议</h1><p>区域建议为后续网络生成候选框。RCNN、Fast RCNN中的selective search都很耗时，而Faster RCNN则抛弃了这种方法，直接使用RPN生成检测框，极大提升检测框的生成速度。结构如下。</p>
+<p><img src="/images/Faster RCNN_3.png" alt="图片"></p>
+<p>上图展示了RPN网络的具体结构。可以看到RPN网络实际分为2条线，上面一条通过softmax分类anchors获得foreground和background，下面一条用于计算对于anchors的bounding box regression偏移量，以获得精确的proposal。而最后的Proposal层则负责综合foreground anchors和bounding box regression偏移量获取proposals，同时剔除太小和超出边界的proposals，并选择部分送入ROI layer。</p>
+<h2 id="Anchors"><a href="#Anchors" class="headerlink" title="Anchors"></a>Anchors</h2><p>这里有必要对Anchors（锚框）介绍一下。所谓anchors，实际上就是一组由rpn生成的矩形。假设输入数据的空间尺寸为 $h$ 和 $w$，那么大小为 $s\in (0,1]$ 和比例为 $r &gt; 0$ 的锚框形状是</p>
 <script type="math/tex; mode=display">
-y_l=h(x_l)+F(x_l, W_l) and x_{l+1} = f(y_l)</script><p>简化以上公式，令所有“identity”分支都是 $h(x_l) = x_l$ 以及 $x_{l+1} = y_l$，那么得到:</p>
-<script type="math/tex; mode=display">
-x_{l+1} = x_l + F(x_l, W_l)</script><p>我们递归的计算:</p>
-<script type="math/tex; mode=display">
-x_{l+2} = x_{l+1} + F(x_{l+1}, W_{l+1}) = x_l + F(x_l, W_l) + F(x_{l+1}, W_{l+1})</script><script type="math/tex; mode=display">
-x_L = x_l + \sum_{i=l}^{L-1}F(x_i, W_i) \tag{1}</script><p>公式(1)，表达了任何第 $L$ 层(深层)与第 $l$ 层(浅层)之间关系；假设损失函数为loss，那么反向传播公式为：</p>
-<script type="math/tex; mode=display">
-\frac{\partial loss}{\partial x_l} = \frac{\partial loss}{\partial x_L} \frac{\partial x_L}{\partial x_l} = \frac{\partial loss}{\partial x_L} (1 + \frac{\partial}{\partial x_l}\sum_{i=l}^{L-1}F(x_i, W_i))</script><p>这个反向传播公式有几个特点：  </p>
-<ul>
-<li>关于 $x_l$ 的梯度信息与两部分值有关：$x_L$ 的梯度值，也就是说两层之间梯度信息无障碍传递了，以及 $\frac{\partial loss}{\partial x_L} \frac{\partial}{\partial x_l}\sum_{i=l}^{L-1}F(x_i, W_i))$;   </li>
-<li>$\frac{\partial loss}{\partial x_l}$的值不会轻易抵消，因为在一个mini_batch中，$\frac{\partial}{\partial x_l}\sum_{i=l}^{L-1}F(x_i, W_i))$不会一直为<code>-1</code>；</li>
-<li>有效的防止了当权重很小时，梯度消失的问题。</li>
-</ul>
-<p>以上优秀的特点只有在假设 $h(x_l) = x_l$ 以及 $x_{l+1} = y_l$ 成立时才有效，所以ResNet要尽量保证两点：  </p>
-<ul>
-<li>不轻易改变”identity“分支的值，也就是输入与输出一致； </li>
-<li>addition之后不再接改变信息分布的层；</li>
-</ul>
-<p>到此也就彻底回答了图(b)的结构为何会阻碍反向传播时的信息。</p>
-<p><strong>为什么选图(e)而不是图(d)</strong><br>在分析图(d)和图(e)之前，我们引出一个概念：<code>Post-activation</code>和<code>Pre-activation</code>，其中Post和Pre的概念是相对于weight(conv)层来说的，那么我们不难发现，图(a)、(b)、(c)都是<code>Post-activation</code>，图(d), (c)都是<code>Pre-activation</code>，而论文作者用实验结果得出了图(e)的结构比ResNet原结构要好。原因在于两点：</p>
-<ul>
-<li>反向传播基本符合假设，信息传递无阻碍；</li>
-<li>BN层作为pre-activation，起到了正则化的作用。</li>
-</ul>
-<h1 id="残差块的代码实现"><a href="#残差块的代码实现" class="headerlink" title="残差块的代码实现"></a>残差块的代码实现</h1><p>残差块mxnet代码如下：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Blocks</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">BasicBlockV1</span><span class="params">(HybridBlock)</span>:</span></span><br><span class="line">    <span class="string">r"""BasicBlock V1 from `"Deep Residual Learning for Image Recognition"</span></span><br><span class="line"><span class="string">    &lt;http://arxiv.org/abs/1512.03385&gt;`_ paper.</span></span><br><span class="line"><span class="string">    This is used for ResNet V1 for 18, 34 layers.</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    Parameters</span></span><br><span class="line"><span class="string">    ----------</span></span><br><span class="line"><span class="string">    channels : int</span></span><br><span class="line"><span class="string">        Number of output channels.</span></span><br><span class="line"><span class="string">    stride : int</span></span><br><span class="line"><span class="string">        Stride size.</span></span><br><span class="line"><span class="string">    downsample : bool, default False</span></span><br><span class="line"><span class="string">        Whether to downsample the input.</span></span><br><span class="line"><span class="string">    in_channels : int, default 0</span></span><br><span class="line"><span class="string">        Number of input channels. Default is 0, to infer from the graph.</span></span><br><span class="line"><span class="string">    """</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, channels, stride, downsample=False, in_channels=<span class="number">0</span>, **kwargs)</span>:</span></span><br><span class="line">        super(BasicBlockV1, self).__init__(**kwargs)</span><br><span class="line">        self.body = nn.HybridSequential(prefix=<span class="string">''</span>)</span><br><span class="line">        self.body.add(_conv3x3(channels, stride, in_channels))</span><br><span class="line">        self.body.add(nn.BatchNorm())</span><br><span class="line">        self.body.add(nn.Activation(<span class="string">'relu'</span>))</span><br><span class="line">        self.body.add(_conv3x3(channels, <span class="number">1</span>, channels))</span><br><span class="line">        self.body.add(nn.BatchNorm())</span><br><span class="line">        <span class="keyword">if</span> downsample:</span><br><span class="line">            self.downsample = nn.HybridSequential(prefix=<span class="string">''</span>)</span><br><span class="line">            self.downsample.add(nn.Conv2D(channels, kernel_size=<span class="number">1</span>, strides=stride,</span><br><span class="line">                                          use_bias=<span class="keyword">False</span>, in_channels=in_channels))</span><br><span class="line">            self.downsample.add(nn.BatchNorm())</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            self.downsample = <span class="keyword">None</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">hybrid_forward</span><span class="params">(self, F, x)</span>:</span></span><br><span class="line">        residual = x</span><br><span class="line"></span><br><span class="line">        x = self.body(x)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> self.downsample:</span><br><span class="line">            residual = self.downsample(residual)</span><br><span class="line"></span><br><span class="line">        x = F.Activation(residual+x, act_type=<span class="string">'relu'</span>)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> x</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">BottleneckV1</span><span class="params">(HybridBlock)</span>:</span></span><br><span class="line">    <span class="string">r"""Bottleneck V1 from `"Deep Residual Learning for Image Recognition"</span></span><br><span class="line"><span class="string">    &lt;http://arxiv.org/abs/1512.03385&gt;`_ paper.</span></span><br><span class="line"><span class="string">    This is used for ResNet V1 for 50, 101, 152 layers.</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    Parameters</span></span><br><span class="line"><span class="string">    ----------</span></span><br><span class="line"><span class="string">    channels : int</span></span><br><span class="line"><span class="string">        Number of output channels.</span></span><br><span class="line"><span class="string">    stride : int</span></span><br><span class="line"><span class="string">        Stride size.</span></span><br><span class="line"><span class="string">    downsample : bool, default False</span></span><br><span class="line"><span class="string">        Whether to downsample the input.</span></span><br><span class="line"><span class="string">    in_channels : int, default 0</span></span><br><span class="line"><span class="string">        Number of input channels. Default is 0, to infer from the graph.</span></span><br><span class="line"><span class="string">    """</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, channels, stride, downsample=False, in_channels=<span class="number">0</span>, **kwargs)</span>:</span></span><br><span class="line">        super(BottleneckV1, self).__init__(**kwargs)</span><br><span class="line">        self.body = nn.HybridSequential(prefix=<span class="string">''</span>)</span><br><span class="line">        self.body.add(nn.Conv2D(channels//<span class="number">4</span>, kernel_size=<span class="number">1</span>, strides=stride))</span><br><span class="line">        self.body.add(nn.BatchNorm())</span><br><span class="line">        self.body.add(nn.Activation(<span class="string">'relu'</span>))</span><br><span class="line">        self.body.add(_conv3x3(channels//<span class="number">4</span>, <span class="number">1</span>, channels//<span class="number">4</span>))</span><br><span class="line">        self.body.add(nn.BatchNorm())</span><br><span class="line">        self.body.add(nn.Activation(<span class="string">'relu'</span>))</span><br><span class="line">        self.body.add(nn.Conv2D(channels, kernel_size=<span class="number">1</span>, strides=<span class="number">1</span>))</span><br><span class="line">        self.body.add(nn.BatchNorm())</span><br><span class="line">        <span class="keyword">if</span> downsample:</span><br><span class="line">            self.downsample = nn.HybridSequential(prefix=<span class="string">''</span>)</span><br><span class="line">            self.downsample.add(nn.Conv2D(channels, kernel_size=<span class="number">1</span>, strides=stride,</span><br><span class="line">                                          use_bias=<span class="keyword">False</span>, in_channels=in_channels))</span><br><span class="line">            self.downsample.add(nn.BatchNorm())</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            self.downsample = <span class="keyword">None</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">hybrid_forward</span><span class="params">(self, F, x)</span>:</span></span><br><span class="line">        residual = x</span><br><span class="line"></span><br><span class="line">        x = self.body(x)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> self.downsample:</span><br><span class="line">            residual = self.downsample(residual)</span><br><span class="line"></span><br><span class="line">        x = F.Activation(x + residual, act_type=<span class="string">'relu'</span>)</span><br><span class="line">        <span class="keyword">return</span> x</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">BasicBlockV2</span><span class="params">(HybridBlock)</span>:</span></span><br><span class="line">    <span class="string">r"""BasicBlock V2 from</span></span><br><span class="line"><span class="string">    `"Identity Mappings in Deep Residual Networks"</span></span><br><span class="line"><span class="string">    &lt;https://arxiv.org/abs/1603.05027&gt;`_ paper.</span></span><br><span class="line"><span class="string">    This is used for ResNet V2 for 18, 34 layers.</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    Parameters</span></span><br><span class="line"><span class="string">    ----------</span></span><br><span class="line"><span class="string">    channels : int</span></span><br><span class="line"><span class="string">        Number of output channels.</span></span><br><span class="line"><span class="string">    stride : int</span></span><br><span class="line"><span class="string">        Stride size.</span></span><br><span class="line"><span class="string">    downsample : bool, default False</span></span><br><span class="line"><span class="string">        Whether to downsample the input.</span></span><br><span class="line"><span class="string">    in_channels : int, default 0</span></span><br><span class="line"><span class="string">        Number of input channels. Default is 0, to infer from the graph.</span></span><br><span class="line"><span class="string">    """</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, channels, stride, downsample=False, in_channels=<span class="number">0</span>, **kwargs)</span>:</span></span><br><span class="line">        super(BasicBlockV2, self).__init__(**kwargs)</span><br><span class="line">        self.bn1 = nn.BatchNorm()</span><br><span class="line">        self.conv1 = _conv3x3(channels, stride, in_channels)</span><br><span class="line">        self.bn2 = nn.BatchNorm()</span><br><span class="line">        self.conv2 = _conv3x3(channels, <span class="number">1</span>, channels)</span><br><span class="line">        <span class="keyword">if</span> downsample:</span><br><span class="line">            self.downsample = nn.Conv2D(channels, <span class="number">1</span>, stride, use_bias=<span class="keyword">False</span>,</span><br><span class="line">                                        in_channels=in_channels)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            self.downsample = <span class="keyword">None</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">hybrid_forward</span><span class="params">(self, F, x)</span>:</span></span><br><span class="line">        residual = x</span><br><span class="line">        x = self.bn1(x)</span><br><span class="line">        x = F.Activation(x, act_type=<span class="string">'relu'</span>)</span><br><span class="line">        <span class="keyword">if</span> self.downsample:</span><br><span class="line">            residual = self.downsample(x)</span><br><span class="line">        x = self.conv1(x)</span><br><span class="line"></span><br><span class="line">        x = self.bn2(x)</span><br><span class="line">        x = F.Activation(x, act_type=<span class="string">'relu'</span>)</span><br><span class="line">        x = self.conv2(x)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> x + residual</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">BottleneckV2</span><span class="params">(HybridBlock)</span>:</span></span><br><span class="line">    <span class="string">r"""Bottleneck V2 from</span></span><br><span class="line"><span class="string">    `"Identity Mappings in Deep Residual Networks"</span></span><br><span class="line"><span class="string">    &lt;https://arxiv.org/abs/1603.05027&gt;`_ paper.</span></span><br><span class="line"><span class="string">    This is used for ResNet V2 for 50, 101, 152 layers.</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    Parameters</span></span><br><span class="line"><span class="string">    ----------</span></span><br><span class="line"><span class="string">    channels : int</span></span><br><span class="line"><span class="string">        Number of output channels.</span></span><br><span class="line"><span class="string">    stride : int</span></span><br><span class="line"><span class="string">        Stride size.</span></span><br><span class="line"><span class="string">    downsample : bool, default False</span></span><br><span class="line"><span class="string">        Whether to downsample the input.</span></span><br><span class="line"><span class="string">    in_channels : int, default 0</span></span><br><span class="line"><span class="string">        Number of input channels. Default is 0, to infer from the graph.</span></span><br><span class="line"><span class="string">    """</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, channels, stride, downsample=False, in_channels=<span class="number">0</span>, **kwargs)</span>:</span></span><br><span class="line">        super(BottleneckV2, self).__init__(**kwargs)</span><br><span class="line">        self.bn1 = nn.BatchNorm()</span><br><span class="line">        self.conv1 = nn.Conv2D(channels//<span class="number">4</span>, kernel_size=<span class="number">1</span>, strides=<span class="number">1</span>, use_bias=<span class="keyword">False</span>)</span><br><span class="line">        self.bn2 = nn.BatchNorm()</span><br><span class="line">        self.conv2 = _conv3x3(channels//<span class="number">4</span>, stride, channels//<span class="number">4</span>)</span><br><span class="line">        self.bn3 = nn.BatchNorm()</span><br><span class="line">        self.conv3 = nn.Conv2D(channels, kernel_size=<span class="number">1</span>, strides=<span class="number">1</span>, use_bias=<span class="keyword">False</span>)</span><br><span class="line">        <span class="keyword">if</span> downsample:</span><br><span class="line">            self.downsample = nn.Conv2D(channels, <span class="number">1</span>, stride, use_bias=<span class="keyword">False</span>,</span><br><span class="line">                                        in_channels=in_channels)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            self.downsample = <span class="keyword">None</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">hybrid_forward</span><span class="params">(self, F, x)</span>:</span></span><br><span class="line">        residual = x</span><br><span class="line">        x = self.bn1(x)</span><br><span class="line">        x = F.Activation(x, act_type=<span class="string">'relu'</span>)</span><br><span class="line">        <span class="keyword">if</span> self.downsample:</span><br><span class="line">            residual = self.downsample(x)</span><br><span class="line">        x = self.conv1(x)</span><br><span class="line"></span><br><span class="line">        x = self.bn2(x)</span><br><span class="line">        x = F.Activation(x, act_type=<span class="string">'relu'</span>)</span><br><span class="line">        x = self.conv2(x)</span><br><span class="line"></span><br><span class="line">        x = self.bn3(x)</span><br><span class="line">        x = F.Activation(x, act_type=<span class="string">'relu'</span>)</span><br><span class="line">        x = self.conv3(x)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> x + residual</span><br></pre></td></tr></table></figure></p>
-<h1 id="网络结构"><a href="#网络结构" class="headerlink" title="网络结构"></a>网络结构</h1><p>VGG-19、简单网络与ResNet的对比：</p>
-<p><img src="/images/ResNet解析_3.png" alt="图片"></p>
-<p>特点如下：</p>
+\left( ws\sqrt{r}, \  \frac{hs}{\sqrt{r}}\right),</script><p>论文中使用三种不同的areas $128\times128, 256\times256, 512\times421$ 和三种不同的比例 $1:1,1:2,2:1$，即每一个中心点可以产生9个anchors。遍历feature maps，为每一个点都配备这9种anchors作为初始的检测框。</p>
+<p><img src="/images/Faster RCNN_4.png" alt="图片"></p>
+<p>原文中，Conv Layers生成的feature map有256个通道，相当于feature map每个点都是256 dimensions，$3\times 3$卷积之后的通道还是256d，假设每个点上有k个anchor（默认为9），而每个anhcor要分foreground和background，所以每个点由256d feature转化为cls=2k scores；而每个anchor都有[x, y, w, h]对应4个坐标，所以reg=4k coordinates。</p>
+<p>具体是由$1\times 1$ 卷积来做，如之前的图示，经过该卷积的输出大小为 $W\times H \times 18$，这也就刚好对应了feature maps每一个点都有9个anchors，同时每个anchors又有可能是foreground和background，所有这些信息都保存 $W\times H\times (9\cdot2)$ 大小的矩阵。后面接softmax分类获得foreground anchors。在softmax前后的reshape layer其实只是为了方便Caffe保存数据，不属于网络的内容。</p>
+<p>需要理解的是，虽然anchors是基于卷积特征图定义的，但最终的anchos是相对于原始图片的。</p>
+<p>由于只有卷积层和pooling层，特征图的维度是与原始图片的尺寸成比例关系的。 如果图片尺寸 $w×h$，特征图的尺寸是 $w/r×h/r$。 其中，$r$ 是下采样率(subsampling ratio)，这样，原图中的框和特征图上的锚框是对应的，只不过分辨率下降。</p>
+<h2 id="Bounding-Box回归"><a href="#Bounding-Box回归" class="headerlink" title="Bounding Box回归"></a>Bounding Box回归</h2><p>生成的box可能对目标有正确的分类，但定位不准。所以我们希望采用一种方法box进行微调，使得foreground anchors和GT更加接近。</p>
+<p>对于窗口一般使用四维向量 $(x, y, w, h)$ 表示，分别表示窗口的中心点坐标和宽高。对于下图，红色的框P代表原始的Foreground Anchors，绿色的框G代表目标的GT，我们的目标是寻找一种关系，使得输入原始的anchor A经过映射得到一个跟真实窗口 $G$ 更接近的回归窗口 $G’$ ，即给定：anchor $(P_x, P_y, P_w, P_h)$ 和 $GT=[G_{x}, G_{y}, G_{w}, G_{h}]$，寻找一种变换F，使得：$F(P_x, P_y, P_w, P_h)=(G_{x}’, G_{y}’, G_{w}’, G_{h}’)$，其中$(G_{x}’, G_{y}’, G_{w}’, G_{h}’)≈(G_{x}, G_{y}, G_{w}, G_{h})$ 。</p>
+<p><img src="/images/Faster RCNN_5.png" alt="图片"></p>
+<p>那么经过何种变换 $F$ 才能从anchor $P$ 变为 $G’$？ 思路就是:  </p>
 <ol>
-<li>对于相同的输出特征图尺寸，层具有相同数量的滤波器。  </li>
-<li>如果特征图尺寸减半，则滤波器数量加倍。通过步长为2的卷积层直接执行下采样。  </li>
-<li>网络以全局平均池化层和具有softmax的1000维全连接层结束。  </li>
-<li>不使用dropout。</li>
+<li>先做平移 $(\Delta x, \Delta y)$， $\Delta x = P_w d_x(P), \Delta y = P_h d_y(P)$ ，RCNN论文中：<script type="math/tex; mode=display">
+ G_{x}' = P_w d_x(P) + P_x \\ 
+ G_{y}' = P_h d_y(P) + P_y</script></li>
+<li>然后再做尺度缩放 $(S_w, S_h), S_w = exp(d_w(P)), S_h = exp(d_h(P))$，对应论文中：<script type="math/tex; mode=display">
+ G_{x}'= P_w exp(d_w(P) ) \\
+ G_{y}'= P_h exp(d_h(P) )</script></li>
 </ol>
-<p>如下是作者讨论的各种ResNet的架构  </p>
-<p><img src="/images/ResNet解析_4.png" alt="图片"></p>
-<h1 id="ResNet解决了什么问题"><a href="#ResNet解决了什么问题" class="headerlink" title="ResNet解决了什么问题"></a>ResNet解决了什么问题</h1><p>ResNet解决什么问题？下面是一些观点：   </p>
+<p>bounding box regression就是学习 $d_x(P), d_y(P), d_w(P), d_h(P)$ 这四个变换。当输入的anchor P与GT相差较小时，可以认为这种变换是一种线性变换， 那么就可以用线性回归来建模对窗口进行微调。</p>
+<p>接下来的问题就是如何通过线性回归获得 $d_x(P), d_y(P), d_w(P), d_h(P)$ 了。线性回归就是给定输入的特征向量 $X$, 学习一组参数 $W$, 使得经过线性回归后的值跟真实值 $Y$ 非常接近，即 $Y=WX$。对于该问题，输入 $X$ 是cnn feature map，定义为 $\phi$；同时还有训练传入P与GT之间的变换量，即 $(t_{x}, t_{y}, t_{w}, t_{h})$。输出是 $d_{x}(A),d_{y}(A),d_{w}(A),d_{h}(A)$ 四个变换。那么目标函数可以表示为：</p>
+<script type="math/tex; mode=display">
+d_*(P) = w_*^T\phi(P)</script><p>其中 $\phi(P)$ 是对应anchor的feature map组成的特征向量，$w$ 是需要学习的参数，$d(P)$ 是得到的预测值（$*$表示 $x，y，w，h$，也就是每一个变换对应一个上述目标函数）。为了让预测值 $(t_{x}, t_{y}, t_{w}, t_{h})$ 与真实值差距最小，设计损失函数：</p>
+<script type="math/tex; mode=display">
+Loss = \sum_i^N(t_*^i - \hat w_*^T\phi_5(P^i))^2</script><p>函数优化目标为：</p>
+<script type="math/tex; mode=display">
+W_* = argmin_{w_*} \sum_i^N(t_*^i - \hat w_*^T\phi(P^i))^2 + \lambda || \hat w_*||^2</script><p>需要说明，只有在GT与需要回归框位置比较接近时，才可近似认为上述线性变换成立。<br>说完原理，对应于Faster RCNN原文，foreground anchor与ground truth之间的平移量 $(t_x, t_y)$ 与尺度因子 $(t_w, t_h)$ 如下：</p>
+<script type="math/tex; mode=display">
+t_x = (G_x - P_x) / P_w \\
+t_y = (G_y - P_y) / P_h \\
+t_w = \log (G_w / P_w) \\
+t_h = \log(G_h / P_h)</script><p>对于训练bouding box regression网络回归分支，输入是cnn feature $\phi$，监督信号是Anchor与GT的差距 $(t_x, t_y, t_w, t_h)$，即训练目标是：输入 $\phi$ 的情况下使网络输出与监督信号尽可能接近。那么当bouding box regression工作时，再输入 $\phi$ 时，回归网络分支的输出就是每个Anchor的平移量和变换尺度 $(t_x, t_y, t_w, t_h)$，显然即可用来修正Anchor位置了。</p>
+<p>在Faster RCNN中，通过 $1\times1$ 的卷积来得到 $[d_{x}(A),d_{y}(A),d_{w}(A),d_{h}(A)]$ 变换量。输出为36，表示9个anchors，每个有4个变换值</p>
+<p><img src="/images/Faster RCNN_5.png" alt="图片"></p>
+<h2 id="Proposal-Layer"><a href="#Proposal-Layer" class="headerlink" title="Proposal Layer"></a>Proposal Layer</h2><p>Proposal Layer负责综合所有 [d_{x}(A),d_{y}(A),d_{w}(A),d_{h}(A)] 变换量和foreground anchors，计算出精准的proposal，送入后续RoI Pooling Layer。</p>
+<p>Proposal Layer 做了以下事情：</p>
 <ol>
-<li>梯度消失的角度。在进行梯度反传计算时，从误差函数(顶部)开始，朝着输入数据方向(底部)逐层计算梯度。当层串联在一起的时候，根据链式法则每层的梯度乘在一起，这样经常导致梯度大小指数衰减。从而在靠近底部的层只得到很小的梯度，随之权重的更新量也变小，使得他们的收敛缓慢，train不动了。越深的网络这个问题越明显。ResNet因为有一个恒等映射，相当于一个高速通道，梯度反传的时候可以直接通过这个高速通道反向传播，前面的层也有梯度，这样整个网络就可以更好的训练，也能将网络做的更深，得到更多的特征。</li>
-<li>梯度相关性的角度。<a href="https://arxiv.org/abs/1702.08591" target="_blank" rel="noopener">The Shattered Gradients Problem: If resnets are the answer, then what is the question?</a>这篇论文专门讨论ResNet为什么有效，论文大意是说，神经网络越来越深的时候，反传回来的梯度之间的相关性会越来越差，最后接近白噪声。因为我们知道图像是具备局部相关性的，那其实可以认为梯度也应该具备类似的相关性，这样更新的梯度才有意义，如果梯度接近白噪声，那梯度更新可能根本就是在做随机扰动。有了梯度相关性这个指标之后，作者分析了一系列的结构和激活函数，发现resnet在保持梯度相关性方面很优秀(相关性衰减从 $\frac{1}{2^L}$ 到了 $\frac{1}{2^L}$ ）。这一点其实也很好理解，从梯度流来看，有一路梯度是保持原样不动地往回传，这部分的相关性是非常强的。</li>
+<li>利用 $[d_{x}(A),d_{y}(A),d_{w}(A),d_{h}(A)]$ 对所有的anchors做bbox regression回归；</li>
+<li>将超出原图像素范围的anchors的clip到原图像素范围；</li>
+<li>剔除非常小（<code>width&lt;threshold or height&lt;threshold</code>）的foreground anchors；</li>
+<li>做nms。会按照iou剔除冗余的框，并且得分从高到低排序；</li>
+<li>在做nms后的结果中，提取前n(e.g. 2000)个再加上gt_box的结果进行sampler，具体是通过与gt_box的iou得出哪些是前景foreground，哪些是background，哪些需要ignore，并且按score选出前m个(e.g. 128, 128)作为ROI pooling layer的输入。</li>
 </ol>
-<h1 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h1><p>[1]. <a href="https://arxiv.org/abs/1512.03385" target="_blank" rel="noopener">Deep Residual Learning for Image Recognition</a><br>[2]. <a href="https://arxiv.org/abs/1603.05027" target="_blank" rel="noopener">Identity Mappings in Deep Residual Networks</a><br>[3]. <a href="https://arxiv.org/abs/1409.1556" target="_blank" rel="noopener">Very Deep Convolutional Networks for Large-Scale Image Recognition</a><br>[4]. <a href="https://papers.nips.cc/paper/4824-imagenet-classification-with-deep-convolutional-neural-networks.pdf" target="_blank" rel="noopener">ImageNet Classification with Deep Convolutional<br>Neural Networks</a><br>[5]. <a href="http://www.dengfanxin.cn/wp-content/uploads/2016/03/1998Lecun.pdf" target="_blank" rel="noopener">Gradient-Based Learning Applied to Document Recognition</a><br>[6]. <a href="https://blog.csdn.net/lanran2/article/details/80247515" target="_blank" rel="noopener">ResNetV2：ResNet深度解析</a></p>
+<h1 id="ROI池化"><a href="#ROI池化" class="headerlink" title="ROI池化"></a>ROI池化</h1><p>对于传统的CNN，由于全连接的存在，输入的图像尺寸必须是固定值。如果输入图像大小不定，有2种解决办法：1. 从图像中crop一部分传入网络；2.将图像warp成需要的大小后传入网络。但这两种方法要么crop后破坏了图像的完整结构，要么warp破坏了图像原始形状信息。RPN网络生成的proposals也存在上述问题。</p>
+<p>Faster R-CNN中提出了RoI Pooling解决这个问题。RoI Pooling是从Spatial Pyramid Pooling发展而来。首先将proposals映射回feature map的尺度，之后将每个proposal水平和竖直分为pooled_w和pooled_h份，对每一份都进行max pooling处理。这样处理后，即使大小不同的proposal，输出结果都是 $pooled_w\times pooled_h$ 大小，实现了fixed-length output。原文中的输出空间尺寸是 $7\times7$。</p>
+<h1 id="RCNN分类与边框预测"><a href="#RCNN分类与边框预测" class="headerlink" title="RCNN分类与边框预测"></a>RCNN分类与边框预测</h1><p>R-CNN 是 Faster R-CNN 框架中的最后一个步骤，采用FC层来输出每个可能的 object 类别class 的score。例如对于$512\times7\times7$ 的feature map，首先做一个全局平均，就拉平成 $512\times1\times1$ 的向量，然后再接两个不同的全连接层处理：  </p>
+<ul>
+<li>一个全连接层有 $N+1$ 个神经单元，其中 $N$ 是类别class的总数。再通过softmax得到类别。</li>
+<li>一个全连接层有 $4N$ 个神经单元。回归预测输出，得到 $N$ 个可能的类别classes分别预测 $Δcenterx,Δcentery,Δwidth,Δheight$。 </li>
+</ul>
+<p><img src="/images/Faster RCNN_7.png" alt="图片"></p>
+<h1 id="训练"><a href="#训练" class="headerlink" title="训练"></a>训练</h1><p>训练过程中是降低Loss的过程。Loss有两个方面：RPN的Loss和RCNN的Loss。</p>
+<h2 id="RPN-Loss"><a href="#RPN-Loss" class="headerlink" title="RPN Loss"></a>RPN Loss</h2><p>RPN有两种类型的预测值输出：foreground与background分类和边界框回归调整。</p>
+<p>训练时，对所有的anchors分类为三种类别，foreground，background，ignore，与gt_box的iou大于0.7的anchors作为foreground；大于0小于0.3的作为background，其余的ignore。并且采用动态batches，因为即使已经尝试保持background和foreground的anchors的平衡比例，也不总是可行的。根据图片中gt_box和anchors的尺度与比例，很有可能得不到foreground。 这种情况时，将采用与gt_box具有最大iou的anchors. 这与理想情况相差很远，但实际中一般总能有foreground样本和要学习目标.</p>
+<p>然后，随机采样anchors来生成batchsize=256的mini-batch，尽可能的保持foreground和background的比例平衡。  </p>
+<ul>
+<li>对mini-batch内的所有anchors计算分类loss，采用SigmoidBinaryCrossEntropyLoss。  </li>
+<li>只对mini-batch内标记为foreground的box计算回归loss。Faster RCNN没有采用简单的L1或L2 loss用于回归误差，而是采用Smooth L1 loss。</li>
+<li>将两个loss相加就是rpn网络的loss。</li>
+</ul>
+<h2 id="RCNN-Loss"><a href="#RCNN-Loss" class="headerlink" title="RCNN Loss"></a>RCNN Loss</h2><p>RCNN网络也有两种预测输出：类别预测和边界框调整。</p>
+<p>对于输入roi pooling的proposal，计算它与任意gt_box的iou，大于0.7就认为是正确的box，0.1到0.7之间的设为background。边界框回归的目标计算的是正例proposal与其对应的gt_box间的偏移和缩放。 分类loss使用SoftmaxCrossEntropyLoss，边框回归使用Smooth L1 loss。最后将两个loss加在一起。</p>
+<h1 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h1><p>[1]. <a href="https://zhuanlan.zhihu.com/p/31426458" target="_blank" rel="noopener">一文读懂Faster RCNN</a><br>[2]. <a href="Faster R-CNN: Towards Real-Time Object Detection with Region Proposal Networks">Faster R-CNN: Towards Real-Time Object Detection with Region Proposal Networks</a><br>[3]. <a href="https://blog.csdn.net/zziahgf/article/details/79311275" target="_blank" rel="noopener">Faster R-CNN - 目标检测详解</a><br>[4]. <a href="https://tryolabs.com/blog/2018/01/18/faster-r-cnn-down-the-rabbit-hole-of-modern-object-detection/" target="_blank" rel="noopener">Faster R-CNN: Down the rabbit hole of modern object detection</a></p>
 
       
     </div>
@@ -523,7 +551,15 @@ x_L = x_l + \sum_{i=l}^{L-1}F(x_i, W_i) \tag{1}</script><p>公式(1)，表达了
       
         <div class="post-tags">
           
-            <a href="/tags/ResNet/" rel="tag"># ResNet</a>
+            <a href="/tags/RCNN/" rel="tag"># RCNN</a>
+          
+            <a href="/tags/Faster-RCNN/" rel="tag"># Faster RCNN</a>
+          
+            <a href="/tags/目标检测/" rel="tag"># 目标检测</a>
+          
+            <a href="/tags/ROI/" rel="tag"># ROI</a>
+          
+            <a href="/tags/RPN/" rel="tag"># RPN</a>
           
         </div>
       
@@ -536,8 +572,8 @@ x_L = x_l + \sum_{i=l}^{L-1}F(x_i, W_i) \tag{1}</script><p>公式(1)，表达了
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/06/15/Vim_Usage_Summary/" rel="next" title="vim使用积累">
-                <i class="fa fa-chevron-left"></i> vim使用积累
+              <a href="/2018/06/20/目标检测之SSD/" rel="next" title="目标检测之SSD">
+                <i class="fa fa-chevron-left"></i> 目标检测之SSD
               </a>
             
           </div>
@@ -546,8 +582,8 @@ x_L = x_l + \sum_{i=l}^{L-1}F(x_i, W_i) \tag{1}</script><p>公式(1)，表达了
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2018/06/16/Linux_Knowledge/" rel="prev" title="linux知识积累">
-                linux知识积累 <i class="fa fa-chevron-right"></i>
+              <a href="/2018/06/22/Gluon源码解读之DataLoader/" rel="prev" title="Mxnet源码解读之Dataset与DataLoader">
+                Mxnet源码解读之Dataset与DataLoader <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -656,7 +692,7 @@ x_L = x_l + \sum_{i=l}^{L-1}F(x_i, W_i) \tag{1}</script><p>公式(1)，表达了
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">93</span>
+                  <span class="site-state-item-count">92</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -832,6 +868,18 @@ x_L = x_l + \sum_{i=l}^{L-1}F(x_i, W_i) \tag{1}</script><p>公式(1)，表达了
                     <a href="http://cuijiahua.com/" title="Jack Cui" target="_blank">Jack Cui</a>
                   </li>
                 
+                  <li class="links-of-blogroll-item">
+                    <a href="https://blog.csdn.net/loseinvain" title="FesianXu" target="_blank">FesianXu</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://me.csdn.net/u012436149" title="ke1th" target="_blank">ke1th</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://blog.csdn.net/u010099080" title="secondsilverman" target="_blank">secondsilverman</a>
+                  </li>
+                
               </ul>
             </div>
           
@@ -851,7 +899,7 @@ x_L = x_l + \sum_{i=l}^{L-1}F(x_i, W_i) \tag{1}</script><p>公式(1)，表达了
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#残差块"><span class="nav-number">1.</span> <span class="nav-text">残差块</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#什么样的残差块work？"><span class="nav-number">2.</span> <span class="nav-text">什么样的残差块work？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#残差块的代码实现"><span class="nav-number">3.</span> <span class="nav-text">残差块的代码实现</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#网络结构"><span class="nav-number">4.</span> <span class="nav-text">网络结构</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#ResNet解决了什么问题"><span class="nav-number">5.</span> <span class="nav-text">ResNet解决了什么问题</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考文献"><span class="nav-number">6.</span> <span class="nav-text">参考文献</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#网络结构"><span class="nav-number">1.</span> <span class="nav-text">网络结构</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#特征提取"><span class="nav-number">2.</span> <span class="nav-text">特征提取</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#VGG"><span class="nav-number">2.1.</span> <span class="nav-text">VGG</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ResNet"><span class="nav-number">2.2.</span> <span class="nav-text">ResNet</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#区域建议"><span class="nav-number">3.</span> <span class="nav-text">区域建议</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Anchors"><span class="nav-number">3.1.</span> <span class="nav-text">Anchors</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Bounding-Box回归"><span class="nav-number">3.2.</span> <span class="nav-text">Bounding Box回归</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Proposal-Layer"><span class="nav-number">3.3.</span> <span class="nav-text">Proposal Layer</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#ROI池化"><span class="nav-number">4.</span> <span class="nav-text">ROI池化</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#RCNN分类与边框预测"><span class="nav-number">5.</span> <span class="nav-text">RCNN分类与边框预测</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#训练"><span class="nav-number">6.</span> <span class="nav-text">训练</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#RPN-Loss"><span class="nav-number">6.1.</span> <span class="nav-text">RPN Loss</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RCNN-Loss"><span class="nav-number">6.2.</span> <span class="nav-text">RCNN Loss</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考文献"><span class="nav-number">7.</span> <span class="nav-text">参考文献</span></a></li></ol></div>
             
 
           </div>

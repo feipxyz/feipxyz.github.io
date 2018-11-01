@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Python," />
+  <meta name="keywords" content="ResNet," />
 
 
 
@@ -79,18 +79,24 @@
 
 
 
-<meta name="description" content="每个变量都有标识、类型和值。对象一旦创建，它的标识绝不会变；可以把标识理解为对象在内存中的地址。 id()返回标识的整数标识，可以认为是对象内存地址。">
-<meta name="keywords" content="Python">
+<meta name="description" content="ResNet在2015年被提出，在ImageNet比赛classification任务上获得第一名，因为它“简单与实用”并存，之后很多方法都建立在ResNet50或者ResNet101的基础上完成的，检测，分割，识别等领域都纷纷使用ResNet，Alpha zero也使用了ResNet。">
+<meta name="keywords" content="ResNet">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Python标识、相等性和别名">
-<meta property="og:url" content="flyrie.top/2018/09/03/Python_Identification_/index.html">
+<meta property="og:title" content="ResNet解析">
+<meta property="og:url" content="flyrie.top/2018/06/15/ResNet/index.html">
 <meta property="og:site_name" content="乡间小路">
-<meta property="og:description" content="每个变量都有标识、类型和值。对象一旦创建，它的标识绝不会变；可以把标识理解为对象在内存中的地址。 id()返回标识的整数标识，可以认为是对象内存地址。">
+<meta property="og:description" content="ResNet在2015年被提出，在ImageNet比赛classification任务上获得第一名，因为它“简单与实用”并存，之后很多方法都建立在ResNet50或者ResNet101的基础上完成的，检测，分割，识别等领域都纷纷使用ResNet，Alpha zero也使用了ResNet。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-10-17T14:01:58.335Z">
+<meta property="og:image" content="/images/ResNet解析_2.png">
+<meta property="og:image" content="/images/ResNet解析_5.png">
+<meta property="og:image" content="/images/ResNet解析_6.png">
+<meta property="og:image" content="/images/ResNet解析_3.png">
+<meta property="og:image" content="/images/ResNet解析_4.png">
+<meta property="og:updated_time" content="2018-06-14T17:36:15.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Python标识、相等性和别名">
-<meta name="twitter:description" content="每个变量都有标识、类型和值。对象一旦创建，它的标识绝不会变；可以把标识理解为对象在内存中的地址。 id()返回标识的整数标识，可以认为是对象内存地址。">
+<meta name="twitter:title" content="ResNet解析">
+<meta name="twitter:description" content="ResNet在2015年被提出，在ImageNet比赛classification任务上获得第一名，因为它“简单与实用”并存，之后很多方法都建立在ResNet50或者ResNet101的基础上完成的，检测，分割，识别等领域都纷纷使用ResNet，Alpha zero也使用了ResNet。">
+<meta name="twitter:image" content="/images/ResNet解析_2.png">
 
 
 
@@ -120,13 +126,13 @@
 
 
 
-  <link rel="canonical" href="flyrie.top/2018/09/03/Python_Identification_/"/>
+  <link rel="canonical" href="flyrie.top/2018/06/15/ResNet/"/>
 
 
 
 
 
-  <title>Python标识、相等性和别名 | 乡间小路</title>
+  <title>ResNet解析 | 乡间小路</title>
   
 
 
@@ -307,7 +313,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="flyrie.top/2018/09/03/Python_Identification_/">
+    <link itemprop="mainEntityOfPage" href="flyrie.top/2018/06/15/ResNet/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="乡间小路">
@@ -324,7 +330,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Python标识、相等性和别名</h1>
+          <h1 class="post-title" itemprop="name headline">ResNet解析</h1>
         
 
         <div class="post-meta">
@@ -336,8 +342,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-09-03T01:46:14+08:00">
-                2018-09-03
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-06-15T01:36:15+08:00">
+                2018-06-15
               </time>
             
 
@@ -352,8 +358,8 @@
               
                 <span class="post-meta-item-text">更新于&#58;</span>
               
-              <time title="更新于" itemprop="dateModified" datetime="2018-10-17T22:01:58+08:00">
-                2018-10-17
+              <time title="更新于" itemprop="dateModified" datetime="2018-06-15T01:36:15+08:00">
+                2018-06-15
               </time>
             
           </span>
@@ -371,8 +377,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Python/" itemprop="url" rel="index">
-                    <span itemprop="name">Python</span>
+                  <a href="/categories/深度学习/" itemprop="url" rel="index">
+                    <span itemprop="name">深度学习</span>
                   </a>
                 </span>
 
@@ -408,24 +414,74 @@
       
 
       
-        <ol>
-<li>每个变量都有标识、类型和值。对象一旦创建，它的标识绝不会变；可以把标识理解为对象在内存中的地址。</li>
-<li><code>id()</code>返回标识的整数标识，可以认为是对象内存地址。<a id="more"></a></li>
-<li><code>==</code>运算符比较两个对象的值，<code>is</code>比较对象的标识。</li>
-<li><code>=</code>直接赋值，传递的是对象的引用，相当于一个别名，其中一个改变另一个也会跟着变。</li>
-<li>元组的不可变是相对不可变。</li>
+        <p>ResNet在2015年被提出，在ImageNet比赛classification任务上获得第一名，因为它“简单与实用”并存，之后很多方法都建立在ResNet50或者ResNet101的基础上完成的，检测，分割，识别等领域都纷纷使用ResNet，Alpha zero也使用了ResNet。<a id="more"></a></p>
+<h1 id="残差块"><a href="#残差块" class="headerlink" title="残差块"></a>残差块</h1><p>ResNet的基础块叫做残差块。一般有两种形式BasicBlock和Bottleneck。</p>
+<ol>
+<li><p>BasicBlock结构中，主要使用了两个$3\times3$的卷积核。 残差residual分支为：<code>OUT = CONV3*3 + BN + RELU + CONV3*3 + BN</code>，然后与恒等映射identity相加再做relu <code>OUT + X + RELU</code>。</p>
+</li>
+<li><p>Bottleneck结构中。分别使用$1\times1，3\times3，1\times1$的卷积核，残差residual分支为：<code>OUT = CONV1*1 + BN + RELU + CONV3*3 + BN + RELU + CONV1*1 + BN</code>，然后与恒等映射identity相加再做relu <code>OUT + X + RELU</code>。使用Bottleneck结构可以减少网络参数数量。</p>
+</li>
 </ol>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">t1 = (<span class="number">1</span>, <span class="number">2</span>, [<span class="number">30</span>, <span class="number">40</span>])</span><br><span class="line">t2 = (<span class="number">1</span>, <span class="number">2</span>, [<span class="number">30</span>, <span class="number">40</span>])</span><br><span class="line">t1 == t2</span><br></pre></td></tr></table></figure>
-<pre><code>True
-</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">id(t1[<span class="number">-1</span>])</span><br></pre></td></tr></table></figure>
-<pre><code>140181428815816
-</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">t1[<span class="number">-1</span>].append(<span class="number">99</span>)</span><br><span class="line">t1</span><br></pre></td></tr></table></figure>
-<pre><code>(1, 2, [30, 40, 99, 99])
-</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">id(t1[<span class="number">-1</span>])</span><br></pre></td></tr></table></figure>
-<pre><code>140181428815816
-</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">t1 == t2</span><br></pre></td></tr></table></figure>
-<pre><code>False
-</code></pre><p>虽然 t1 和 t2 是不同的对象，但是二者相等——与预期相符。t1[-1] 的标识没变，只是值变了。</p>
+<p>如下图所示(直接粘贴论文中的原图，原图没有画BN结构）：</p>
+<p><img src="/images/ResNet解析_2.png" alt="图片"></p>
+<p>这两种结构分别针对ResNet34（左图）和ResNet50/101/152（右图），</p>
+<p>使用右图结构目的一目了然，就是为了降低参数的数目，第一个1x1的卷积把256维channel降到64维，然后在最后通过1x1卷积恢复，整体上用的参数数目：1x1x256x64 + 3x3x64x64 + 1x1x64x256 = 69632，而不使用bottleneck的话就是两个3x3x256的卷积，参数数目: 3x3x256x256x2 = 1179648，差了16.94倍。<br>对于BasicBlock，可以用于34层或者更少的网络中，对于Bottleneck Design的ResNet通常用于更深的如101这样的网络中，目的是减少计算和参数。</p>
+<p>在之后的《Identity Mappings in Deep Residual Networks》中，作者又提出了一种更优的残差块结构，并且分析了什么样的残差结构才work。主要改变是将<code>BN</code>和<code>RELU</code>放在了<code>CONV</code>之前，对比如下：</p>
+<p><img src="/images/ResNet解析_5.png" alt="图片"><br>实验结果表明，新的残差结构要优于之前的残差结构。</p>
+<h1 id="什么样的残差块work？"><a href="#什么样的残差块work？" class="headerlink" title="什么样的残差块work？"></a>什么样的残差块work？</h1><p>下面(a)到(e)的结构哪个是我们常用的ResNet结构？ 答案是(a)和(e）。</p>
+<p><img src="/images/ResNet解析_6.png" alt="图片">  </p>
+<p>对于每个图右侧部分我们称作“residual”分支，左侧部分我们称作“identity”分支。</p>
+<p>ResNet原文中使用的结构是(a），（a)的特点有两个：  </p>
+<ul>
+<li>BN和ReLU在weight的后面；  </li>
+<li>最后的ReLU在addition的后面。</li>
+</ul>
+<p>对于特点(1)，属于常规范畴，我们平时也都这个顺序：Conv-&gt;BN-&gt;ReLU；对于特点(2），为什么ReLU放在addition后面呢？</p>
+<p><strong>图(c)的结构work么？</strong><br>答案是不work。如果ReLU作为“residual”分支的结尾，不难发现“residual”分支的结果永远非负，这样前向的时候输入会单调递增，从而会影响特征的表达能力，所以我们希望“residual”分支的结果应该在 $(-\infty, +\infty)$。这点也是我们以后设计网络时所要注意的。</p>
+<p><strong>图(b)的结构work么？</strong><br>答案是不work。这里BN改变了“identity”分支的分布，影响了信息的传递，在训练的时候会阻碍loss的下降。</p>
+<p><strong>为什么“identity”分支发生变化，会影响信息传递，从而影响训练？</strong><br>回顾ResNet的公式：</p>
+<script type="math/tex; mode=display">
+y_l=h(x_l)+F(x_l, W_l) \quad and \quad  x_{l+1} = f(y_l)</script><p>简化以上公式，令所有“identity”分支都是 $h(x_l) = x_l$ 以及 $x_{l+1} = y_l$，那么得到:</p>
+<script type="math/tex; mode=display">
+x_{l+1} = x_l + F(x_l, W_l)</script><p>我们递归的计算:</p>
+<script type="math/tex; mode=display">
+x_{l+2} = x_{l+1} + F(x_{l+1}, W_{l+1}) = x_l + F(x_l, W_l) + F(x_{l+1}, W_{l+1})</script><script type="math/tex; mode=display">
+x_L = x_l + \sum_{i=l}^{L-1}F(x_i, W_i) \tag{1}</script><p>公式(1)，表达了任何第 $L$ 层(深层)与第 $l$ 层(浅层)之间关系。假设损失函数为loss，那么反向传播公式为：</p>
+<script type="math/tex; mode=display">
+\frac{\partial loss}{\partial x_l} = \frac{\partial loss}{\partial x_L} \frac{\partial x_L}{\partial x_l} = \frac{\partial loss}{\partial x_L} (1 + \frac{\partial}{\partial x_l}\sum_{i=l}^{L-1}F(x_i, W_i))</script><p>这个反向传播公式有几个特点：  </p>
+<ul>
+<li>关于 $x_l$ 的梯度信息与两部分值有关：$x_L$ 的梯度值，也就是说两层之间梯度信息无障碍传递了，以及 $\frac{\partial loss}{\partial x_L} \frac{\partial}{\partial x_l}\sum_{i=l}^{L-1}F(x_i, W_i)$;   </li>
+<li>$\frac{\partial loss}{\partial x_l}$的值不会轻易抵消，因为在一个mini_batch中，$\frac{\partial}{\partial x_l}\sum_{i=l}^{L-1}F(x_i, W_i))$不会一直为<code>-1</code>；</li>
+<li>有效的防止了当权重很小时，梯度消失的问题。</li>
+</ul>
+<p>以上优秀的特点只有在假设 $h(x_l) = x_l$ 以及 $x_{l+1} = y_l$ 成立时才有效，所以ResNet要尽量保证两点：  </p>
+<ul>
+<li>不轻易改变”identity“分支的值，也就是输入与输出一致； </li>
+<li>addition之后不再接改变信息分布的层；</li>
+</ul>
+<p>到此也就彻底回答了图(b)的结构为何会阻碍反向传播时的信息。</p>
+<p><strong>为什么选图(e)而不是图(d)</strong><br>在分析图(d)和图(e)之前，我们引出一个概念：<code>Post-activation</code>和<code>Pre-activation</code>，其中Post和Pre的概念是相对于weight(conv)层来说的，那么我们不难发现，图(a)、(b)、(c)都是<code>Post-activation</code>，图(d), (c)都是<code>Pre-activation</code>，而论文作者用实验结果得出了图(e)的结构比ResNet原结构要好。原因在于两点：</p>
+<ul>
+<li>反向传播基本符合假设，信息传递无阻碍；</li>
+<li>BN层作为pre-activation，起到了正则化的作用。</li>
+</ul>
+<h1 id="网络结构"><a href="#网络结构" class="headerlink" title="网络结构"></a>网络结构</h1><p>VGG-19、简单网络与ResNet的对比：</p>
+<p><img src="/images/ResNet解析_3.png" alt="图片"></p>
+<p>特点如下：</p>
+<ol>
+<li>对于相同的输出特征图尺寸，层具有相同数量的滤波器。  </li>
+<li>如果特征图尺寸减半，则滤波器数量加倍。通过步长为2的卷积层直接执行下采样。  </li>
+<li>网络以全局平均池化层和具有softmax的1000维全连接层结束。  </li>
+<li>不使用dropout。</li>
+</ol>
+<p>如下是作者讨论的各种ResNet的架构  </p>
+<p><img src="/images/ResNet解析_4.png" alt="图片"></p>
+<h1 id="ResNet解决了什么问题"><a href="#ResNet解决了什么问题" class="headerlink" title="ResNet解决了什么问题"></a>ResNet解决了什么问题</h1><p>ResNet解决什么问题？下面是一些观点：   </p>
+<ol>
+<li>梯度消失的角度。在进行梯度反传计算时，从误差函数(顶部)开始，朝着输入数据方向(底部)逐层计算梯度。当层串联在一起的时候，根据链式法则每层的梯度乘在一起，这样经常导致梯度大小指数衰减。从而在靠近底部的层只得到很小的梯度，随之权重的更新量也变小，使得他们的收敛缓慢，train不动了。越深的网络这个问题越明显。ResNet因为有一个恒等映射，相当于一个高速通道，梯度反传的时候可以直接通过这个高速通道反向传播，前面的层也有梯度，这样整个网络就可以更好的训练，也能将网络做的更深，得到更多的特征。</li>
+<li>梯度相关性的角度。<a href="https://arxiv.org/abs/1702.08591" target="_blank" rel="noopener">The Shattered Gradients Problem: If resnets are the answer, then what is the question?</a>这篇论文专门讨论ResNet为什么有效，论文大意是说，神经网络越来越深的时候，反传回来的梯度之间的相关性会越来越差，最后接近白噪声。因为我们知道图像是具备局部相关性的，那其实可以认为梯度也应该具备类似的相关性，这样更新的梯度才有意义，如果梯度接近白噪声，那梯度更新可能根本就是在做随机扰动。有了梯度相关性这个指标之后，作者分析了一系列的结构和激活函数，发现resnet在保持梯度相关性方面很优秀(相关性衰减从 $\frac{1}{2^L}$ 到了 $\frac{1}{2^L}$ ）。这一点其实也很好理解，从梯度流来看，有一路梯度是保持原样不动地往回传，这部分的相关性是非常强的。</li>
+</ol>
+<h1 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h1><p>[1]. <a href="https://arxiv.org/abs/1512.03385" target="_blank" rel="noopener">Deep Residual Learning for Image Recognition</a><br>[2]. <a href="https://arxiv.org/abs/1603.05027" target="_blank" rel="noopener">Identity Mappings in Deep Residual Networks</a><br>[3]. <a href="https://arxiv.org/abs/1409.1556" target="_blank" rel="noopener">Very Deep Convolutional Networks for Large-Scale Image Recognition</a><br>[4]. <a href="https://papers.nips.cc/paper/4824-imagenet-classification-with-deep-convolutional-neural-networks.pdf" target="_blank" rel="noopener">ImageNet Classification with Deep Convolutional<br>Neural Networks</a><br>[5]. <a href="http://www.dengfanxin.cn/wp-content/uploads/2016/03/1998Lecun.pdf" target="_blank" rel="noopener">Gradient-Based Learning Applied to Document Recognition</a><br>[6]. <a href="https://blog.csdn.net/lanran2/article/details/80247515" target="_blank" rel="noopener">ResNetV2：ResNet深度解析</a></p>
 
       
     </div>
@@ -467,7 +523,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/Python/" rel="tag"># Python</a>
+            <a href="/tags/ResNet/" rel="tag"># ResNet</a>
           
         </div>
       
@@ -480,8 +536,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/09/02/Python_Function_Arg_Deliver/" rel="next" title="Python函数参数的传递">
-                <i class="fa fa-chevron-left"></i> Python函数参数的传递
+              <a href="/2018/06/15/Vim_Usage_Summary/" rel="next" title="vim使用积累">
+                <i class="fa fa-chevron-left"></i> vim使用积累
               </a>
             
           </div>
@@ -490,8 +546,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2018/09/14/Summary_Of_Sorting_Algorithm/" rel="prev" title="排序算法总结">
-                排序算法总结 <i class="fa fa-chevron-right"></i>
+              <a href="/2018/06/16/Linux_Knowledge/" rel="prev" title="linux知识积累">
+                linux知识积累 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -549,8 +605,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -591,7 +656,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">93</span>
+                  <span class="site-state-item-count">92</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -767,6 +832,18 @@
                     <a href="http://cuijiahua.com/" title="Jack Cui" target="_blank">Jack Cui</a>
                   </li>
                 
+                  <li class="links-of-blogroll-item">
+                    <a href="https://blog.csdn.net/loseinvain" title="FesianXu" target="_blank">FesianXu</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://me.csdn.net/u012436149" title="ke1th" target="_blank">ke1th</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://blog.csdn.net/u010099080" title="secondsilverman" target="_blank">secondsilverman</a>
+                  </li>
+                
               </ul>
             </div>
           
@@ -776,6 +853,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#残差块"><span class="nav-number">1.</span> <span class="nav-text">残差块</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#什么样的残差块work？"><span class="nav-number">2.</span> <span class="nav-text">什么样的残差块work？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#网络结构"><span class="nav-number">3.</span> <span class="nav-text">网络结构</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#ResNet解决了什么问题"><span class="nav-number">4.</span> <span class="nav-text">ResNet解决了什么问题</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考文献"><span class="nav-number">5.</span> <span class="nav-text">参考文献</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       

@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Python," />
+  <meta name="keywords" content="Hexo, NexT" />
 
 
 
@@ -79,23 +79,22 @@
 
 
 
-<meta name="description" content="Python默认复制的副本共享可能引发意想不到的结果。">
-<meta name="keywords" content="Python">
+<meta name="description" content="本文是《流畅的Python》第八章的读书笔记，本文先讨论对象标识、值和别名等概念。随后，会揭露元组的一个神奇特性：元组是不可变的，但是其中的值可以改变。然后就引申到浅复制和深复制。接下来的话题是引用和函数参数：可变的参数默认值导致的问题，以及如何安全地处理函数的调用者传入的可变参数。最后讨论垃圾回收、 del命令。 本文的内容有点儿枯燥，但是这些话题却是解决 Python 程序中很多不易察觉的 b">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Python中的深拷贝与浅拷贝">
-<meta property="og:url" content="flyrie.top/2018/07/20/Python_Copy_Deepcopy/index.html">
+<meta property="og:title" content="Python对象引用、可变性和垃圾回收">
+<meta property="og:url" content="flyrie.top/2018/04/01/Python_Object_References_Mutability_And_Recycling/index.html">
 <meta property="og:site_name" content="乡间小路">
-<meta property="og:description" content="Python默认复制的副本共享可能引发意想不到的结果。">
+<meta property="og:description" content="本文是《流畅的Python》第八章的读书笔记，本文先讨论对象标识、值和别名等概念。随后，会揭露元组的一个神奇特性：元组是不可变的，但是其中的值可以改变。然后就引申到浅复制和深复制。接下来的话题是引用和函数参数：可变的参数默认值导致的问题，以及如何安全地处理函数的调用者传入的可变参数。最后讨论垃圾回收、 del命令。 本文的内容有点儿枯燥，但是这些话题却是解决 Python 程序中很多不易察觉的 b">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="/images/Python基础积累_1.png">
 <meta property="og:image" content="/images/Python基础积累_2.png">
 <meta property="og:image" content="/images/Python基础积累_3.png">
 <meta property="og:image" content="/images/Python基础积累_4.png">
 <meta property="og:image" content="/images/Python基础积累_5.png">
-<meta property="og:updated_time" content="2018-10-16T16:38:53.899Z">
+<meta property="og:updated_time" content="2018-08-19T17:46:14.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Python中的深拷贝与浅拷贝">
-<meta name="twitter:description" content="Python默认复制的副本共享可能引发意想不到的结果。">
+<meta name="twitter:title" content="Python对象引用、可变性和垃圾回收">
+<meta name="twitter:description" content="本文是《流畅的Python》第八章的读书笔记，本文先讨论对象标识、值和别名等概念。随后，会揭露元组的一个神奇特性：元组是不可变的，但是其中的值可以改变。然后就引申到浅复制和深复制。接下来的话题是引用和函数参数：可变的参数默认值导致的问题，以及如何安全地处理函数的调用者传入的可变参数。最后讨论垃圾回收、 del命令。 本文的内容有点儿枯燥，但是这些话题却是解决 Python 程序中很多不易察觉的 b">
 <meta name="twitter:image" content="/images/Python基础积累_1.png">
 
 
@@ -126,13 +125,13 @@
 
 
 
-  <link rel="canonical" href="flyrie.top/2018/07/20/Python_Copy_Deepcopy/"/>
+  <link rel="canonical" href="flyrie.top/2018/04/01/Python_Object_References_Mutability_And_Recycling/"/>
 
 
 
 
 
-  <title>Python中的深拷贝与浅拷贝 | 乡间小路</title>
+  <title>Python对象引用、可变性和垃圾回收 | 乡间小路</title>
   
 
 
@@ -313,7 +312,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="flyrie.top/2018/07/20/Python_Copy_Deepcopy/">
+    <link itemprop="mainEntityOfPage" href="flyrie.top/2018/04/01/Python_Object_References_Mutability_And_Recycling/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="乡间小路">
@@ -330,7 +329,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Python中的深拷贝与浅拷贝</h1>
+          <h1 class="post-title" itemprop="name headline">Python对象引用、可变性和垃圾回收</h1>
         
 
         <div class="post-meta">
@@ -342,8 +341,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-07-20T01:46:15+08:00">
-                2018-07-20
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-04-01T01:46:14+08:00">
+                2018-04-01
               </time>
             
 
@@ -358,8 +357,8 @@
               
                 <span class="post-meta-item-text">更新于&#58;</span>
               
-              <time title="更新于" itemprop="dateModified" datetime="2018-10-17T00:38:53+08:00">
-                2018-10-17
+              <time title="更新于" itemprop="dateModified" datetime="2018-08-20T01:46:14+08:00">
+                2018-08-20
               </time>
             
           </span>
@@ -414,38 +413,79 @@
       
 
       
-        <p>Python默认复制的副本共享可能引发意想不到的结果。<a id="more"></a></p>
-<h1 id="默认做浅复制"><a href="#默认做浅复制" class="headerlink" title="默认做浅复制"></a>默认做浅复制</h1><ol>
-<li><p><code>=</code>直接赋值，传递的是对象的引用，相当于一个别名，其中一个改变另一个也会跟着变。</p>
-</li>
-<li><p>构造方法或<code>[:]</code>做的是浅复制（即复制了最外层容器），如果所有元素都是不可变的，那么这样没有问题，还能节省内存。但是，如果有可变的元素，可能就会导致意想不到的问题。</p>
-</li>
-<li><p><code>copy</code>模块提供的<code>deepcopy</code>和<code>copy</code>函数能为任意对象做深复制和浅复制。</p>
-</li>
-<li><p>深复制有时可能太深了。例如，对象可能会引用不该复制的外部资源或单例值。我们可以实现特殊方法 <code>__copy__()</code> 和 <code>__deepcopy__()</code>，控制 <code>copy</code> 和 <code>deepcopy</code> 的行为。</p>
-</li>
-</ol>
-<p>复制列表（或多数内置的可变集合）最简单的方式是使用内置的类型构造方法或<code>[:]</code>。例如：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">l1 = [<span class="number">3</span>, [<span class="number">66</span>, <span class="number">55</span>, <span class="number">44</span>], (<span class="number">7</span>, <span class="number">8</span>, <span class="number">9</span>)]</span><br><span class="line">l2 = list(l1)</span><br><span class="line">l2 == l1     <span class="comment"># True</span></span><br><span class="line">l2 <span class="keyword">is</span> l1     <span class="comment"># False</span></span><br><span class="line">id(l1)       <span class="comment"># 140027414483080</span></span><br><span class="line">id(l2)       <span class="comment"># 140027413720392</span></span><br></pre></td></tr></table></figure>
-<pre><code>140027413719624
-</code></pre><p>可以看出，副本与源列表相等，但是二者指代不同的对象。</p>
-<p>下面看看这段代码的效果：</p>
+        <p>本文是《流畅的Python》第八章的读书笔记，本文先讨论对象<strong>标识、值和别名</strong>等概念。随后，会揭露元组的一个神奇特性：<strong>元组是不可变的，但是其中的值可以改变</strong>。然后就引申到<strong>浅复制和深复制</strong>。接下来的话题是<strong>引用和函数参数</strong>：可变的参数默认值导致的问题，以及如何安全地处理函数的调用者传入的可变参数。最后讨论<strong>垃圾回收、 <code>del</code>命令</strong>。</p>
+<p>本文的内容有点儿枯燥，但是这些话题却是解决 Python 程序中很多不易察觉的 bug 的关<br>键。<a id="more"></a></p>
+<h1 id="标识、相等性和别名"><a href="#标识、相等性和别名" class="headerlink" title="标识、相等性和别名"></a>标识、相等性和别名</h1><p>在Python中，每个变量都有标识、类型和值。对象一旦创建，它的标识绝不会变；可以把标识理<br>解为对象在内存中的地址。 <code>is</code> 运算符比较两个对象的标识，而<code>==</code>比较两个对象的值； <code>id()</code> 函数返回对象的内存地址。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">t1 = &#123;<span class="string">'name'</span>: <span class="string">'Lili'</span>, <span class="string">'born'</span>: <span class="number">2001</span>&#125;</span><br><span class="line">t2 = &#123;<span class="string">'name'</span>: <span class="string">'Lili'</span>, <span class="string">'born'</span>: <span class="number">2001</span>&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">t1 == t2</span><br></pre></td></tr></table></figure>
+<pre><code>True
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">t1 <span class="keyword">is</span> t2</span><br></pre></td></tr></table></figure>
+<pre><code>False
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(id(t1), id(t2))</span><br></pre></td></tr></table></figure>
+<pre><code>(140059319293992, 140059319293848)
+</code></pre><p>当然，你可以在自己的类中定义 <code>__eq__</code> 方法，从而决定 <code>==</code> 如何比较实例。如果不覆盖<br><code>__eq__</code> 方法，那么从 <code>object</code> 继承的方法比较对象的 ID，因此这种后备机制认为用户定义的类的各个实例是不同的。</p>
+<p>元组与多数 Python 集合（列表、字典、集，等等）一样，保存的是对象的引用。 如果引用的元素是可变的，即便元组本身不可变，元素依然可变。也就是说，元组的不可变性其实是指<code>tuple</code> 数据结构的物理内容（即保存的引用）不可变，与引用的对象无关。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">t1 = (<span class="number">1</span>, <span class="number">2</span>, [<span class="number">30</span>, <span class="number">40</span>])</span><br><span class="line">t1[<span class="number">2</span>].append(<span class="number">100</span>)</span><br><span class="line">t1</span><br></pre></td></tr></table></figure>
+<pre><code>(1, 2, [30, 40, 100])
+</code></pre><h1 id="默认做浅复制"><a href="#默认做浅复制" class="headerlink" title="默认做浅复制"></a>默认做浅复制</h1><p>复制列表（或多数内置的可变集合）最简单的方式是使用内置的类型构造方法。例如：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">l1 = [<span class="number">3</span>, [<span class="number">66</span>, <span class="number">55</span>, <span class="number">44</span>], (<span class="number">7</span>, <span class="number">8</span>, <span class="number">9</span>)]</span><br><span class="line">l2 = list(l1)</span><br><span class="line">(l2 == l1, l2 <span class="keyword">is</span> l1)</span><br></pre></td></tr></table></figure>
+<pre><code>(True, False)
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(id(l1), id(l2))</span><br></pre></td></tr></table></figure>
+<pre><code>(140059319253960, 140059319197384)
+</code></pre><p>可以看出，副本与源列表相等，但是二者指代不同的对象。对列表和其他可变序列来说，还能使用简洁的 <code>l2 = l1[:]</code> 语句创建副本。</p>
+<p>然而，<strong>构造方法或 <code>[:]</code> 做的是浅复制（即复制了最外层容器，副本中的元素是源容器中元素的引用）</strong>。如果所有元素都是不可变的，那么这样没有问题，还能节省内存。但是，如果有可变的元素，可能就会导致意想不到的问题。看看下面的代码：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">l1 = [<span class="number">3</span>, [<span class="number">66</span>, <span class="number">55</span>, <span class="number">44</span>], (<span class="number">7</span>, <span class="number">8</span>, <span class="number">9</span>)]</span><br><span class="line">l2 = list(l1) <span class="comment"># ➊</span></span><br><span class="line">l1.append(<span class="number">100</span>) <span class="comment"># ➋</span></span><br><span class="line"></span><br><span class="line">l1[<span class="number">1</span>].remove(<span class="number">55</span>) <span class="comment"># ➌</span></span><br><span class="line">print(<span class="string">'l1:'</span>, l1)</span><br><span class="line">print(<span class="string">'l2:'</span>, l2)</span><br><span class="line">l2[<span class="number">1</span>] += [<span class="number">33</span>, <span class="number">22</span>] <span class="comment"># ➍</span></span><br><span class="line">l2[<span class="number">2</span>] += (<span class="number">10</span>, <span class="number">11</span>) <span class="comment"># ➎</span></span><br><span class="line">print(<span class="string">'l1:'</span>, l1)</span><br><span class="line">print(<span class="string">'l2:'</span>, l2)</span><br></pre></td></tr></table></figure>
 <pre><code>l1: [3, [66, 44], (7, 8, 9), 100]
 l2: [3, [66, 44], (7, 8, 9)]
 l1: [3, [66, 44, 33, 22], (7, 8, 9), 100]
 l2: [3, [66, 44, 33, 22], (7, 8, 9, 10, 11)]
 </code></pre><p>➊ <code>l2</code> 是 <code>l1</code> 的浅复制副本。此时的状态如图。<br><img src="/images/Python基础积累_1.png" alt="图片"><br>➋ 把 100 追加到 <code>l1</code> 中，对 <code>l2</code> 没有影响。<br><img src="/images/Python基础积累_2.png" alt="图片"><br>➌ 把内部列表 <code>l1[1]</code> 中的 55 删除。这对 <code>l2</code> 有影响，因为 <code>l2[1]</code> 绑定的列表与 <code>l1[1]</code>是同一个。<br><img src="/images/Python基础积累_3.png" alt="图片"><br>➍ 对可变的对象来说，如 <code>l2[1]</code> 引用的列表， <code>+=</code> 运算符就地修改列表。这次修改在<code>l1[1]</code> 中也有体现，因为它是 <code>l2[1]</code> 的别名。<br><img src="/images/Python基础积累_4.png" alt="图片"><br>➎ 对元组来说， += 运算符创建一个新元组，然后重新绑定给变量 l2[2]。现在， l1 和 l2 中最后位置上的元组不是同一个对象。<br><img src="/images/Python基础积累_5.png" alt="图片"></p>
-<h1 id="为任意对象做深复制和浅复制"><a href="#为任意对象做深复制和浅复制" class="headerlink" title="为任意对象做深复制和浅复制"></a>为任意对象做深复制和浅复制</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> copy</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Bus</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, passengers=None)</span>:</span></span><br><span class="line">        <span class="keyword">if</span> passengers <span class="keyword">is</span> <span class="keyword">None</span>:</span><br><span class="line">            self.passengers = []</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            self.passengers = list(passengers)</span><br><span class="line">            </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">pick</span><span class="params">(self, name)</span>:</span></span><br><span class="line">        self.passengers.append(name)</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">drop</span><span class="params">(self, name)</span>:</span></span><br><span class="line">        self.passengers.remove(name)</span><br><span class="line">        </span><br><span class="line">bus1 = Bus([<span class="string">'Alice'</span>, <span class="string">'Bill'</span>, <span class="string">'David'</span>])</span><br><span class="line">bus2 = copy.copy(bus1)</span><br><span class="line">bus3 = copy.deepcopy(bus1)</span><br><span class="line">id(bus1), id(bus2), id(bus3) <span class="comment"># ➊</span></span><br></pre></td></tr></table></figure>
-<pre><code>(140027413487568, 140027413487400, 140027413569776)
+<h1 id="为任意对象做深复制和浅复制"><a href="#为任意对象做深复制和浅复制" class="headerlink" title="为任意对象做深复制和浅复制"></a>为任意对象做深复制和浅复制</h1><p>有时我们需要的是深复制（即副本不共享内部对象的引用）。<code>copy</code> 模块提供的 <code>deepcopy</code> 和 <code>copy</code> 函数能为任意对象做深复制和浅复制。</p>
+<p>为了演示 <code>copy()</code> 和 <code>deepcopy()</code> 的用法，定义了一个简单的类 <code>Bus</code>。这个类表示运载乘客的校车，在途中乘客会上车或下车。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> copy</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Bus</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, passengers=None)</span>:</span></span><br><span class="line">        <span class="keyword">if</span> passengers <span class="keyword">is</span> <span class="keyword">None</span>:</span><br><span class="line">            self.passengers = []</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            self.passengers = list(passengers)</span><br><span class="line">            </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">pick</span><span class="params">(self, name)</span>:</span></span><br><span class="line">        self.passengers.append(name)</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">drop</span><span class="params">(self, name)</span>:</span></span><br><span class="line">        self.passengers.remove(name)</span><br><span class="line">        </span><br><span class="line">bus1 = Bus([<span class="string">'Alice'</span>, <span class="string">'Bill'</span>, <span class="string">'David'</span>])</span><br><span class="line">bus2 = copy.copy(bus1)</span><br><span class="line">bus3 = copy.deepcopy(bus1)</span><br><span class="line">id(bus1), id(bus2), id(bus3) <span class="comment"># ➊</span></span><br></pre></td></tr></table></figure>
+<pre><code>(140059318933488, 140059318933600, 140059318933264)
 </code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">id(bus1.passengers), id(bus2.passengers), id(bus3.passengers) <span class="comment"># ➋</span></span><br></pre></td></tr></table></figure>
-<pre><code>(140027413574216, 140027413574216, 140027413866632)
-</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bus1.drop(<span class="string">'Bill'</span>)</span><br></pre></td></tr></table></figure>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bus2.passengers <span class="comment"># ❸</span></span><br></pre></td></tr></table></figure>
+<pre><code>(140059319442504, 140059319442504, 140059319440968)
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">bus1.drop(<span class="string">'Bill'</span>)</span><br><span class="line">bus2.passengers <span class="comment"># ❸</span></span><br></pre></td></tr></table></figure>
 <pre><code>[&#39;Alice&#39;, &#39;David&#39;]
 </code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bus3.passengers <span class="comment"># ❹</span></span><br></pre></td></tr></table></figure>
 <pre><code>[&#39;Alice&#39;, &#39;Bill&#39;, &#39;David&#39;]
 </code></pre><p>➊ 使用 copy 和 deepcopy，创建 3 个不同的 Bus 实例。<br>➋ 审查 passengers 属性后发现，bus1 和 bus2 共享同一个列表对象，因为 bus2 是bus1 的浅复制副本。<br>❸ bus1 中的 ‘Bill’ 下车后，bus2 中也没有他了。<br>❹ bus3 是 bus1 的深复制副本，因此它的 passengers 属性指代另一个列表。</p>
+<p>深复制有时可能太深了。例如，对象可能会引用不该复制的外部资源或单例值。我们可以实现特殊方法 <code>__copy__()</code> 和 <code>__deepcopy__()</code>，控制 <code>copy</code> 和 <code>deepcopy</code> 的行为。</p>
+<h1 id="函数的参数传递"><a href="#函数的参数传递" class="headerlink" title="函数的参数传递"></a>函数的参数传递</h1><p>Python 唯一支持的参数传递模式是共享传参(call by sharing)，共享传参指函数的各个形式参数获得实参中各个引用的副本。也就是说，函数内部的形参是实参的别名。函数可能会修改接收到的任何可变对象。</p>
+<h2 id="不要用可变类型作为参数的默认值"><a href="#不要用可变类型作为参数的默认值" class="headerlink" title="不要用可变类型作为参数的默认值"></a>不要用可变类型作为参数的默认值</h2><p>默认参数最好指向不可变对象，否则会引起难以调试的问题。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">HauntedBus</span>:</span></span><br><span class="line">    <span class="string">"""备受幽灵乘客折磨的校车"""</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, passengers=[])</span>:</span>  <span class="comment"># ➊</span></span><br><span class="line">        self.passengers = passengers <span class="comment"># ➋</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">pick</span><span class="params">(self, name)</span>:</span></span><br><span class="line">        self.passengers.append(name) <span class="comment"># ➌</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">drop</span><span class="params">(self, name)</span>:</span></span><br><span class="line">        self.passengers.remove(name)</span><br></pre></td></tr></table></figure>
+<p>❶ 如果没传入 passengers 参数，使用默认绑定的列表对象，一开始是空列表。<br>❷ 这个赋值语句把 self.passengers 变成 passengers 的别名，而没有传入passengers 参数时,后者又是默认列表的别名。<br>❸ 在 self.passengers 上调用 .remove() 和 .append() 方法时，修改的其实是默认列表，它是函数对象的一个属性。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">bus1 = HauntedBus() </span><br><span class="line">bus1.pick(<span class="string">'Carrie'</span>)</span><br><span class="line"></span><br><span class="line">bus2 = HauntedBus() </span><br><span class="line">print(bus2.passengers)  <span class="comment"># ['Carrie']</span></span><br><span class="line">bus2.passengers <span class="keyword">is</span> bus1.passengers</span><br></pre></td></tr></table></figure>
+<pre><code>[&#39;Carrie&#39;]
+
+
+
+
+
+True
+</code></pre><p>可以看出 <code>bus2</code> 的列表竟然不为空。这种问题很难发现。实例化 <code>HauntedBus</code> 时，如果传入乘客，会按预期运作。但是不为 <code>HauntedBus</code> 指定乘客的话，奇怪的事就发生了，这是因为 <code>self.passengers</code> 变成了 <code>passengers</code> 参数默认值的别名。出现这个问题的根源是，默认值在定义函数时计算(通常在加载模块时)，因此默认值变成了函数对象的属性。因此，如果默认值是可变对象，而且修改了它的值，那么后续的函数调用都会受到影响。</p>
+<h2 id="防御可变参数"><a href="#防御可变参数" class="headerlink" title="防御可变参数"></a>防御可变参数</h2><p>如果定义的函数接收可变参数,应该谨慎考虑调用方是否期望修改传入的参数。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">TwilightBus</span>:</span></span><br><span class="line">    <span class="string">"""让乘客销声匿迹的校车"""</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, passengers=None)</span>:</span></span><br><span class="line">        <span class="keyword">if</span> passengers <span class="keyword">is</span> <span class="keyword">None</span>:</span><br><span class="line">            self.passengers = [] </span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            self.passengers = passengers</span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">pick</span><span class="params">(self, name)</span>:</span></span><br><span class="line">        self.passengers.append(name)</span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">drop</span><span class="params">(self, name)</span>:</span></span><br><span class="line">        self.passengers.remove(name) </span><br><span class="line">        </span><br><span class="line">basketball_team = [<span class="string">'Sue'</span>, <span class="string">'Tina'</span>, <span class="string">'Maya'</span>, <span class="string">'Diana'</span>, <span class="string">'Pat'</span>] <span class="comment"># ➊</span></span><br><span class="line">bus = TwilightBus(basketball_team) <span class="comment"># ➋</span></span><br><span class="line">bus.drop(<span class="string">'Tina'</span>) <span class="comment"># ➌</span></span><br><span class="line">bus.drop(<span class="string">'Pat'</span>)</span><br><span class="line">basketball_team  <span class="comment"># ➍</span></span><br></pre></td></tr></table></figure>
+<pre><code>[&#39;Sue&#39;, &#39;Maya&#39;, &#39;Diana&#39;]
+</code></pre><p>basketball_team 中有 5 个学生的名字，使用这队学生实例化 TwilightBus。两个学生下车了，下车的学生从篮球队中消失了!</p>
+<p>当 passengers 不为 None 时，self.passengers 变成 passengers 的别名，而后者是传给 <code>__init__</code> 方法的实参的别名。在 self.passengers 上调用 .remove() 和 .append() 方法其实会修改传给构造方法的那个列表。</p>
+<p>这里的问题是，校车为传给构造方法的列表创建了别名。正确的做法是，校车自己维护乘客列表。修正的方法很简单:在 <strong>init</strong> 中，传入 passengers 参数时，应该把参数值的副本赋值给 self.passengers。</p>
+<p>正确的做法应该如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, passengers=None)</span>:</span></span><br><span class="line">    <span class="keyword">if</span> passengers <span class="keyword">is</span> <span class="keyword">None</span>:</span><br><span class="line">        self.passengers = []</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        self.passengers = list(passengers)</span><br></pre></td></tr></table></figure>
+<h1 id="del-和垃圾回收"><a href="#del-和垃圾回收" class="headerlink" title="del 和垃圾回收"></a><code>del</code> 和垃圾回收</h1><p>对象绝不会自行销毁；然而，无法得到对象时，可能会被当作垃圾回收。—— Python 语言参考手册中“Data Model”一章</p>
+<p>Python 没有直接销毁对象的机制，<code>del</code> 语句删除名称，而不是对象。 <code>del</code> 命令可能会导致对象被当作垃圾回收，但是仅当删<br>除的变量保存的是对象的最后一个引用，或者无法得到对象时。重新绑定也可能会导致对象的引用数量归零，导致对象被销毁。</p>
+<p>在 <code>CPython</code> 中，垃圾回收使用的主要算法是引用计数。实际上，每个对象都会统计有多少引用指向自己。当引用计数归零时，对象立即就被销毁： <code>CPython</code> 会在对象上调用 <code>__del__</code> 方法（如果定义了），然后释放分配给对象的内存。但是这种引用计数的方式遇到引用循环容易泄露内存。 <code>CPython 2.0</code> 增加了分代垃圾回收算法，用于检测引用循环中涉及的对象组，它能把引用循环中不可获取的对象销毁。</p>
+<p>引用计数意味着，在 <code>CPython</code> 中，这样写是安全的（至少目前如此）：<br><code>open(&#39;test.txt&#39;, &#39;wt&#39;, encoding=&#39;utf-8&#39;).write(&#39;1, 2, 3&#39;)</code><br>因为文件对象的引用数量会在 <code>write</code> 方法返回后归零， Python在销毁内存中表示文件的对象之前，会立即关闭文件。然而，这行代码在 <code>Jython</code> 或 <code>IronPython</code> 中却不安全，因为它们使用的是宿主运行时（Java VM 和 .NET CLR）中的垃圾回收程序，那些回收程序更复杂，但是不依靠引用计数，而且销毁对象和关闭文件的时间可能更长。在任何情况下，包括 <code>CPython</code>，最好显式关闭文件；而关闭文件的最可靠方式是使用 <code>with</code> 语句，它能保证文件一定会被关闭，即使打开文件时抛出了异常也无妨。使用 with，上述代码片段变成了：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">with</span> open(<span class="string">'test.txt'</span>, <span class="string">'wt'</span>, encoding=<span class="string">'utf-8'</span>) <span class="keyword">as</span> fp:</span><br><span class="line">    fp.write(<span class="string">'1, 2, 3'</span>)</span><br></pre></td></tr></table></figure>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>变量保存的是引用，这一点对 Python 编程有很多实际的影响。</p>
+<ol>
+<li>简单的赋值不创建副本。</li>
+<li>对 <code>+=</code> 或 <code>*=</code> 所做的增量赋值来说，如果左边的变量绑定的是不可变对象，会创建新对象；如果是可变对象，会就地修改。</li>
+<li>为现有的变量赋予新值，不会修改之前绑定的变量。这叫重新绑定：现在变量绑定了其他对象。如果变量是之前那个对象的最后一个引用，对象会被当作垃圾回收。</li>
+<li>函数的参数以别名的形式传递，这意味着，函数可能会修改通过参数传入的可变对象。这一行为无法避免，除非在本地创建副本，或者使用不可变对象（例如，传入元组，而不传入列表）。</li>
+<li>使用可变类型作为函数参数的默认值有危险，因为如果就地修改了参数，默认值也就变了，这会影响以后使用默认值的调用。</li>
+</ol>
 
       
     </div>
@@ -485,12 +525,6 @@ l2: [3, [66, 44, 33, 22], (7, 8, 9, 10, 11)]
 
     <footer class="post-footer">
       
-        <div class="post-tags">
-          
-            <a href="/tags/Python/" rel="tag"># Python</a>
-          
-        </div>
-      
 
       
       
@@ -500,8 +534,8 @@ l2: [3, [66, 44, 33, 22], (7, 8, 9, 10, 11)]
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/07/17/最大熵模型/" rel="next" title="最大熵模型【转】">
-                <i class="fa fa-chevron-left"></i> 最大熵模型【转】
+              <a href="/2018/03/15/C++_Learning_note/" rel="next" title="C++知识积累">
+                <i class="fa fa-chevron-left"></i> C++知识积累
               </a>
             
           </div>
@@ -510,8 +544,8 @@ l2: [3, [66, 44, 33, 22], (7, 8, 9, 10, 11)]
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2018/07/20/Python序列化/" rel="prev" title="Python序列化">
-                Python序列化 <i class="fa fa-chevron-right"></i>
+              <a href="/2018/04/12/Matrix_Derivation/" rel="prev" title="标量、向量、矩阵求导">
+                标量、向量、矩阵求导 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -620,7 +654,7 @@ l2: [3, [66, 44, 33, 22], (7, 8, 9, 10, 11)]
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">93</span>
+                  <span class="site-state-item-count">92</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -796,6 +830,18 @@ l2: [3, [66, 44, 33, 22], (7, 8, 9, 10, 11)]
                     <a href="http://cuijiahua.com/" title="Jack Cui" target="_blank">Jack Cui</a>
                   </li>
                 
+                  <li class="links-of-blogroll-item">
+                    <a href="https://blog.csdn.net/loseinvain" title="FesianXu" target="_blank">FesianXu</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://me.csdn.net/u012436149" title="ke1th" target="_blank">ke1th</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://blog.csdn.net/u010099080" title="secondsilverman" target="_blank">secondsilverman</a>
+                  </li>
+                
               </ul>
             </div>
           
@@ -815,7 +861,7 @@ l2: [3, [66, 44, 33, 22], (7, 8, 9, 10, 11)]
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#默认做浅复制"><span class="nav-number">1.</span> <span class="nav-text">默认做浅复制</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#为任意对象做深复制和浅复制"><span class="nav-number">2.</span> <span class="nav-text">为任意对象做深复制和浅复制</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#标识、相等性和别名"><span class="nav-number">1.</span> <span class="nav-text">标识、相等性和别名</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#默认做浅复制"><span class="nav-number">2.</span> <span class="nav-text">默认做浅复制</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#为任意对象做深复制和浅复制"><span class="nav-number">3.</span> <span class="nav-text">为任意对象做深复制和浅复制</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#函数的参数传递"><span class="nav-number">4.</span> <span class="nav-text">函数的参数传递</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#不要用可变类型作为参数的默认值"><span class="nav-number">4.1.</span> <span class="nav-text">不要用可变类型作为参数的默认值</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#防御可变参数"><span class="nav-number">4.2.</span> <span class="nav-text">防御可变参数</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#del-和垃圾回收"><span class="nav-number">5.</span> <span class="nav-text">del 和垃圾回收</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总结"><span class="nav-number">6.</span> <span class="nav-text">总结</span></a></li></ol></div>
             
 
           </div>
