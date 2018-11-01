@@ -414,7 +414,7 @@
 
       
         <p>本文是《流畅的Python》第八章的读书笔记，本文先讨论对象<strong>标识、值和别名</strong>等概念。随后，会揭露元组的一个神奇特性：<strong>元组是不可变的，但是其中的值可以改变</strong>。然后就引申到<strong>浅复制和深复制</strong>。接下来的话题是<strong>引用和函数参数</strong>：可变的参数默认值导致的问题，以及如何安全地处理函数的调用者传入的可变参数。最后讨论<strong>垃圾回收、 <code>del</code>命令</strong>。</p>
-<p>本文的内容有点儿枯燥，但是这些话题却是解决 Python 程序中很多不易察觉的 bug 的关<br>键。<a id="more"></a></p>
+<p>本文的内容有点儿枯燥，但是这些话题却是解决 Python 程序中很多不易察觉的 bug 的关键。<a id="more"></a></p>
 <h1 id="标识、相等性和别名"><a href="#标识、相等性和别名" class="headerlink" title="标识、相等性和别名"></a>标识、相等性和别名</h1><p>在Python中，每个变量都有标识、类型和值。对象一旦创建，它的标识绝不会变；可以把标识理<br>解为对象在内存中的地址。 <code>is</code> 运算符比较两个对象的标识，而<code>==</code>比较两个对象的值； <code>id()</code> 函数返回对象的内存地址。</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">t1 = &#123;<span class="string">'name'</span>: <span class="string">'Lili'</span>, <span class="string">'born'</span>: <span class="number">2001</span>&#125;</span><br><span class="line">t2 = &#123;<span class="string">'name'</span>: <span class="string">'Lili'</span>, <span class="string">'born'</span>: <span class="number">2001</span>&#125;</span><br></pre></td></tr></table></figure>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">t1 == t2</span><br></pre></td></tr></table></figure>
