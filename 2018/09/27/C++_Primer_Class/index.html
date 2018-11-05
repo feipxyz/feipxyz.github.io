@@ -415,7 +415,7 @@
 <p>而当类开发者不允许成员函数改变类内变量的时候，普通的<code>this</code>指针无法做到，因为它指向的是非常量。此时就需要将<code>this</code>指针声明为一个指向常量的常量指针。C++通过在成员函数参数列表之后家<code>const</code>关键字来修改<code>this</code>指针类型为指向非常量。</p>
 <h2 id="返回一个this对象的函数"><a href="#返回一个this对象的函数" class="headerlink" title="返回一个this对象的函数"></a>返回一个<code>this</code>对象的函数</h2><p>函数<code>combine</code>的设计初衷类似于复合赋值运算符<code>+=</code>，调用该函数的对象代表的是赋值运算符左侧的运算对象，右侧运算对象则通过显式的实参被传入函数。</p>
 <p>该函数一个值得关注的部分是它的返回类型和返回语句。当我们定义的函数类似于内置运算符时，应该令该函数的行为尽量模仿这个运算符。内置运算符把它的左侧运算对象当成左值返回。因此成员函数也应返回：<code>return *this; //返回执行该函数的对象</code>，并且函数返回类型为引用（如果声明为普通的返回类型，那得到的就是一个副本）。</p>
-<h2 id="非成员函数接口声明"><a href="#非成员函数接口声明" class="headerlink" title="非成员函数接口声明"></a>非成员函数接口声明</h2><p>一般来说，如果非成员函数是类借口的组成部分，则这些函数的声明应该与类在同一个头文件当中。<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">istream &amp;<span class="title">read</span><span class="params">(istream &amp;is, SalesData &amp;item)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">double</span> price = <span class="number">0</span>;</span><br><span class="line">    is &gt;&gt; item.bookNo &gt;&gt; item.units_sold &gt;&gt; price;</span><br><span class="line">    item.revenue = price * item.units_sold;</span><br><span class="line">    <span class="keyword">return</span> is;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function">ostream &amp;<span class="title">print</span><span class="params">(ostream &amp;os, <span class="keyword">const</span> SalesData &amp;item)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    os &lt;&lt; item.Isbn() &lt;&lt; <span class="string">" "</span> &lt;&lt; item.units_sold &lt;&lt; <span class="string">" "</span></span><br><span class="line">       &lt;&lt; item.revenue &lt;&lt; <span class="string">" "</span> &lt;&lt; item.AvgPrice();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> os;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="非成员函数接口声明"><a href="#非成员函数接口声明" class="headerlink" title="非成员函数接口声明"></a>非成员函数接口声明</h2><p>一般来说，如果非成员函数是类接口的组成部分，则这些函数的声明应该与类在同一个头文件当中。<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">istream &amp;<span class="title">read</span><span class="params">(istream &amp;is, SalesData &amp;item)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">double</span> price = <span class="number">0</span>;</span><br><span class="line">    is &gt;&gt; item.bookNo &gt;&gt; item.units_sold &gt;&gt; price;</span><br><span class="line">    item.revenue = price * item.units_sold;</span><br><span class="line">    <span class="keyword">return</span> is;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function">ostream &amp;<span class="title">print</span><span class="params">(ostream &amp;os, <span class="keyword">const</span> SalesData &amp;item)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    os &lt;&lt; item.Isbn() &lt;&lt; <span class="string">" "</span> &lt;&lt; item.units_sold &lt;&lt; <span class="string">" "</span></span><br><span class="line">       &lt;&lt; item.revenue &lt;&lt; <span class="string">" "</span> &lt;&lt; item.AvgPrice();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> os;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <p><code>read</code> 和 <code>print</code> 分别接受各自 <code>IO</code> 类型的引用作为其参数。 <code>IO</code> 类属于不能被拷贝的类型，我们只能通过引用来传递它们。</p>
 <h2 id="构造函数"><a href="#构造函数" class="headerlink" title="构造函数"></a>构造函数</h2><p>构造函数不能声明成<code>const</code>的。</p>
 <p>如果我们的类没有显式地定义构造函数，那么编译器就会为我们隐式地定义一个默认构造函数，又叫合成的默认构造函数。合成默认构造函数无须任何实参。</p>
@@ -424,7 +424,7 @@
 <li>如果存在类内初始值，用它来初始化成员。</li>
 <li>否则，默认初始化该成员。</li>
 </ul>
-<p>只有当类没有声明任何构造函数时，编译器才会自动地生成默认构造函数。</p>
+<p><strong>只有当类没有声明任何构造函数时，编译器才会自动地生成默认构造函数。</strong></p>
 <h3 id="某些类不能依赖于合成的默认构造函数"><a href="#某些类不能依赖于合成的默认构造函数" class="headerlink" title="某些类不能依赖于合成的默认构造函数"></a>某些类不能依赖于合成的默认构造函数</h3><p>合成的默认构造函数只适合非常简单的类，比如现在定义的这个<code>SalesData</code>版本，对于一个普通的类来说，必须定义它自己的默认构造函数，原因有三：</p>
 <ol>
 <li><p>第一个原因也是最容易理解的一个原因是编译器只有在发现类不包含任何构造函数的情况下才会替我们生成一个默认的构造函数。一旦我们定义了一些其他的构造函数，那么除非我们再定义一个默认的构造函数，否则类将没有默认构造函数。</p>
@@ -436,7 +436,8 @@
 </ol>
 <h3 id="default的含义"><a href="#default的含义" class="headerlink" title="==default的含义"></a><code>==default</code>的含义</h3><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SalesData() = <span class="keyword">default</span>;</span><br></pre></td></tr></table></figure>
 <p>首先明确一点，因为该构造函数不接受任何实参，所以它时一个默认构造函数。我们定义这个构造函数的目的仅仅是因为我们既需要其他形式的构造函数，也需要默认的构造函数。我们希望这个函数的作用完全等同于之前使用的合成默认构造函数。</p>
-<p>在 C++11 中，如果我们需要默认的行为，那么可以通过在参数列表后面写上 = default 来要求编译器生成构造函数。其中， = default 既可以和声明一起出现在类的内部，也可以定义出现在类的外部。和其他函数一样，如果 = default 在类的内部，则默认构造函数是内联的；如果它在类的外部，则将该成员默认情况下不是内联的。</p>
+<p>C++11 标准引入了一个新特性：”=default”函数。程序员只需在函数声明后加上“=default;”，就可将该函数声明为 “=default”函数，编译器将为显式声明的 “=default”函数自动生成函数体。该函数比用户自己定义的默认构造函数获得更高的代码效率。”= default” 既可以和声明一起出现在类的内部，也可以定义出现在类的外部。和其他函数一样，如果 = default 在类的内部，则默认构造函数是内联的；如果它在类的外部，则将该成员默认情况下不是内联的。</p>
+<p>“=default”函数特性仅适用于类的特殊成员函数，且该特殊成员函数没有默认参数。</p>
 <h3 id="成员初始化顺序"><a href="#成员初始化顺序" class="headerlink" title="成员初始化顺序"></a>成员初始化顺序</h3><p>成员的初始化顺序与它们在类定义中的出现顺序一致：第一个成员先被初始化，然后第二个，以此类推。构造函数初始值列表中初始值的前后位置关系不会影响实际的初始化顺序。</p>
 <p>最好令构造函数初始值的顺序与成员声明的顺序保持一致。而且如果可能的话，尽量避免使用某些成员初始化其他成员。</p>
 <h3 id="默认构造函数"><a href="#默认构造函数" class="headerlink" title="默认构造函数"></a>默认构造函数</h3><p>如果一个构造函数为所有参数都提供了默认实参，则它实际上也定义了默认构造函数。一个类只能有一个默认构造函数。</p>
@@ -648,7 +649,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">83</span>
+                  <span class="site-state-item-count">86</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
