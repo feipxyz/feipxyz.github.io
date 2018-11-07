@@ -79,17 +79,17 @@
 
 
 
-<meta name="description" content="把知道的东西讲清楚">
+<meta name="description" content="基本内置类型 基本字符类型是 char，一个 char 的空间应确保可以存放机器基本字符集中任意字符对应的数字值。也就是说，一个 char 的大小和一个机器字节一样。  当一个算数表达式中既有无符号数又有int值时，那个int值就会转为无符号数。   变量 初始化不是赋值，初始化的含义是创建变量时赋予其一个初始值，而赋值的含义是把对象的当前值擦除，而以一个新值来替代。  作为C++11新标准的一部">
 <meta property="og:type" content="article">
 <meta property="og:title" content="C++ Primer：变量和基本类型">
 <meta property="og:url" content="flyrie.top/2018/08/25/C++_Primer_Variables_And_Basic_Types/index.html">
 <meta property="og:site_name" content="乡间小路">
-<meta property="og:description" content="把知道的东西讲清楚">
+<meta property="og:description" content="基本内置类型 基本字符类型是 char，一个 char 的空间应确保可以存放机器基本字符集中任意字符对应的数字值。也就是说，一个 char 的大小和一个机器字节一样。  当一个算数表达式中既有无符号数又有int值时，那个int值就会转为无符号数。   变量 初始化不是赋值，初始化的含义是创建变量时赋予其一个初始值，而赋值的含义是把对象的当前值擦除，而以一个新值来替代。  作为C++11新标准的一部">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:updated_time" content="2018-10-10T17:46:14.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="C++ Primer：变量和基本类型">
-<meta name="twitter:description" content="把知道的东西讲清楚">
+<meta name="twitter:description" content="基本内置类型 基本字符类型是 char，一个 char 的空间应确保可以存放机器基本字符集中任意字符对应的数字值。也就是说，一个 char 的大小和一个机器字节一样。  当一个算数表达式中既有无符号数又有int值时，那个int值就会转为无符号数。   变量 初始化不是赋值，初始化的含义是创建变量时赋予其一个初始值，而赋值的含义是把对象的当前值擦除，而以一个新值来替代。  作为C++11新标准的一部">
 
 
 
@@ -407,7 +407,139 @@
       
 
       
-        
+        <h1 id="基本内置类型"><a href="#基本内置类型" class="headerlink" title="基本内置类型"></a>基本内置类型</h1><ol>
+<li><p>基本字符类型是 char，一个 char 的空间应确保可以存放机器基本字符集中任意字符对应的数字值。也就是说，一个 char 的大小和一个机器字节一样。</p>
+</li>
+<li><p>当一个算数表达式中既有无符号数又有int值时，那个int值就会转为无符号数。</p>
+</li>
+</ol>
+<h1 id="变量"><a href="#变量" class="headerlink" title="变量"></a>变量</h1><ol>
+<li><p>初始化不是赋值，初始化的含义是创建变量时赋予其一个初始值，而赋值的含义是把对象的当前值擦除，而以一个新值来替代。</p>
+</li>
+<li><p>作为C++11新标准的一部分，用花括号来初始化变量得到了全面应用，叫做列表初始化。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> units_sold = <span class="number">0</span>;</span><br><span class="line"><span class="keyword">int</span> units_sold = &#123;<span class="number">0</span>&#125;;</span><br><span class="line"><span class="keyword">int</span> units_sold&#123;<span class="number">0</span>&#125;;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">units_sold</span><span class="params">(<span class="number">0</span>)</span></span>;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>如果定义变量时没有指定初值，则变量被默认初始化，此时变量被赋予了默认值，默认值到底是什么由变量类型决定，同时定义变量的位置也会对此有影响。如果是内置类型的变量未被显式初始化，它的值由定义的位置决定。定义于任何函数体(块)之外的变量被初始化为 0 ，而定义于函数体(块)内部的内置类型变量将不被初始化。一个未被初始化的内置类型变量的值是未定义的，如果试图拷贝或以其他形式访问此类值将引发错误。定义在块内部的局部变量有一个例外，即如果是static型变量，即使不显式地给予初始值，也会被默认初始化为零。</p>
+</li>
+<li><p>为了允许把程序拆分成多个逻辑部分来编写，C++语言支持分离式编译机制，该机制允许将程序分割成若干个文件，每个文件可以被独立翻译。</p>
+</li>
+<li><p>为了支持分离式编译，C++语言将声明和定义区分开。声明使得名字被程序所知，一个文件如果想使用别处定义的名字则必须包含对那个名字的声明。而定义负责创建与名字关联的实体。</p>
+</li>
+<li><p>变量声明规定了变量的类型和名字，在这一点上定义与之相同。但是除此之外，定义还申请存储空间，也可能会为变量赋一个初值。</p>
+</li>
+<li><p>如果想声明一个变量而非定义它，就在变量名前添加关键字extern，而且不要显示地初始化变量，任何包含了显示初始化的声明即成为定义。我们能给extern关键字标记的变量赋一个初始值，但是这么做也就抵消了extern的作用。extern语句如果包含初始值就不再是声明，而变成定义了。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">extern</span> <span class="keyword">int</span> j；　　<span class="comment">// 声明j而非定义j</span></span><br><span class="line"><span class="keyword">int</span> j；　　　　　 <span class="comment">// 声明并定义j，定义会分配空间，而声明不会</span></span><br><span class="line"><span class="keyword">extern</span> <span class="keyword">double</span> pi = <span class="number">3.1416</span>；　　<span class="comment">//定义</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>在函数体内部，如果试图初始化一个由extern关键字标记的变量，将引发错误。</p>
+</li>
+<li><p>变量能且只能被定义一次，但是可以被多次声明。</p>
+</li>
+<li><p>声明和定义的区别看起来也许微不足道，但实际上却非常重要。如果要在多个文件中使用同一个变量，就必须在声明和定义分离。此时，变量的定义必须出现在且只能出现在一个文件中，而其他用到该变量的文件必须对其进行声明，却绝对不能重复定义。</p>
+</li>
+<li><p>C++是一种静态类型语言，其含义是在编译阶段检查类型。</p>
+</li>
+</ol>
+<h1 id="复合类型"><a href="#复合类型" class="headerlink" title="复合类型"></a>复合类型</h1><ol>
+<li><p>C++11中新增了一种引用，所谓“右值引用”，这种引用主要用于内置类，严格来说，当我们使用“引用”时，指的其实是“左值引用”。</p>
+</li>
+<li><p>引用必须被初始化，因为无法令引用绑定到另一个对象上。<code>int &amp;ref; //报错</code>。</p>
+</li>
+<li><p>引用并非对象，相反的，它知识为一个已经存在的对象起一个别名。所以也不能定义引用的引用。</p>
+</li>
+<li><p>一般来说，引用的类型都要和与之绑定的对象严格匹配。而且引用只能绑定在对象上，而不能与字面值或某个表达式结果绑定在一起。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> &amp;refVal4 = <span class="number">10</span>;  <span class="comment">//错误，引用类型的初始值必须是一个对象</span></span><br><span class="line"><span class="keyword">double</span> dval = <span class="number">3.14</span>;</span><br><span class="line"><span class="keyword">int</span> &amp;refVal = dval; <span class="comment">//错啦，对应起来，这里引用的类型的初始值必须是 int 型</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>不一般的情况下，有两种例外：</p>
+<ul>
+<li><p>在初始化常量引用时，允许任意表达式作为初始值，只要该表达式的结果能转换成引用的类型即可；尤其是允许为一个常量引用绑定非常量的对象、字面值，甚至是一个一般表达式：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> i = <span class="number">12</span>;</span><br><span class="line"><span class="keyword">const</span> <span class="keyword">int</span> &amp;r1 = i;      <span class="comment">//允许将 const int &amp; 绑定到一个普通int 对象上；</span></span><br><span class="line"><span class="keyword">const</span> <span class="keyword">int</span> &amp;r2 = <span class="number">12</span>;     <span class="comment">//正确：r1 是一个常量引用；</span></span><br><span class="line"><span class="keyword">const</span> <span class="keyword">int</span> &amp;r3 = r1*<span class="number">2</span>;   <span class="comment">//正确：r3 是一个常量引用；</span></span><br><span class="line"><span class="keyword">int</span> &amp; r4 = r1*<span class="number">2</span>;        <span class="comment">//错误：r4只是一个普通的非常量引用；</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>存在继承关系的类：此处见以后博文。</p>
+</li>
+</ul>
+</li>
+<li><p>指针本身就是一个对象，允许对指针赋值拷贝，而且在指针的生命周期内它可以先后指向几个不同的对象。指针无须在定义时赋初值。和其他内置类型一样，在块作用域内定义的指针如果没有被初始化，也将拥有一个不确定的值。</p>
+</li>
+<li><p>因为引用不是对象，没有实际地址，所以不能定义指向引用的指针。</p>
+</li>
+<li><p>一般来说，指针的类型要和它指向的对象严格匹配。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">double</span> dval;</span><br><span class="line"><span class="keyword">double</span> *pd = &amp;dval;</span><br><span class="line"><span class="keyword">double</span> *pd2 = pd;</span><br><span class="line"><span class="keyword">int</span> *pi = pd;  <span class="comment">//错误，类型不匹配</span></span><br><span class="line">pi = &amp;dval;    <span class="comment">//错误，类型不匹配</span></span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>例外情况有两种，其中之一是：允许一个指向常量的指针指向一个非常量对象。</p>
+<ol>
+<li><p>空指针不指向任何对象，在试图使用一个指针之前代码可以首先检查它是否为空。得到空指针最直接的办法是用字面值nullptr来初始化指针，也可以通过将指针初始化为字面值0来生成空指针。过去的指针会用到一个名为NULL的预处理变量来给指针赋值，这个变量在头文件cstdlib中定义，它的值就是0。定义空指针：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> *p1=<span class="literal">nullptr</span>;    <span class="comment">//等价于int *p1=0;</span></span><br><span class="line"><span class="keyword">int</span> *p2=<span class="number">0</span>;          <span class="comment">//直接将p2初始化为字母常量0</span></span><br><span class="line"><span class="comment">/* 要包含#include&lt;cstdlib&gt; */</span></span><br><span class="line"><span class="keyword">int</span> *p3=<span class="literal">NULL</span>;       <span class="comment">//等价于int *p3=0;</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>在新标准下，最好使用<code>nullptr</code>，同事尽量避免使用<code>NULL</code>。</p>
+</li>
+<li><p>把<code>int</code>变量直接赋值给指针是错误的做法，即使这个变量恰好是0</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> zero = <span class="number">0</span>;</span><br><span class="line">pi = zero <span class="comment">//错误</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>如果实在不清楚指针应该指向何处，就把它初始化为<code>nullptr</code>，这样程序就能检测并知道它没有指向任何具体的对象了。</p>
+</li>
+<li><p>C++提供了一种特殊的指针类型<code>void*</code>，它可以保存任何类型对象的地址，<code>void*</code>表明该指针与一地址值相关，但是不清楚在此地址上的对象的类型，也就无法确定能在这个对象上做哪些操作。</p>
+</li>
+<li><p>引用本身不是一个对象，因此不能定义指向引用的指针，但指针是对象，所以存在对指针的引用。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> *p;</span><br><span class="line"><span class="keyword">int</span> *&amp;r = p;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h1 id="const限定符"><a href="#const限定符" class="headerlink" title="const限定符"></a>const限定符</h1><ol>
+<li><p>const对象一旦创建后其值就不能再改变，所以const对象必须初始化。</p>
+</li>
+<li><p>默认情况下，const对象被设定为仅在文件内有效。当多个文件中出现了同名的const变量时，其实等同于在不同文件中分别定义了独立的变量。</p>
+</li>
+<li><p>某些时候有这样一种const变量，它的初始值不是一个常量表达式，但又确实有必要在文件间共享。在这种情况下，我们不希望编译器为每个文件分别生成独立的变量。相反，我们想让这类const对象像其他（非常量）对象一样工作，也就是说，只在一个文件种定义cons，而在其他多个文件中声明并使用它。解决的办法是，对于const变量不管是声明还是定义都添加extern关键字，这样只需定义一次就可以。</p>
+</li>
+<li><p>const引用</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="keyword">int</span> ci = <span class="number">1024</span>;</span><br><span class="line"><span class="keyword">const</span> <span class="keyword">int</span> &amp;r1 = ci;   <span class="comment">//正确</span></span><br><span class="line">r1 = <span class="number">42</span>; <span class="comment">//错误，r1是对常量的引用</span></span><br><span class="line"><span class="keyword">int</span> &amp;r2 = ci; <span class="comment">//错误，试图让一个非常量引用指向一个常量对象。</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>顶层const<br>顶层const用来表明一个对象本身是一个不可更改的常量。内置类型的const为顶层const。对于指针，被顶层const修改后，不可更改指针指向的对象。</p>
+</li>
+<li><p>底层const<br>底层const(常量指针)用来表明一个指针或引用所指向的对象是一个不可更改常量。对于指针和引用，被底层const修改后，不可通过指针或引用修改指针指向的对象值。（可以通过其他方式修改其值）。</p>
+</li>
+<li><p>执行拷贝操作时，顶层const对于拷贝操作无影响</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="keyword">int</span> i = <span class="number">1</span>;</span><br><span class="line"><span class="keyword">int</span> m = i;          <span class="comment">//i具有顶层const对于拷贝操作无影响。</span></span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>但是底层const不可忽略。执行拷贝操作时，拷入与拷出对象必须具有相同的底层const，或者两对象的数据类型必须能够转换。一般来说，非常量可以转换成常量，反之不行。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">int i = 1;</span><br><span class="line">const int *p = &amp;i;  //正确，非常量转换为常量</span><br><span class="line">int *q = p;         //错误，常量不可转换为非常量</span><br><span class="line">const int *r = p;   //正确，等号两边都具有底层const</span><br></pre></td></tr></table></figure></p>
+<ol>
+<li>constexpr变量<br>常量表达式（const expression）是指值不会改变并且在编译过程中就能得到计算结果的表达式。一个对象（或表达式）是不是常量表达式由它的数据类型和初始值共同决定，例如：<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="keyword">int</span> max=<span class="number">20</span>;   <span class="comment">//max是常量表达式</span></span><br><span class="line"><span class="keyword">const</span> <span class="keyword">int</span> li=max+<span class="number">1</span>; <span class="comment">//li是常量表达式</span></span><br><span class="line"><span class="keyword">int</span> sta=<span class="number">27</span>;         <span class="comment">//sta不是常量表达式</span></span><br><span class="line"><span class="keyword">const</span> <span class="keyword">int</span> sz=get(); <span class="comment">//sz不是常量表达式</span></span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>在一个复杂系统中很难分辨一个初始值到底是不是常量表达式。虽然可以用const来定义，但在使用时尽管要求如此但依然会发生初始值不是常量表达式的情况。可以说，在这种情况下，对象的定义和使用是两回事。<br>C++11规定，允许将变量声明为constexpr类型，以便由编译器来验证变量的值是否是一个常量表达式。声明为constexpr的变量一定是一个常量，而且必须用常量表达式初始化：<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">constexpr</span> <span class="keyword">int</span> mf = <span class="number">20</span>; 		<span class="comment">// 20是常量表达式</span></span><br><span class="line"><span class="keyword">constexpr</span> <span class="keyword">int</span> limit = mf + <span class="number">1</span>;	<span class="comment">// mf+1是常量表达式</span></span><br><span class="line"><span class="keyword">constexpr</span> <span class="keyword">int</span> sz = size(); 	<span class="comment">// 只有当size是一个constexpr函数时才是一条正确的声明语句</span></span><br></pre></td></tr></table></figure></p>
+<p>一般来说，如果你认为变量是一个常量表达式，那就把它声明为<code>constexpr</code>。</p>
+<ol>
+<li>字面值类型<br>常量表达式的值需要在编译时就得到计算，因此对声明constexp时用到的类型必须有所限制。因为这些类型一般比较简单，容易得到，就把它们称为字面值类型。算术类型、引用和指针都属于字面值类型。自定义的类、IO库、string则不属于字面值类型，也就不能被定义成constexpr。<br>尽管指针和引用都能定义成constexpr，但它们的初始值却受到严格限制，一个constexpr指针的初始值必须是nullprt或者0，或者是某个存储在某个固定地址中的对象。定义在函数体之外的对象其地址固定不变。</li>
+</ol>
+<h1 id="处理类型"><a href="#处理类型" class="headerlink" title="处理类型"></a>处理类型</h1><ol>
+<li><p>类型别名  </p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="keyword">double</span> wages;</span><br><span class="line"><span class="keyword">using</span> SI = Sales_item;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>指针、常量和类型别名  </p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="keyword">char</span> *pstring</span><br><span class="line"><span class="keyword">const</span> pstring cstr = <span class="number">0</span>;  <span class="comment">//cstr是指向char的常量指针</span></span><br><span class="line"><span class="keyword">const</span> pstring *ps;       <span class="comment">//ps是一个指针，它的对象是指向char的常量指针</span></span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>const是对给定类型的修饰，pstring实际上是指向char的指针，因此const pstring就是指向char的常量指针，而非指向常量的指针。需要强调的是，声明语句中用到pstring时，其基本数据类型是指针。</p>
+<ol>
+<li><p>auto类型说明符<br>编程时常常需要把表达式的值赋给变量，这就要求在声明变量的时候清楚知道表达式的类型。然而要做到这一点并非那么容易，有时候甚至根本做不到。为了解决这个问题，C++11标准引入了auto类型说明符，用它就能让编译器替我们去分析表达式所属的类型。与原来那些只对应一种特定类型的说明符不同，auto让编译器通过初值来推算变量类型。显然，auto定义的变量必须要有初始值。<br>使用auto能在一条语句中声明多个变量。但是一条声明语句只能有一个基本数据类型，所以该语句中所有变量的初始基本数据类型都必须一致：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">auto</span> sz = <span class="number">0</span>, pi = <span class="number">3.14</span>  <span class="comment">//错误</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>当引用被用作初始值时，真正参与初始化的其实是引用对象的值。</li>
+<li>auot一般会忽略掉顶层const，同时底层const会被保留下来。<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> i = <span class="number">0</span>;</span><br><span class="line"><span class="keyword">const</span> <span class="keyword">int</span> ci = i, &amp;cr = ci;</span><br><span class="line"><span class="keyword">auto</span> b = ci;  <span class="comment">// b 是一个整数（ci的顶层const特性被忽略掉）</span></span><br><span class="line"><span class="keyword">auto</span> c = cr;  <span class="comment">// c 是一个整数（cr是ci的别名，ci本身是一个顶层const）</span></span><br><span class="line"><span class="keyword">auto</span> d = &amp;i;  <span class="comment">// d 是一个整型指针（整数的地址就是指向整数的指针）</span></span><br><span class="line"><span class="keyword">auto</span> e = &amp;ci; <span class="comment">// e 是一个指向整数常量的指针（对常量对象取地址是一种底层const）</span></span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>如果希望推断出的auto类型是一个顶层const，需要明确指出：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="keyword">auto</span> f = ci; <span class="comment">// ci 的推演类型是int，f是const int类型</span></span><br></pre></td></tr></table></figure>
+<p>还可以将引用的类型设置为auto，此时原来的初始化规则仍然适用：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">auto</span> &amp;g = ci; <span class="comment">// g是一个整型常量引用，绑定到ci</span></span><br><span class="line"><span class="keyword">auto</span> &amp;h = <span class="number">42</span>; <span class="comment">// Error: 不能为非常量引用绑定字面值</span></span><br><span class="line"><span class="keyword">const</span> <span class="keyword">auto</span> &amp;j = <span class="number">42</span>; <span class="comment">// OK: 可以为常量引用绑定字面值</span></span><br></pre></td></tr></table></figure>
+<p>切记，符号<code>*</code>和<code>&amp;</code>只从属于某个声明，而非基本数据类型的一部分，因此初始值必须是同一类型：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">auto</span> k = ci, &amp;l = i; <span class="comment">// k是整数，l是整型引用</span></span><br><span class="line"><span class="keyword">auto</span> &amp;m = ci, *p = &amp;ci; <span class="comment">// m是对整型常量的引用，p是指向整型常量的指针</span></span><br><span class="line"><span class="keyword">auto</span> &amp;n = i, *p2 = &amp;ci; <span class="comment">// Error: i的类型是int，而&amp;ci的类型是const int</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>decltype类型指示符</p>
+</li>
+</ol>
+
       
     </div>
     
@@ -455,8 +587,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/08/25/C++ STL学习笔记/" rel="next" title="C++ STL学习笔记">
-                <i class="fa fa-chevron-left"></i> C++ STL学习笔记
+              <a href="/2018/08/25/C++_Primer_Object_Oriented_Programming/" rel="next" title="C++ Primer：面向对象">
+                <i class="fa fa-chevron-left"></i> C++ Primer：面向对象
               </a>
             
           </div>
@@ -465,8 +597,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2018/09/01/C++_Complie_And_Link/" rel="prev" title="【转】C++编译与链接">
-                【转】C++编译与链接 <i class="fa fa-chevron-right"></i>
+              <a href="/2018/08/25/C++ STL学习笔记/" rel="prev" title="C++ STL学习笔记">
+                C++ STL学习笔记 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -524,8 +656,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -763,6 +904,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#基本内置类型"><span class="nav-number">1.</span> <span class="nav-text">基本内置类型</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#变量"><span class="nav-number">2.</span> <span class="nav-text">变量</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#复合类型"><span class="nav-number">3.</span> <span class="nav-text">复合类型</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#const限定符"><span class="nav-number">4.</span> <span class="nav-text">const限定符</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#处理类型"><span class="nav-number">5.</span> <span class="nav-text">处理类型</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
