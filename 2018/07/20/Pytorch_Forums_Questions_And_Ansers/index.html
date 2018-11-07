@@ -87,7 +87,7 @@
 <meta property="og:site_name" content="乡间小路">
 <meta property="og:description" content="这里记录一些在Pytorch的论坛上看到的问题与解答。论坛地址：https://discuss.pytorch.org/">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-11-05T12:40:52.536Z">
+<meta property="og:updated_time" content="2018-11-07T08:53:28.659Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Pytorch Forums遇到的问答">
 <meta name="twitter:description" content="这里记录一些在Pytorch的论坛上看到的问题与解答。论坛地址：https://discuss.pytorch.org/">
@@ -352,8 +352,8 @@
               
                 <span class="post-meta-item-text">更新于&#58;</span>
               
-              <time title="更新于" itemprop="dateModified" datetime="2018-11-05T20:40:52+08:00">
-                2018-11-05
+              <time title="更新于" itemprop="dateModified" datetime="2018-11-07T16:53:28+08:00">
+                2018-11-07
               </time>
             
           </span>
@@ -429,6 +429,11 @@
 <li><p><a href="https://discuss.pytorch.org/t/clone-and-detach-in-v0-4-0/16861" target="_blank" rel="noopener">Clone and detach in v0.4.0</a><br>clone和detach的用法</p>
 <blockquote>
 <p>tensor.detach() creates a tensor that shares storage with tensor that does not require grad. tensor.clone()creates a copy of tensor that imitates the original tensor’s requires_grad field.<br>You should use detach() when attempting to remove a tensor from a computation graph, and clone as a way to copy the tensor while still keeping the copy as a part of the computation graph it came from.</p>
+</blockquote>
+</li>
+<li><p><a href="https://discuss.pytorch.org/t/when-to-set-pin-memory-to-true/19723" target="_blank" rel="noopener">When to set pin_memory to true?</a>,<a href="https://discuss.pytorch.org/t/pin-memory-on-variables/11874" target="_blank" rel="noopener">Pin_memory() on variables?</a>  </p>
+<blockquote>
+<p>If you load your samples in the Dataset on CPU and would like to push it during training to the GPU, you can speed up the host to device transfer by enabling pin_memory.This lets your DataLoader allocate the samples in page-locked memory, which speeds-up the transfer.You can find more information on the NVIDIA blog<br>if you are loading your data on the CPU.It won’t work if your dataset is really small and you push it already to the GPU in the Dataset, but that’s pretty obvious.<br>Pinning memory is only useful for CPU Tensors that have to be moved to the GPU. So, pinning all of a model’s variables/tensors doesn’t make sense at all.</p>
 </blockquote>
 </li>
 </ol>
@@ -575,7 +580,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">86</span>
+                  <span class="site-state-item-count">88</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
