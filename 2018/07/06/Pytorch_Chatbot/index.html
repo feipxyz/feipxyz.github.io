@@ -1,0 +1,1619 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="本文参考 pytorch 官方 tutorial CHATBOT TUTORIAL。 需要掌握的pytorch用法 torch.Tensor 是默认的 tensor 类型 torch.FlaotTensor 的简称。32-bit floating point。  torch.cat((x, x, x), dim=1)在给定维度上对输入的张量序列进行连接操作。例如 x shape = (2, 3),">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Pytorch入门实战：训练一个聊天机器人">
+<meta property="og:url" content="flyrie.top/2018/07/06/Pytorch_Chatbot/index.html">
+<meta property="og:site_name" content="乡间小路">
+<meta property="og:description" content="本文参考 pytorch 官方 tutorial CHATBOT TUTORIAL。 需要掌握的pytorch用法 torch.Tensor 是默认的 tensor 类型 torch.FlaotTensor 的简称。32-bit floating point。  torch.cat((x, x, x), dim=1)在给定维度上对输入的张量序列进行连接操作。例如 x shape = (2, 3),">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="/images/ChatRobot_Seq2Seq.svg">
+<meta property="og:updated_time" content="2018-10-31T17:46:14.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Pytorch入门实战：训练一个聊天机器人">
+<meta name="twitter:description" content="本文参考 pytorch 官方 tutorial CHATBOT TUTORIAL。 需要掌握的pytorch用法 torch.Tensor 是默认的 tensor 类型 torch.FlaotTensor 的简称。32-bit floating point。  torch.cat((x, x, x), dim=1)在给定维度上对输入的张量序列进行连接操作。例如 x shape = (2, 3),">
+<meta name="twitter:image" content="/images/ChatRobot_Seq2Seq.svg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"always","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="flyrie.top/2018/07/06/Pytorch_Chatbot/"/>
+
+
+
+
+
+  <title>Pytorch入门实战：训练一个聊天机器人 | 乡间小路</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?95d8d402b20d99d1e2e6f2de7b397428";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">乡间小路</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="flyrie.top/2018/07/06/Pytorch_Chatbot/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="乡间小路">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="乡间小路">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Pytorch入门实战：训练一个聊天机器人</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-07-06T01:46:14+08:00">
+                2018-07-06
+              </time>
+            
+
+            
+              <span class="post-meta-divider">|</span>
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">更新于&#58;</span>
+              
+              <time title="更新于" itemprop="dateModified" datetime="2018-11-01T01:46:14+08:00">
+                2018-11-01
+              </time>
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/深度学习/" itemprop="url" rel="index">
+                    <span itemprop="name">深度学习</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/深度学习/Pytorch与Mxnet/" itemprop="url" rel="index">
+                    <span itemprop="name">Pytorch与Mxnet</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>本文参考 pytorch 官方 tutorial <a href="https://pytorch.org/tutorials/beginner/chatbot_tutorial.html#chatbot-tutorial" target="_blank" rel="noopener">CHATBOT TUTORIAL</a>。</p>
+<h1 id="需要掌握的pytorch用法"><a href="#需要掌握的pytorch用法" class="headerlink" title="需要掌握的pytorch用法"></a>需要掌握的pytorch用法</h1><ol>
+<li><p><code>torch.Tensor</code> 是默认的 tensor 类型 <code>torch.FlaotTensor</code> 的简称。32-bit floating point。</p>
+</li>
+<li><p><code>torch.cat((x, x, x), dim=1)</code><br>在给定维度上对输入的张量序列进行连接操作。例如 x shape = (2, 3), 经过上面的变换之后的输出为 shape = (2, 9)</p>
+</li>
+<li><p><code>torch.topk(input, k, dim)</code><br>返回按第dim维最大的 k 个值，以及出现的位置。</p>
+</li>
+<li><p><code>torch.gather(input, dim, index)</code><br>沿给定轴dim，将输入索引张量index指定位置的值进行聚合。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">a = torch.tensor([[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>], [<span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>]])</span><br><span class="line">index = torch.LongTensor([[<span class="number">0</span>, <span class="number">1</span>], [<span class="number">2</span>, <span class="number">0</span>]])</span><br><span class="line">b = torch.gather(a, dim=<span class="number">1</span>, index=index)</span><br><span class="line"><span class="comment"># b: [[1, 2], [6, 4]]</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>torch.nn.utils.rnn.pack_padded_sequence(input, lengths, batch_first=False)<br>在 rnn 中，将一个填充过的变长序列压紧。输入的形状可以是 <code>(T×B×*)</code>。T 是最长序列长度，B 是 batch size，<code>*</code> 代表任意维度(可以是0)。如果 batch_first=True 的话，那么相应的 input size 就是 <code>(B×T×*)</code>。<br>输入的序列，应该按序列长度的长短排序，长的在前，短的在后。即 <code>input[:,0]</code> 代表的是最长的序列，<code>input[:, B-1]</code>保存的是最短的序列。<br><code>lengths</code> 表示每个序列的长度。</p>
+</li>
+<li><p>torch.nn.utils.rnn.pad_packed_sequence(sequence, batch_first=False)<br>这个操作和 <code>pack_padded_sequence()</code> 是相反的。把压紧的序列再填充回来。<br>返回的 tensor 的 size 是 <code>T×B×*</code>, T 是最长序列的长度，B 是 batch_size,如果 batch_first=True, 那么返回值是 <code>B×T×*</code>。Batch 中的元素将会以它们长度的逆序排列。</p>
+</li>
+<li><p>torch.masked_select(input, mask, out=None)<br>Returns a new 1-D tensor which indexes the input tensor according to the binary mask mask which is a ByteTensor.<br>The shapes of the mask tensor and the input tensor don’t need to match, but they must be broadcastable.</p>
+</li>
+<li><p>torch.nn.utils.clip_grad_norm_(parameters, max_norm, norm_type=2)<br>梯度裁剪</p>
+</li>
+</ol>
+<a id="more"></a>
+<h1 id="载入并处理数据"><a href="#载入并处理数据" class="headerlink" title="载入并处理数据"></a>载入并处理数据</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">%matplotlib inline</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> __future__ <span class="keyword">import</span> absolute_import</span><br><span class="line"><span class="keyword">from</span> __future__ <span class="keyword">import</span> division</span><br><span class="line"><span class="keyword">from</span> __future__ <span class="keyword">import</span> print_function</span><br><span class="line"><span class="keyword">from</span> __future__ <span class="keyword">import</span> unicode_literals</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"><span class="keyword">from</span> torch.jit <span class="keyword">import</span> script, trace</span><br><span class="line"><span class="keyword">import</span> torch.nn <span class="keyword">as</span> nn</span><br><span class="line"><span class="keyword">from</span> torch <span class="keyword">import</span> optim</span><br><span class="line"><span class="keyword">import</span> torch.nn.functional <span class="keyword">as</span> F</span><br><span class="line"><span class="keyword">import</span> csv</span><br><span class="line"><span class="keyword">import</span> random</span><br><span class="line"><span class="keyword">import</span> re</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">import</span> unicodedata</span><br><span class="line"><span class="keyword">import</span> codecs</span><br><span class="line"><span class="keyword">from</span> io <span class="keyword">import</span> open</span><br><span class="line"><span class="keyword">import</span> itertools</span><br><span class="line"><span class="keyword">import</span> math</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">USE_CUDA = torch.cuda.is_available()</span><br><span class="line">device = torch.device(<span class="string">"cuda"</span> <span class="keyword">if</span> USE_CUDA <span class="keyword">else</span> <span class="string">"cpu"</span>)</span><br><span class="line">device</span><br></pre></td></tr></table></figure>
+<pre><code>device(type=&#39;cuda&#39;)
+</code></pre><p>接下来重新格式化我们的数据文件，并将数据加载到我们可以使用的结构中。</p>
+<p><a href="https://www.cs.cornell.edu/~cristian/Cornell_Movie-Dialogs_Corpus.html" target="_blank" rel="noopener">Cornell Movie-Dialogs Corpus</a>是一个丰富的电影角色对话数据集：</p>
+<ul>
+<li>包括10292对电影角色之间的220579次会话</li>
+<li>617部电影中的9035个角色</li>
+</ul>
+<p>这个数据集庞大而多样，语言形式，时间段，情感等都有很大差异。我们希望这种多样性使我们的模型能够适应多种形式的输入和查询。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">corpus_name = <span class="string">"cornell movie-dialogs corpus"</span></span><br><span class="line">corpus = os.path.join(<span class="string">"data"</span>, corpus_name)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">printLines</span><span class="params">(file, n=<span class="number">10</span>)</span>:</span></span><br><span class="line">    <span class="keyword">with</span> open(file, <span class="string">'rb'</span>) <span class="keyword">as</span> datafile:</span><br><span class="line">        lines = datafile.readlines()</span><br><span class="line">    <span class="keyword">for</span> line <span class="keyword">in</span> lines[:n]:</span><br><span class="line">        print(line)</span><br><span class="line"></span><br><span class="line">printLines(os.path.join(corpus, <span class="string">"movie_lines.txt"</span>))</span><br></pre></td></tr></table></figure>
+<pre><code>b&#39;L1045 +++$+++ u0 +++$+++ m0 +++$+++ BIANCA +++$+++ They do not!\n&#39;
+b&#39;L1044 +++$+++ u2 +++$+++ m0 +++$+++ CAMERON +++$+++ They do to!\n&#39;
+b&#39;L985 +++$+++ u0 +++$+++ m0 +++$+++ BIANCA +++$+++ I hope so.\n&#39;
+b&#39;L984 +++$+++ u2 +++$+++ m0 +++$+++ CAMERON +++$+++ She okay?\n&#39;
+b&quot;L925 +++$+++ u0 +++$+++ m0 +++$+++ BIANCA +++$+++ Let&#39;s go.\n&quot;
+b&#39;L924 +++$+++ u2 +++$+++ m0 +++$+++ CAMERON +++$+++ Wow\n&#39;
+b&quot;L872 +++$+++ u0 +++$+++ m0 +++$+++ BIANCA +++$+++ Okay -- you&#39;re gonna need to learn how to lie.\n&quot;
+b&#39;L871 +++$+++ u2 +++$+++ m0 +++$+++ CAMERON +++$+++ No\n&#39;
+b&#39;L870 +++$+++ u0 +++$+++ m0 +++$+++ BIANCA +++$+++ I\&#39;m kidding.  You know how sometimes you just become this &quot;persona&quot;?  And you don\&#39;t know how to quit?\n&#39;
+b&#39;L869 +++$+++ u0 +++$+++ m0 +++$+++ BIANCA +++$+++ Like my fear of wearing pastels?\n&#39;
+</code></pre><h2 id="创建格式化的数据文件"><a href="#创建格式化的数据文件" class="headerlink" title="创建格式化的数据文件"></a>创建格式化的数据文件</h2><p>现在我们来创建格式合适的格式化的数据文件，这个新文件的每一行都包含一个以制表符分隔的查询语句和一个响应语句对。</p>
+<p>以下函数用来解析原始 <code>movie_lines.txt</code> 数据文件。</p>
+<ul>
+<li><code>loadLines</code> 将文件的每一行拆分为字段字典（lineID，characterID，movieID，character，text）</li>
+<li><code>loadConversations</code> 将来自 <code>loadLines</code> 的行字段分组为基于 <code>movie_conversations.txt</code> 的对话</li>
+<li><code>extractSentencePairs</code> 从会话中提取一对句子</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Splits each line of the file into a dictionary of fields</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">loadLines</span><span class="params">(fileName, fields)</span>:</span></span><br><span class="line">    lines = &#123;&#125;</span><br><span class="line">    <span class="keyword">with</span> open(fileName, <span class="string">'r'</span>, encoding=<span class="string">'iso-8859-1'</span>) <span class="keyword">as</span> f:</span><br><span class="line">        <span class="keyword">for</span> line <span class="keyword">in</span> f:</span><br><span class="line">            values = line.split(<span class="string">" +++$+++ "</span>)</span><br><span class="line">            <span class="comment"># Extract fields</span></span><br><span class="line">            lineObj = &#123;&#125;</span><br><span class="line">            <span class="keyword">for</span> i, field <span class="keyword">in</span> enumerate(fields):</span><br><span class="line">                lineObj[field] = values[i]</span><br><span class="line">            lines[lineObj[<span class="string">'lineID'</span>]] = lineObj</span><br><span class="line">    <span class="keyword">return</span> lines</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># Groups fields of lines from `loadLines` into conversations based on *movie_conversations.txt*</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">loadConversations</span><span class="params">(fileName, lines, fields)</span>:</span></span><br><span class="line">    conversations = []</span><br><span class="line">    <span class="keyword">with</span> open(fileName, <span class="string">'r'</span>, encoding=<span class="string">'iso-8859-1'</span>) <span class="keyword">as</span> f:</span><br><span class="line">        <span class="keyword">for</span> line <span class="keyword">in</span> f:</span><br><span class="line">            values = line.split(<span class="string">" +++$+++ "</span>)</span><br><span class="line">            <span class="comment"># Extract fields</span></span><br><span class="line">            convObj = &#123;&#125;</span><br><span class="line">            <span class="keyword">for</span> i, field <span class="keyword">in</span> enumerate(fields):</span><br><span class="line">                convObj[field] = values[i]</span><br><span class="line">            <span class="comment"># Convert string to list (convObj["utteranceIDs"] == "['L598485', 'L598486', ...]")</span></span><br><span class="line">            lineIds = eval(convObj[<span class="string">"utteranceIDs"</span>])</span><br><span class="line">            <span class="comment"># Reassemble lines</span></span><br><span class="line">            convObj[<span class="string">"lines"</span>] = []</span><br><span class="line">            <span class="keyword">for</span> lineId <span class="keyword">in</span> lineIds:</span><br><span class="line">                convObj[<span class="string">"lines"</span>].append(lines[lineId])</span><br><span class="line">            conversations.append(convObj)</span><br><span class="line">    <span class="keyword">return</span> conversations</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># Extracts pairs of sentences from conversations</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">extractSentencePairs</span><span class="params">(conversations)</span>:</span></span><br><span class="line">    qa_pairs = []</span><br><span class="line">    <span class="keyword">for</span> conversation <span class="keyword">in</span> conversations:</span><br><span class="line">        <span class="comment"># Iterate over all the lines of the conversation</span></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(len(conversation[<span class="string">"lines"</span>]) - <span class="number">1</span>):  <span class="comment"># We ignore the last line (no answer for it)</span></span><br><span class="line">            inputLine = conversation[<span class="string">"lines"</span>][i][<span class="string">"text"</span>].strip()</span><br><span class="line">            targetLine = conversation[<span class="string">"lines"</span>][i+<span class="number">1</span>][<span class="string">"text"</span>].strip()</span><br><span class="line">            <span class="comment"># Filter wrong samples (if one of the lists is empty)</span></span><br><span class="line">            <span class="keyword">if</span> inputLine <span class="keyword">and</span> targetLine:</span><br><span class="line">                qa_pairs.append([inputLine, targetLine])</span><br><span class="line">    <span class="keyword">return</span> qa_pairs</span><br></pre></td></tr></table></figure>
+<p>现在我们调用这些函数并创建新文件，命名为<code>formatted_movie_lines.txt</code>。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Define path to new file</span></span><br><span class="line">datafile = os.path.join(corpus, <span class="string">"formatted_movie_lines.txt"</span>)</span><br><span class="line"></span><br><span class="line">delimiter = <span class="string">'\t'</span></span><br><span class="line"><span class="comment"># Unescape the delimiter</span></span><br><span class="line">delimiter = str(codecs.decode(delimiter, <span class="string">"unicode_escape"</span>))</span><br><span class="line"></span><br><span class="line"><span class="comment"># Initialize lines dict, conversations list, and field ids</span></span><br><span class="line">lines = &#123;&#125;</span><br><span class="line">conversations = []</span><br><span class="line">MOVIE_LINES_FIELDS = [<span class="string">"lineID"</span>, <span class="string">"characterID"</span>, <span class="string">"movieID"</span>, <span class="string">"character"</span>, <span class="string">"text"</span>]</span><br><span class="line">MOVIE_CONVERSATIONS_FIELDS = [<span class="string">"character1ID"</span>, <span class="string">"character2ID"</span>, <span class="string">"movieID"</span>, <span class="string">"utteranceIDs"</span>]</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Load lines and process conversations</span></span><br><span class="line">print(<span class="string">"\nProcessing corpus..."</span>)</span><br><span class="line">lines = loadLines(os.path.join(corpus, <span class="string">"movie_lines.txt"</span>), MOVIE_LINES_FIELDS)</span><br></pre></td></tr></table></figure>
+<pre><code>Processing corpus...
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">print(<span class="string">"\nLoading conversations..."</span>)</span><br><span class="line">conversations = loadConversations(os.path.join(corpus, <span class="string">"movie_conversations.txt"</span>),</span><br><span class="line">                                  lines, MOVIE_CONVERSATIONS_FIELDS)</span><br></pre></td></tr></table></figure>
+<pre><code>Loading conversations...
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Write new csv file</span></span><br><span class="line">print(<span class="string">"\nWriting newly formatted file..."</span>)</span><br><span class="line"><span class="keyword">with</span> open(datafile, <span class="string">'w'</span>, encoding=<span class="string">'utf-8'</span>) <span class="keyword">as</span> outputfile:</span><br><span class="line">    writer = csv.writer(outputfile, delimiter=delimiter)</span><br><span class="line">    <span class="keyword">for</span> pair <span class="keyword">in</span> extractSentencePairs(conversations):</span><br><span class="line">        writer.writerow(pair)</span><br><span class="line"></span><br><span class="line"><span class="comment"># Print a sample of lines</span></span><br><span class="line">print(<span class="string">"\nSample lines from file:"</span>)</span><br><span class="line">printLines(datafile)</span><br></pre></td></tr></table></figure>
+<pre><code>Writing newly formatted file...
+
+Sample lines from file:
+b&quot;Can we make this quick?  Roxanne Korrine and Andrew Barrett are having an incredibly horrendous public break- up on the quad.  Again.\tWell, I thought we&#39;d start with pronunciation, if that&#39;s okay with you.\r\n&quot;
+b&quot;Well, I thought we&#39;d start with pronunciation, if that&#39;s okay with you.\tNot the hacking and gagging and spitting part.  Please.\r\n&quot;
+b&quot;Not the hacking and gagging and spitting part.  Please.\tOkay... then how &#39;bout we try out some French cuisine.  Saturday?  Night?\r\n&quot;
+b&quot;You&#39;re asking me out.  That&#39;s so cute. What&#39;s your name again?\tForget it.\r\n&quot;
+b&quot;No, no, it&#39;s my fault -- we didn&#39;t have a proper introduction ---\tCameron.\r\n&quot;
+b&quot;Cameron.\tThe thing is, Cameron -- I&#39;m at the mercy of a particularly hideous breed of loser.  My sister.  I can&#39;t date until she does.\r\n&quot;
+b&quot;The thing is, Cameron -- I&#39;m at the mercy of a particularly hideous breed of loser.  My sister.  I can&#39;t date until she does.\tSeems like she could get a date easy enough...\r\n&quot;
+b&#39;Why?\tUnsolved mystery.  She used to be really popular when she started high school, then it was just like she got sick of it or something.\r\n&#39;
+b&quot;Unsolved mystery.  She used to be really popular when she started high school, then it was just like she got sick of it or something.\tThat&#39;s a shame.\r\n&quot;
+b&#39;Gosh, if only we could find Kat a boyfriend...\tLet me see what I can do.\r\n&#39;
+</code></pre><h2 id="加载并裁剪数据"><a href="#加载并裁剪数据" class="headerlink" title="加载并裁剪数据"></a>加载并裁剪数据</h2><p>接下来我们创建一个字典来并且将 query/response 的句子加载到内存中</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Default word tokens</span></span><br><span class="line">PAD_token = <span class="number">0</span>  <span class="comment"># Used for padding short sentences</span></span><br><span class="line">SOS_token = <span class="number">1</span>  <span class="comment"># Start-of-sentence token</span></span><br><span class="line">EOS_token = <span class="number">2</span>  <span class="comment"># End-of-sentence token</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Voc</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, name)</span>:</span></span><br><span class="line">        self.name = name</span><br><span class="line">        self.trimmed = <span class="keyword">False</span></span><br><span class="line">        self.word2index = &#123;&#125;</span><br><span class="line">        self.word2count = &#123;&#125;</span><br><span class="line">        self.index2word = &#123;PAD_token: <span class="string">"PAD"</span>, SOS_token: <span class="string">"SOS"</span>, EOS_token: <span class="string">"EOS"</span>&#125;</span><br><span class="line">        self.num_words = <span class="number">3</span>  <span class="comment"># Count SOS, EOS, PAD</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">addSentence</span><span class="params">(self, sentence)</span>:</span></span><br><span class="line">        <span class="keyword">for</span> word <span class="keyword">in</span> sentence.split(<span class="string">' '</span>):</span><br><span class="line">            self.addWord(word)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">addWord</span><span class="params">(self, word)</span>:</span></span><br><span class="line">        <span class="keyword">if</span> word <span class="keyword">not</span> <span class="keyword">in</span> self.word2index:</span><br><span class="line">            self.word2index[word] = self.num_words</span><br><span class="line">            self.word2count[word] = <span class="number">1</span></span><br><span class="line">            self.index2word[self.num_words] = word</span><br><span class="line">            self.num_words += <span class="number">1</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            self.word2count[word] += <span class="number">1</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># Remove words below a certain count threshold</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">trim</span><span class="params">(self, min_count)</span>:</span></span><br><span class="line">        <span class="keyword">if</span> self.trimmed:</span><br><span class="line">            <span class="keyword">return</span></span><br><span class="line">        self.trimmed = <span class="keyword">True</span></span><br><span class="line"></span><br><span class="line">        keep_words = []</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> k, v <span class="keyword">in</span> self.word2count.items():</span><br><span class="line">            <span class="keyword">if</span> v &gt;= min_count:</span><br><span class="line">                keep_words.append(k)</span><br><span class="line"></span><br><span class="line">        print(<span class="string">'keep_words &#123;&#125; / &#123;&#125; = &#123;:.4f&#125;'</span>.format(</span><br><span class="line">            len(keep_words), len(self.word2index), len(keep_words) / len(self.word2index)</span><br><span class="line">        ))</span><br><span class="line"></span><br><span class="line">        <span class="comment"># Reinitialize dictionaries</span></span><br><span class="line">        self.word2index = &#123;&#125;</span><br><span class="line">        self.word2count = &#123;&#125;</span><br><span class="line">        self.index2word = &#123;PAD_token: <span class="string">"PAD"</span>, SOS_token: <span class="string">"SOS"</span>, EOS_token: <span class="string">"EOS"</span>&#125;</span><br><span class="line">        self.num_words = <span class="number">3</span> <span class="comment"># Count default tokens</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> word <span class="keyword">in</span> keep_words:</span><br><span class="line">            self.addWord(word)</span><br></pre></td></tr></table></figure>
+<p>现在我们汇总我们的词汇和查询/回应句子对。 在我们使用这些数据之前，我们必须执行一些预处理。</p>
+<p>首先，我们必须使用 <code>unicodeToAscii</code> 将 <code>Unicode</code> 字符串转换为 <code>ASCII</code>。 接下来，我们应该将所有字母转换为小写并修剪除基本标点符号（<code>normalizeString</code>）之外的所有非字母字符。最后，为了加速训练收敛，我们将过滤掉长度大于MAX_LENGTH阈值的句子（<code>filterPairs</code>）。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br></pre></td><td class="code"><pre><span class="line">MAX_LENGTH = <span class="number">10</span>  <span class="comment"># Maximum sentence length to consider</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Turn a Unicode string to plain ASCII, thanks to</span></span><br><span class="line"><span class="comment"># http://stackoverflow.com/a/518232/2809427</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">unicodeToAscii</span><span class="params">(s)</span>:</span></span><br><span class="line">    <span class="keyword">return</span> <span class="string">''</span>.join(</span><br><span class="line">        c <span class="keyword">for</span> c <span class="keyword">in</span> unicodedata.normalize(<span class="string">'NFD'</span>, s)</span><br><span class="line">        <span class="keyword">if</span> unicodedata.category(c) != <span class="string">'Mn'</span></span><br><span class="line">    )</span><br><span class="line"></span><br><span class="line"><span class="comment"># Lowercase, trim, and remove non-letter characters</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">normalizeString</span><span class="params">(s)</span>:</span></span><br><span class="line">    s = unicodeToAscii(s.lower().strip())</span><br><span class="line">    s = re.sub(<span class="string">r"([.!?])"</span>, <span class="string">r" \1"</span>, s)</span><br><span class="line">    s = re.sub(<span class="string">r"[^a-zA-Z.!?]+"</span>, <span class="string">r" "</span>, s)</span><br><span class="line">    s = re.sub(<span class="string">r"\s+"</span>, <span class="string">r" "</span>, s).strip()</span><br><span class="line">    <span class="keyword">return</span> s</span><br><span class="line"></span><br><span class="line"><span class="comment"># Read query/response pairs and return a voc object</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">readVocs</span><span class="params">(datafile, corpus_name)</span>:</span></span><br><span class="line">    print(<span class="string">"Reading lines..."</span>)</span><br><span class="line">    <span class="comment"># Read the file and split into lines</span></span><br><span class="line">    lines = open(datafile, encoding=<span class="string">'utf-8'</span>).\</span><br><span class="line">        read().strip().split(<span class="string">'\n'</span>)</span><br><span class="line">    <span class="comment"># Split every line into pairs and normalize</span></span><br><span class="line">    pairs = [[normalizeString(s) <span class="keyword">for</span> s <span class="keyword">in</span> l.split(<span class="string">'\t'</span>)] <span class="keyword">for</span> l <span class="keyword">in</span> lines]</span><br><span class="line">    voc = Voc(corpus_name)</span><br><span class="line">    <span class="keyword">return</span> voc, pairs</span><br><span class="line"></span><br><span class="line"><span class="comment"># Returns True iff both sentences in a pair 'p' are under the MAX_LENGTH threshold</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">filterPair</span><span class="params">(p)</span>:</span></span><br><span class="line">    <span class="comment"># Input sequences need to preserve the last word for EOS token</span></span><br><span class="line">    <span class="keyword">return</span> len(p[<span class="number">0</span>].split(<span class="string">' '</span>)) &lt; MAX_LENGTH <span class="keyword">and</span> len(p[<span class="number">1</span>].split(<span class="string">' '</span>)) &lt; MAX_LENGTH</span><br><span class="line"></span><br><span class="line"><span class="comment"># Filter pairs using filterPair condition</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">filterPairs</span><span class="params">(pairs)</span>:</span></span><br><span class="line">    <span class="keyword">return</span> [pair <span class="keyword">for</span> pair <span class="keyword">in</span> pairs <span class="keyword">if</span> filterPair(pair)]</span><br><span class="line"></span><br><span class="line"><span class="comment"># Using the functions defined above, return a populated voc object and pairs list</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">loadPrepareData</span><span class="params">(corpus, corpus_name, datafile, save_dir)</span>:</span></span><br><span class="line">    print(<span class="string">"Start preparing training data ..."</span>)</span><br><span class="line">    voc, pairs = readVocs(datafile, corpus_name)</span><br><span class="line">    print(<span class="string">"Read &#123;!s&#125; sentence pairs"</span>.format(len(pairs)))</span><br><span class="line">    pairs = filterPairs(pairs)</span><br><span class="line">    print(<span class="string">"Trimmed to &#123;!s&#125; sentence pairs"</span>.format(len(pairs)))</span><br><span class="line">    print(<span class="string">"Counting words..."</span>)</span><br><span class="line">    <span class="keyword">for</span> pair <span class="keyword">in</span> pairs:</span><br><span class="line">        voc.addSentence(pair[<span class="number">0</span>])</span><br><span class="line">        voc.addSentence(pair[<span class="number">1</span>])</span><br><span class="line">    print(<span class="string">"Counted words:"</span>, voc.num_words)</span><br><span class="line">    <span class="keyword">return</span> voc, pairs</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># Load/Assemble voc and pairs</span></span><br><span class="line">save_dir = os.path.join(<span class="string">"data"</span>, <span class="string">"save"</span>)</span><br><span class="line">voc, pairs = loadPrepareData(corpus, corpus_name, datafile, save_dir)</span><br><span class="line"><span class="comment"># Print some pairs to validate</span></span><br><span class="line">print(<span class="string">"\npairs:"</span>)</span><br><span class="line"><span class="keyword">for</span> pair <span class="keyword">in</span> pairs[:<span class="number">10</span>]:</span><br><span class="line">    print(pair)</span><br></pre></td></tr></table></figure>
+<pre><code>Start preparing training data ...
+Reading lines...
+Read 221282 sentence pairs
+Trimmed to 64271 sentence pairs
+Counting words...
+Counted words: 18008
+
+pairs:
+[&#39;there .&#39;, &#39;where ?&#39;]
+[&#39;you have my word . as a gentleman&#39;, &#39;you re sweet .&#39;]
+[&#39;hi .&#39;, &#39;looks like things worked out tonight huh ?&#39;]
+[&#39;you know chastity ?&#39;, &#39;i believe we share an art instructor&#39;]
+[&#39;have fun tonight ?&#39;, &#39;tons&#39;]
+[&#39;well no . . .&#39;, &#39;then that s all you had to say .&#39;]
+[&#39;then that s all you had to say .&#39;, &#39;but&#39;]
+[&#39;but&#39;, &#39;you always been this selfish ?&#39;]
+[&#39;do you listen to this crap ?&#39;, &#39;what crap ?&#39;]
+[&#39;what good stuff ?&#39;, &#39;the real you .&#39;]
+</code></pre><p>另一种有利于在训练期间实现更快收敛的策略是修剪我们词汇表中很少使用的单词。减小特征空间也会降低模型学习的难度。我们将通过两个步骤来完成此操作：</p>
+<ul>
+<li>使用 <code>voc.trim</code> 函数修剪 <code>MIN_COUNT</code> 阈值下使用的单词</li>
+<li>过滤出带有修剪单词的句子对</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">MIN_COUNT = <span class="number">3</span>    <span class="comment"># Minimum word count threshold for trimming</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">trimRareWords</span><span class="params">(voc, pairs, MIN_COUNT)</span>:</span></span><br><span class="line">    <span class="comment"># Trim words used under the MIN_COUNT from the voc</span></span><br><span class="line">    voc.trim(MIN_COUNT)</span><br><span class="line">    <span class="comment"># Filter out pairs with trimmed words</span></span><br><span class="line">    keep_pairs = []</span><br><span class="line">    <span class="keyword">for</span> pair <span class="keyword">in</span> pairs:</span><br><span class="line">        input_sentence = pair[<span class="number">0</span>]</span><br><span class="line">        output_sentence = pair[<span class="number">1</span>]</span><br><span class="line">        keep_input = <span class="keyword">True</span></span><br><span class="line">        keep_output = <span class="keyword">True</span></span><br><span class="line">        <span class="comment"># Check input sentence</span></span><br><span class="line">        <span class="keyword">for</span> word <span class="keyword">in</span> input_sentence.split(<span class="string">' '</span>):</span><br><span class="line">            <span class="keyword">if</span> word <span class="keyword">not</span> <span class="keyword">in</span> voc.word2index:</span><br><span class="line">                keep_input = <span class="keyword">False</span></span><br><span class="line">                <span class="keyword">break</span></span><br><span class="line">        <span class="comment"># Check output sentence</span></span><br><span class="line">        <span class="keyword">for</span> word <span class="keyword">in</span> output_sentence.split(<span class="string">' '</span>):</span><br><span class="line">            <span class="keyword">if</span> word <span class="keyword">not</span> <span class="keyword">in</span> voc.word2index:</span><br><span class="line">                keep_output = <span class="keyword">False</span></span><br><span class="line">                <span class="keyword">break</span></span><br><span class="line"></span><br><span class="line">        <span class="comment"># Only keep pairs that do not contain trimmed word(s) in their input or output sentence</span></span><br><span class="line">        <span class="keyword">if</span> keep_input <span class="keyword">and</span> keep_output:</span><br><span class="line">            keep_pairs.append(pair)</span><br><span class="line"></span><br><span class="line">    print(<span class="string">"Trimmed from &#123;&#125; pairs to &#123;&#125;, &#123;:.4f&#125; of total"</span>.format(len(pairs), len(keep_pairs), len(keep_pairs) / len(pairs)))</span><br><span class="line">    <span class="keyword">return</span> keep_pairs</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># Trim voc and pairs</span></span><br><span class="line">pairs = trimRareWords(voc, pairs, MIN_COUNT)</span><br></pre></td></tr></table></figure>
+<pre><code>keep_words 7823 / 18005 = 0.4345
+Trimmed from 64271 pairs to 53165, 0.8272 of total
+</code></pre><h1 id="为模型准备数据"><a href="#为模型准备数据" class="headerlink" title="为模型准备数据"></a>为模型准备数据</h1><p>我们的最终给模型输入的应该是一个数值张量，使用小批量数据进行训练。</p>
+<p>而句子长度有长有短，使用小批量也意味着我们必须注意批量中句子长度的变化。为了适应同一批次中不同大小的句子，我们批量输入的张量形状设置为<code>（max_length，batch_size）</code>，其中短于 <code>max_length</code> 的句子在之后全部用 <code>EOS_token</code> 填充。</p>
+<p>这里读者可以考虑一些为什么我们将张量形状设置为 <code>（max_length，batch_size）</code> 而不是 <code>（batch_size，max_length）</code>（从时间序列的角度考虑）。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">indexesFromSentence</span><span class="params">(voc, sentence)</span>:</span></span><br><span class="line">    <span class="keyword">return</span> [voc.word2index[word] <span class="keyword">for</span> word <span class="keyword">in</span> sentence.split(<span class="string">' '</span>)] + [EOS_token]</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">zeroPadding</span><span class="params">(l, fillvalue=PAD_token)</span>:</span></span><br><span class="line">    <span class="keyword">return</span> list(itertools.zip_longest(*l, fillvalue=fillvalue))</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">binaryMatrix</span><span class="params">(l, value=PAD_token)</span>:</span></span><br><span class="line">    m = []</span><br><span class="line">    <span class="keyword">for</span> i, seq <span class="keyword">in</span> enumerate(l):</span><br><span class="line">        m.append([])</span><br><span class="line">        <span class="keyword">for</span> token <span class="keyword">in</span> seq:</span><br><span class="line">            <span class="keyword">if</span> token == PAD_token:</span><br><span class="line">                m[i].append(<span class="number">0</span>)</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                m[i].append(<span class="number">1</span>)</span><br><span class="line">    <span class="keyword">return</span> m</span><br><span class="line"></span><br><span class="line"><span class="comment"># Returns padded input sequence tensor and lengths</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">inputVar</span><span class="params">(l, voc)</span>:</span></span><br><span class="line">    indexes_batch = [indexesFromSentence(voc, sentence) <span class="keyword">for</span> sentence <span class="keyword">in</span> l]</span><br><span class="line">    lengths = torch.tensor([len(indexes) <span class="keyword">for</span> indexes <span class="keyword">in</span> indexes_batch])</span><br><span class="line">    padList = zeroPadding(indexes_batch)</span><br><span class="line">    padVar = torch.LongTensor(padList)</span><br><span class="line">    <span class="keyword">return</span> padVar, lengths</span><br><span class="line"></span><br><span class="line"><span class="comment"># Returns padded target sequence tensor, padding mask, and max target length</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">outputVar</span><span class="params">(l, voc)</span>:</span></span><br><span class="line">    indexes_batch = [indexesFromSentence(voc, sentence) <span class="keyword">for</span> sentence <span class="keyword">in</span> l]</span><br><span class="line">    max_target_len = max([len(indexes) <span class="keyword">for</span> indexes <span class="keyword">in</span> indexes_batch])</span><br><span class="line">    padList = zeroPadding(indexes_batch)</span><br><span class="line">    mask = binaryMatrix(padList)</span><br><span class="line">    mask = torch.ByteTensor(mask)</span><br><span class="line">    padVar = torch.LongTensor(padList)</span><br><span class="line">    <span class="keyword">return</span> padVar, mask, max_target_len</span><br><span class="line"></span><br><span class="line"><span class="comment"># Returns all items for a given batch of pairs</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">batch2TrainData</span><span class="params">(voc, pair_batch)</span>:</span></span><br><span class="line">    pair_batch.sort(key=<span class="keyword">lambda</span> x: len(x[<span class="number">0</span>].split(<span class="string">" "</span>)), reverse=<span class="keyword">True</span>)</span><br><span class="line">    input_batch, output_batch = [], []</span><br><span class="line">    <span class="keyword">for</span> pair <span class="keyword">in</span> pair_batch:</span><br><span class="line">        input_batch.append(pair[<span class="number">0</span>])</span><br><span class="line">        output_batch.append(pair[<span class="number">1</span>])</span><br><span class="line">    inp, lengths = inputVar(input_batch, voc)</span><br><span class="line">    output, mask, max_target_len = outputVar(output_batch, voc)</span><br><span class="line">    <span class="keyword">return</span> inp, lengths, output, mask, max_target_len</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># Example for validation</span></span><br><span class="line">small_batch_size = <span class="number">5</span></span><br><span class="line">batches = batch2TrainData(voc, [random.choice(pairs) <span class="keyword">for</span> _ <span class="keyword">in</span> range(small_batch_size)])</span><br><span class="line">input_variable, lengths, target_variable, mask, max_target_len = batches</span><br><span class="line"></span><br><span class="line">print(<span class="string">"input_variable:"</span>, input_variable)</span><br><span class="line">print(<span class="string">"lengths:"</span>, lengths)</span><br><span class="line">print(<span class="string">"target_variable:"</span>, target_variable)</span><br><span class="line">print(<span class="string">"mask:"</span>, mask)</span><br><span class="line">print(<span class="string">"max_target_len:"</span>, max_target_len)</span><br></pre></td></tr></table></figure>
+<pre><code>input_variable: tensor([[ 271,   25,   34,   25, 4164],
+        [ 117,  247,    4,  197,  329],
+        [3232,  117,  101,  117, 5736],
+        [2095,   47,   37,   24,    6],
+        [  96,  349,   34,    4,    2],
+        [  53,   33,    4,    2,    0],
+        [   4,   98,    2,    0,    0],
+        [   4,    7,    0,    0,    0],
+        [   4,    4,    0,    0,    0],
+        [   2,    2,    0,    0,    0]])
+lengths: tensor([10, 10,  7,  6,  5])
+target_variable: tensor([[  34,   34,  124,  410,  371],
+        [ 101,    7,  125,   53,    7],
+        [  37,   68,    4,  851,   89],
+        [ 479,  274,  124,   47,  534],
+        [  96,    4,  125,  371,    4],
+        [7435,    2,    4,   40,    2],
+        [   4,    0,    2,  170,    0],
+        [   2,    0,    0,    6,    0],
+        [   0,    0,    0,    2,    0]])
+mask: tensor([[1, 1, 1, 1, 1],
+        [1, 1, 1, 1, 1],
+        [1, 1, 1, 1, 1],
+        [1, 1, 1, 1, 1],
+        [1, 1, 1, 1, 1],
+        [1, 1, 1, 1, 1],
+        [1, 0, 1, 1, 0],
+        [1, 0, 0, 1, 0],
+        [0, 0, 0, 1, 0]], dtype=torch.uint8)
+max_target_len: 9
+</code></pre><h1 id="定义模型"><a href="#定义模型" class="headerlink" title="定义模型"></a>定义模型</h1><p>我们使用 <code>seq2seq</code> 模型，它有一个编码器和解码器。在这里，编码器和解码器都使用GRU。</p>
+<p>总体模型结构图如下：</p>
+<p><img src="/images/ChatRobot_Seq2Seq.svg" alt="iamge"></p>
+<h2 id="编码器"><a href="#编码器" class="headerlink" title="编码器"></a>编码器</h2><p>编码器使用一个双向的GRU。</p>
+<p><strong>计算流图如下：</strong></p>
+<ol>
+<li>将单词索引转换为词向量。</li>
+<li>对填充批量序列进行一个pack操作。</li>
+<li>通过GRU前向传播。</li>
+<li>unpack操作。</li>
+<li>将双向GRU的输出求和。</li>
+<li>返回输出和最终隐藏状态。</li>
+</ol>
+<p><strong>输入：</strong></p>
+<ul>
+<li><code>input_seq</code>：一个<code>batch</code>，<code>shape =（max_length，batch_size）</code></li>
+<li><code>input_lengths</code>：对应批量中每个句子的长度， <code>shape=（batch_size,）</code></li>
+<li><code>hidden</code>：隐藏状态，<code>shape =（n_layers × num_directions，batch_size，hidden_size）</code></li>
+</ul>
+<p><strong>输出：</strong></p>
+<ul>
+<li><code>output</code>：<code>GRU</code> 最后一个隐藏层的输出特征（双向输出之和），<code>shape =（max_length，batch_size，hidden_size）</code></li>
+<li><code>hidden</code>：从GRU更新的隐藏状态; <code>shape =（n_layers x num_directions，batch_size，hidden_size）</code></li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">EncoderRNN</span><span class="params">(nn.Module)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, hidden_size, embedding, n_layers=<span class="number">1</span>, dropout=<span class="number">0</span>)</span>:</span></span><br><span class="line">        super(EncoderRNN, self).__init__()</span><br><span class="line">        self.n_layers = n_layers</span><br><span class="line">        self.hidden_size = hidden_size</span><br><span class="line">        self.embedding = embedding</span><br><span class="line"></span><br><span class="line">        <span class="comment"># Initialize GRU; the input_size and hidden_size params are both set to 'hidden_size'</span></span><br><span class="line">        <span class="comment">#   because our input size is a word embedding with number of features == hidden_size</span></span><br><span class="line">        self.gru = nn.GRU(hidden_size, hidden_size, n_layers,</span><br><span class="line">                          dropout=(<span class="number">0</span> <span class="keyword">if</span> n_layers == <span class="number">1</span> <span class="keyword">else</span> dropout), bidirectional=<span class="keyword">True</span>)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">forward</span><span class="params">(self, input_seq, input_lengths, hidden=None)</span>:</span></span><br><span class="line">        <span class="comment"># Convert word indexes to embeddings</span></span><br><span class="line">        embedded = self.embedding(input_seq)</span><br><span class="line">        <span class="comment"># Pack padded batch of sequences for RNN module</span></span><br><span class="line">        packed = torch.nn.utils.rnn.pack_padded_sequence(embedded, input_lengths)</span><br><span class="line">        <span class="comment"># Forward pass through GRU</span></span><br><span class="line">        outputs, hidden = self.gru(packed, hidden)</span><br><span class="line">        <span class="comment"># Unpack padding</span></span><br><span class="line">        outputs, _ = torch.nn.utils.rnn.pad_packed_sequence(outputs)</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># Sum bidirectional GRU outputs</span></span><br><span class="line">        outputs = outputs[:, :, :self.hidden_size] + outputs[:, : ,self.hidden_size:]</span><br><span class="line">        <span class="comment"># Return output and final hidden state</span></span><br><span class="line">        <span class="keyword">return</span> outputs, hidden</span><br></pre></td></tr></table></figure>
+<h1 id="解码器"><a href="#解码器" class="headerlink" title="解码器"></a>解码器</h1><p>编码器的输出的张量中包含了输入句子的信息，我们使用解码器中的隐藏状态和编码器的输出共同产生序列中的下一个词，直到输出一个 <code>EOS_token</code>。一般的 seq2seq 解码器的一个常见问题是，如果我们依赖于上下文向量(就是解码器的输出)来编码整个输入序列的含义，那么我们很可能会丢失信息。在处理长输入序列时尤为明显，这极大地限制了的解码器的能力。</p>
+<p>一个解决方案是使用注意力机制。详细的注意力机制模型解释请移步<a href="http://zh.gluon.ai/chapter_natural-language-processing/attention.html#" target="_blank" rel="noopener">注意力机制</a></p>
+<p>我们实现三种计算注意力机制中 score 的方法：<br>$<br>\operatorname { score } \left( \boldsymbol { h } _ { t } , \overline { \boldsymbol { h } } _ { s } \right) = \left\{ \begin{array} { l l } { \boldsymbol { h } _ { t } ^ { \top } \overline { \boldsymbol { h } } _ { s } } &amp; { \text {dot} } \ { \boldsymbol { h } _ { t } ^ { \top } \boldsymbol { W } _ { \boldsymbol { a } } \overline { \boldsymbol { h } } _ { s } } &amp; { \text { general } } \ { \boldsymbol { v } _ { a } ^ { \top } \tanh \left( \boldsymbol { W } _ { \boldsymbol { a } } \left[ \boldsymbol { h } _ { t } ; \overline { \boldsymbol { h } } _ { s } \right] \right) } &amp; { \text { concat } } \end{array} \right.<br>$</p>
+<p>下面是注意力机制的实现。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Luong attention layer</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Attn</span><span class="params">(torch.nn.Module)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, method, hidden_size)</span>:</span></span><br><span class="line">        super(Attn, self).__init__()</span><br><span class="line">        self.method = method</span><br><span class="line">        <span class="keyword">if</span> self.method <span class="keyword">not</span> <span class="keyword">in</span> [<span class="string">'dot'</span>, <span class="string">'general'</span>, <span class="string">'concat'</span>]:</span><br><span class="line">            <span class="keyword">raise</span> ValueError(self.method, <span class="string">"is not an appropriate attention method."</span>)</span><br><span class="line">        self.hidden_size = hidden_size</span><br><span class="line">        <span class="keyword">if</span> self.method == <span class="string">'general'</span>:</span><br><span class="line">            self.attn = torch.nn.Linear(self.hidden_size, hidden_size)</span><br><span class="line">        <span class="keyword">elif</span> self.method == <span class="string">'concat'</span>:</span><br><span class="line">            self.attn = torch.nn.Linear(self.hidden_size * <span class="number">2</span>, hidden_size)</span><br><span class="line">            self.v = torch.nn.Parameter(torch.FloatTensor(hidden_size))</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">dot_score</span><span class="params">(self, hidden, encoder_output)</span>:</span></span><br><span class="line">        <span class="keyword">return</span> torch.sum(hidden * encoder_output, dim=<span class="number">2</span>)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">general_score</span><span class="params">(self, hidden, encoder_output)</span>:</span></span><br><span class="line">        energy = self.attn(encoder_output)</span><br><span class="line">        <span class="keyword">return</span> torch.sum(hidden * energy, dim=<span class="number">2</span>)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">concat_score</span><span class="params">(self, hidden, encoder_output)</span>:</span></span><br><span class="line">        energy = self.attn(torch.cat((hidden.expand(encoder_output.size(<span class="number">0</span>), <span class="number">-1</span>, <span class="number">-1</span>), encoder_output), <span class="number">2</span>)).tanh()</span><br><span class="line">        <span class="keyword">return</span> torch.sum(self.v * energy, dim=<span class="number">2</span>)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">forward</span><span class="params">(self, hidden, encoder_outputs)</span>:</span></span><br><span class="line">        <span class="comment"># Calculate the attention weights (energies) based on the given method</span></span><br><span class="line">        <span class="keyword">if</span> self.method == <span class="string">'general'</span>:</span><br><span class="line">            attn_energies = self.general_score(hidden, encoder_outputs)</span><br><span class="line">        <span class="keyword">elif</span> self.method == <span class="string">'concat'</span>:</span><br><span class="line">            attn_energies = self.concat_score(hidden, encoder_outputs)</span><br><span class="line">        <span class="keyword">elif</span> self.method == <span class="string">'dot'</span>:</span><br><span class="line">            attn_energies = self.dot_score(hidden, encoder_outputs)</span><br><span class="line"></span><br><span class="line">        <span class="comment"># Transpose max_length and batch_size dimensions</span></span><br><span class="line">        attn_energies = attn_energies.t()</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># attn_energies shape: batch_size × time_step</span></span><br><span class="line">        <span class="comment"># 例如 5 × 10，表示 encoder 的 10 个 time step 对每个 batch 的 energy</span></span><br><span class="line">        <span class="comment"># 接下来做一个 softamx，注意是在 dim=1 的维度上做，然后再加一个维度 返回的 shape: batch_size × 1 × time_step</span></span><br><span class="line">        <span class="keyword">return</span> F.softmax(attn_energies, dim=<span class="number">1</span>).unsqueeze(<span class="number">1</span>)</span><br></pre></td></tr></table></figure>
+<p>下面我们实现解码器模型。 对于解码器，我们每次提供一个batch的数据。 这意味着我们的词嵌入张量和GRU输出都具有形状<code>（1，batch_size，hidden_size）</code>。</p>
+<p><strong>计算图：</strong></p>
+<ol>
+<li>获取当前输入的词向量。</li>
+<li>通过GRU前向传播。</li>
+<li>根据GRU输出计算Attention。</li>
+<li>将Attention权重乘以编码器输出以获得新的“加权和”上下文向量。</li>
+<li>连接加权上下文向量和GRU输出。</li>
+<li>经过两个线性层和一个softmax预测下一个单词</li>
+<li>返回输出和隐藏状态。</li>
+</ol>
+<p><strong>输入：</strong></p>
+<ul>
+<li><code>input_step</code>：输入序列的一个时间步， <code>shape =（1，batch_size）</code></li>
+<li><code>last_hidden</code>：GRU的最后隐藏层，<code>shape =（n_layers x num_directions，batch_size，hidden_size）</code></li>
+<li><code>encoder_outputs</code>：编码器的输出，<code>shape =（time_steps，batch_size，hidden_size）</code></li>
+</ul>
+<p><strong>输出：</strong></p>
+<ul>
+<li><p><code>output</code>：softmax归一化张量，给出每个字的概率是解码序列中正确的下一个字; <code>shape =（batch_size，voc.num_words）</code></p>
+</li>
+<li><p><code>hidden</code>：GRU的最终隐藏状态; <code>shape =（n_layers x num_directions，batch_size，hidden_size）</code></p>
+</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">LuongAttnDecoderRNN</span><span class="params">(nn.Module)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, attn_model, embedding, hidden_size, output_size, n_layers=<span class="number">1</span>, dropout=<span class="number">0.1</span>)</span>:</span></span><br><span class="line">        super(LuongAttnDecoderRNN, self).__init__()</span><br><span class="line"></span><br><span class="line">        <span class="comment"># Keep for reference</span></span><br><span class="line">        self.attn_model = attn_model</span><br><span class="line">        self.hidden_size = hidden_size</span><br><span class="line">        self.output_size = output_size</span><br><span class="line">        self.n_layers = n_layers</span><br><span class="line">        self.dropout = dropout</span><br><span class="line"></span><br><span class="line">        <span class="comment"># Define layers</span></span><br><span class="line">        self.embedding = embedding</span><br><span class="line">        self.embedding_dropout = nn.Dropout(dropout)</span><br><span class="line">        self.gru = nn.GRU(hidden_size, hidden_size, n_layers, dropout=(<span class="number">0</span> <span class="keyword">if</span> n_layers == <span class="number">1</span> <span class="keyword">else</span> dropout))</span><br><span class="line">        self.concat = nn.Linear(hidden_size * <span class="number">2</span>, hidden_size)</span><br><span class="line">        self.out = nn.Linear(hidden_size, output_size)</span><br><span class="line"></span><br><span class="line">        self.attn = Attn(attn_model, hidden_size)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">forward</span><span class="params">(self, input_step, last_hidden, encoder_outputs, debug=False)</span>:</span></span><br><span class="line">        <span class="comment"># Note: we run this one step (word) at a time</span></span><br><span class="line">        <span class="comment"># Get embedding of current input word</span></span><br><span class="line">        <span class="comment"># encoder_outputs shape: time_steps × batch_size × embedded_dim, example: 10 × 5 × 500       </span></span><br><span class="line">        embedded = self.embedding(input_step)</span><br><span class="line">        embedded = self.embedding_dropout(embedded)</span><br><span class="line">        <span class="comment"># Forward through unidirectional GRU</span></span><br><span class="line">        <span class="comment"># rnn_output shape: 1 × batch_size × embedded_dim, example: 1 × 5 × 500</span></span><br><span class="line">        <span class="comment"># hidden shape: hidden_layer × batch_size × embedded_dim, example: 2 × 5 × 500  </span></span><br><span class="line">        rnn_output, hidden = self.gru(embedded, last_hidden)</span><br><span class="line">        <span class="comment"># Calculate attention weights from the current GRU output</span></span><br><span class="line">        <span class="comment"># attn_weights shape: batch_size × 1 × time_steps, example: 5 × 1 × 10</span></span><br><span class="line">        attn_weights = self.attn(rnn_output, encoder_outputs)</span><br><span class="line">        <span class="comment"># Multiply attention weights to encoder outputs to get new "weighted sum" context vector</span></span><br><span class="line">        <span class="comment"># context shape: (batch_size, 1, embedded_dim), example: 5 × 1 × 500</span></span><br><span class="line">        context = attn_weights.bmm(encoder_outputs.transpose(<span class="number">0</span>, <span class="number">1</span>))</span><br><span class="line">        <span class="comment"># Concatenate weighted context vector and GRU output using Luong eq. 5</span></span><br><span class="line">        <span class="comment"># rnn_output shape: batch_size × embedded_dim, example: 5 × 500</span></span><br><span class="line">        rnn_output = rnn_output.squeeze(<span class="number">0</span>)</span><br><span class="line">        <span class="comment"># content shape：batch_size × embedded_dim, example: 5 × 500</span></span><br><span class="line">        context = context.squeeze(<span class="number">1</span>)</span><br><span class="line">        <span class="comment"># concat_input shape: batch_size × （2 × embedded_dim）, example: 5 × 1000</span></span><br><span class="line">        concat_input = torch.cat((rnn_output, context), <span class="number">1</span>)</span><br><span class="line">        <span class="comment">#　concat_output shape: batch_size × embedded_dim, example: 5 × 500</span></span><br><span class="line">        concat_output = torch.tanh(self.concat(concat_input))</span><br><span class="line">        <span class="comment"># Predict next word using Luong eq. 6</span></span><br><span class="line">        <span class="comment"># output shape: batch_size × voc.num_words, example: 5 × 7823</span></span><br><span class="line">        output = self.out(concat_output)</span><br><span class="line">        output = F.softmax(output, dim=<span class="number">1</span>)</span><br><span class="line">        <span class="comment"># Return output and final hidden state</span></span><br><span class="line">        <span class="keyword">return</span> output, hidden</span><br></pre></td></tr></table></figure>
+<h1 id="定义训练步骤"><a href="#定义训练步骤" class="headerlink" title="定义训练步骤"></a>定义训练步骤</h1><h2 id="损失计算"><a href="#损失计算" class="headerlink" title="损失计算"></a>损失计算</h2><p>我们的输出是加了pad字符的输入，计算loss时，我们要不pad字符产生的loss排除在外。单独定义一个 <code>makeNLLLoss</code> 来计算。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">maskNLLLoss</span><span class="params">(inp, target, mask)</span>:</span></span><br><span class="line">    <span class="comment"># inp: (batch_size, voc.num_words) example: (5, 7823)</span></span><br><span class="line">    <span class="comment"># target shape == mask shape = (5, )</span></span><br><span class="line">    nTotal = mask.sum()</span><br><span class="line">    crossEntropy = -torch.log(torch.gather(inp, <span class="number">1</span>, target.view(<span class="number">-1</span>, <span class="number">1</span>)))</span><br><span class="line">    loss = crossEntropy.masked_select(mask).mean()</span><br><span class="line">    loss = loss.to(device)</span><br><span class="line">    <span class="keyword">return</span> loss, nTotal.item()</span><br></pre></td></tr></table></figure>
+<h2 id="单批次训练"><a href="#单批次训练" class="headerlink" title="单批次训练"></a>单批次训练</h2><p>训练的时候我们的编码器输入是一个 mini-batch，但解码器的输入是一个 single-batch。</p>
+<p>我们使用一些技巧来帮助收敛：</p>
+<ul>
+<li><p>第一个技巧是使用 <code>teacher forcing</code>。 这意味着，我们以一定的概率使用当前目标单词作为解码器的下一个输入，而不是使用解码器的上一个预测输出。 该技术有助于更有效的训练。 然而，<code>teacher forcing</code> 可能导致预测期间的模型不稳定，因为解码器可能没有足够的机会在训练期间真正的使用自己的输出序列。 因此，我们必须注意我们如何设置 <code>teacher_forcing_ratio</code>，而不是被快速收敛所迷惑。</p>
+</li>
+<li><p>第二个技巧是梯度裁剪。 这是一种用于对抗“爆炸梯度”问题的常用技术。 本质上，通过将梯度剪切或阈值化到最大值，可以防止梯度以指数方式增长并且在代价函数中溢出（NaN）。</p>
+</li>
+</ul>
+<p><strong>操作顺序：</strong></p>
+<ol>
+<li>将整个批次通过编码器前向传播。</li>
+<li>将解码器的输入初始化为 <code>SOS_token</code>，将隐藏状态初始化为编码器的最后时间步的隐藏状态。</li>
+<li>通过解码器前向传播，一次只处理一个时间步的数据。</li>
+<li>如果使用 <code>teacher forcing</code>：将下一个解码器输入设置为当前目标; 否则：将下一个解码器输入设置为当前解码器输出。</li>
+<li>计算并累积损失。</li>
+<li>执行反向传播。</li>
+<li>梯度裁剪。</li>
+<li>更新编码器和解码器模型参数。</li>
+</ol>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">train</span><span class="params">(input_variable, lengths, target_variable, mask, max_target_len, encoder, decoder, embedding,</span></span></span><br><span class="line"><span class="function"><span class="params">          encoder_optimizer, decoder_optimizer, batch_size, clip, max_length=MAX_LENGTH)</span>:</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># target_variable shape: (time_steps, batch_size) example: (10, 5)</span></span><br><span class="line">    <span class="comment"># mask: (time_steps, batch_size) example: (10, 5)</span></span><br><span class="line">    <span class="comment"># Zero gradients</span></span><br><span class="line">    encoder_optimizer.zero_grad()</span><br><span class="line">    decoder_optimizer.zero_grad()</span><br><span class="line"></span><br><span class="line">    <span class="comment"># Set device options</span></span><br><span class="line">    input_variable = input_variable.to(device)</span><br><span class="line">    lengths = lengths.to(device)</span><br><span class="line">    target_variable = target_variable.to(device)</span><br><span class="line">    mask = mask.to(device)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># Initialize variables</span></span><br><span class="line">    loss = <span class="number">0</span></span><br><span class="line">    print_losses = []</span><br><span class="line">    n_totals = <span class="number">0</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># Forward pass through encoder</span></span><br><span class="line">    <span class="comment"># encoder_outputs: (time_steps, batch_size, embedding_dim), example: （10, 5, 500）</span></span><br><span class="line">    <span class="comment"># encoder_hidden: (hidden_layers, batch_size, embedding_dim), example: (2, 5, 500)</span></span><br><span class="line">    encoder_outputs, encoder_hidden = encoder(input_variable, lengths)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># Create initial decoder input (start with SOS tokens for each sentence)</span></span><br><span class="line">    <span class="comment"># decoder_input: (1, batch_size)</span></span><br><span class="line">    decoder_input = torch.LongTensor([[SOS_token <span class="keyword">for</span> _ <span class="keyword">in</span> range(batch_size)]])</span><br><span class="line">    decoder_input = decoder_input.to(device)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># Set initial decoder hidden state to the encoder's final hidden state</span></span><br><span class="line">    <span class="comment"># decoder_hidden: (decoder.n_layers, batch_size, embedding_dim), example: (1, 5, 500)</span></span><br><span class="line">    decoder_hidden = encoder_hidden[:decoder.n_layers]</span><br><span class="line"></span><br><span class="line">    <span class="comment"># Determine if we are using teacher forcing this iteration</span></span><br><span class="line">    use_teacher_forcing = <span class="keyword">True</span> <span class="keyword">if</span> random.random() &lt; teacher_forcing_ratio <span class="keyword">else</span> <span class="keyword">False</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># Forward batch of sequences through decoder one time step at a time</span></span><br><span class="line">    <span class="keyword">if</span> use_teacher_forcing:</span><br><span class="line">        <span class="keyword">for</span> t <span class="keyword">in</span> range(max_target_len):</span><br><span class="line">            <span class="comment"># decoder_output shape: (batch_size, voc.num_words), example: (5, 7823)</span></span><br><span class="line">            <span class="comment"># decoder_hidden shape: (hidden_layers, batch_size, embdding_dim), example: (2, 5, 500)</span></span><br><span class="line">            decoder_output, decoder_hidden = decoder(</span><br><span class="line">                decoder_input, decoder_hidden, encoder_outputs</span><br><span class="line">            )</span><br><span class="line">            <span class="comment"># Teacher forcing: next input is current target</span></span><br><span class="line">            <span class="comment"># decoder_input shape: (1, batch_size) example: (1, 5)</span></span><br><span class="line">            decoder_input = target_variable[t].view(<span class="number">1</span>, <span class="number">-1</span>)</span><br><span class="line">            <span class="comment"># Calculate and accumulate loss</span></span><br><span class="line">            <span class="comment"># mask_loss: 平均loss </span></span><br><span class="line">            <span class="comment"># nTotal: 有效计算的数目</span></span><br><span class="line">            mask_loss, nTotal = maskNLLLoss(decoder_output, target_variable[t], mask[t])</span><br><span class="line">            loss += mask_loss</span><br><span class="line">            print_losses.append(mask_loss.item() * nTotal)</span><br><span class="line">            n_totals += nTotal</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="keyword">for</span> t <span class="keyword">in</span> range(max_target_len):</span><br><span class="line">            decoder_output, decoder_hidden = decoder(</span><br><span class="line">                decoder_input, decoder_hidden, encoder_outputs</span><br><span class="line">            )</span><br><span class="line">            <span class="comment"># No teacher forcing: next input is decoder's own current output</span></span><br><span class="line">            _, topi = decoder_output.topk(<span class="number">1</span>)</span><br><span class="line">            decoder_input = torch.LongTensor([[topi[i][<span class="number">0</span>] <span class="keyword">for</span> i <span class="keyword">in</span> range(batch_size)]])</span><br><span class="line">            decoder_input = decoder_input.to(device)</span><br><span class="line">            <span class="comment"># Calculate and accumulate loss</span></span><br><span class="line">            mask_loss, nTotal = maskNLLLoss(decoder_output, target_variable[t], mask[t])</span><br><span class="line">            loss += mask_loss</span><br><span class="line">            print_losses.append(mask_loss.item() * nTotal)</span><br><span class="line">            n_totals += nTotal</span><br><span class="line"></span><br><span class="line">    <span class="comment"># Perform backpropatation</span></span><br><span class="line">    loss.backward()</span><br><span class="line"></span><br><span class="line">    <span class="comment"># Clip gradients: gradients are modified in place</span></span><br><span class="line">    _ = torch.nn.utils.clip_grad_norm_(encoder.parameters(), clip)</span><br><span class="line">    _ = torch.nn.utils.clip_grad_norm_(decoder.parameters(), clip)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># Adjust model weights</span></span><br><span class="line">    encoder_optimizer.step()</span><br><span class="line">    decoder_optimizer.step()</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> sum(print_losses) / n_totals</span><br></pre></td></tr></table></figure>
+<h2 id="迭代训练"><a href="#迭代训练" class="headerlink" title="迭代训练"></a>迭代训练</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">trainIters</span><span class="params">(model_name, voc, pairs, encoder, decoder, encoder_optimizer, decoder_optimizer, embedding, encoder_n_layers, decoder_n_layers, save_dir, n_iteration, batch_size, print_every, save_every, clip, corpus_name, loadFilename)</span>:</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># Load batches for each iteration</span></span><br><span class="line">    training_batches = [batch2TrainData(voc, [random.choice(pairs) <span class="keyword">for</span> _ <span class="keyword">in</span> range(batch_size)])</span><br><span class="line">                      <span class="keyword">for</span> _ <span class="keyword">in</span> range(n_iteration)]</span><br><span class="line"></span><br><span class="line">    <span class="comment"># Initializations</span></span><br><span class="line">    print(<span class="string">'Initializing ...'</span>)</span><br><span class="line">    start_iteration = <span class="number">1</span></span><br><span class="line">    print_loss = <span class="number">0</span></span><br><span class="line">    <span class="keyword">if</span> loadFilename:</span><br><span class="line">        start_iteration = checkpoint[<span class="string">'iteration'</span>] + <span class="number">1</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># Training loop</span></span><br><span class="line">    print(<span class="string">"Training..."</span>)</span><br><span class="line">    <span class="keyword">for</span> iteration <span class="keyword">in</span> range(start_iteration, n_iteration + <span class="number">1</span>):</span><br><span class="line">        training_batch = training_batches[iteration - <span class="number">1</span>]</span><br><span class="line">        <span class="comment"># Extract fields from batch</span></span><br><span class="line">        <span class="comment"># input_variable: (time_steps, batch_size) example: (10, 5)</span></span><br><span class="line">        <span class="comment"># lengths: (batch_size,) example: (5, )</span></span><br><span class="line">        <span class="comment"># target_variable: (time_steps, batch_size) example: (10, 5)</span></span><br><span class="line">        <span class="comment"># mask: (time_steps, batch_szie) example: (10, 5)</span></span><br><span class="line">        <span class="comment"># max_target_len: constant example： 10</span></span><br><span class="line">        input_variable, lengths, target_variable, mask, max_target_len = training_batch</span><br><span class="line"></span><br><span class="line">        <span class="comment"># Run a training iteration with batch</span></span><br><span class="line">        <span class="comment"># loss: average loss</span></span><br><span class="line">        loss = train(input_variable, lengths, target_variable, mask, max_target_len, encoder,</span><br><span class="line">                     decoder, embedding, encoder_optimizer, decoder_optimizer, batch_size, clip)</span><br><span class="line">        print_loss += loss</span><br><span class="line"></span><br><span class="line">        <span class="comment"># Print progress</span></span><br><span class="line">        <span class="keyword">if</span> iteration % print_every == <span class="number">0</span>:</span><br><span class="line">            print_loss_avg = print_loss / print_every</span><br><span class="line">            print(<span class="string">"Iteration: &#123;&#125;; Percent complete: &#123;:.1f&#125;%; Average loss: &#123;:.4f&#125;"</span>.format(iteration, iteration / n_iteration * <span class="number">100</span>, print_loss_avg))</span><br><span class="line">            print_loss = <span class="number">0</span></span><br><span class="line"></span><br><span class="line">        <span class="comment"># Save checkpoint</span></span><br><span class="line">        <span class="keyword">if</span> (iteration % save_every == <span class="number">0</span>):</span><br><span class="line">            directory = os.path.join(save_dir, model_name, corpus_name, <span class="string">'&#123;&#125;-&#123;&#125;_&#123;&#125;'</span>.format(encoder_n_layers, decoder_n_layers, hidden_size))</span><br><span class="line">            <span class="keyword">if</span> <span class="keyword">not</span> os.path.exists(directory):</span><br><span class="line">                os.makedirs(directory)</span><br><span class="line">            torch.save(&#123;</span><br><span class="line">                <span class="string">'iteration'</span>: iteration,</span><br><span class="line">                <span class="string">'en'</span>: encoder.state_dict(),</span><br><span class="line">                <span class="string">'de'</span>: decoder.state_dict(),</span><br><span class="line">                <span class="string">'en_opt'</span>: encoder_optimizer.state_dict(),</span><br><span class="line">                <span class="string">'de_opt'</span>: decoder_optimizer.state_dict(),</span><br><span class="line">                <span class="string">'loss'</span>: loss,</span><br><span class="line">                <span class="string">'voc_dict'</span>: voc.__dict__,</span><br><span class="line">                <span class="string">'embedding'</span>: embedding.state_dict()</span><br><span class="line">            &#125;, os.path.join(directory, <span class="string">'&#123;&#125;_&#123;&#125;.tar'</span>.format(iteration, <span class="string">'checkpoint'</span>)))</span><br></pre></td></tr></table></figure>
+<h1 id="定义评估方法"><a href="#定义评估方法" class="headerlink" title="定义评估方法"></a>定义评估方法</h1><p>在训练模型后，我们希望能够自己与机器人交谈。 首先，我们必须定义我们希望模型如何解码编码我们的输入。</p>
+<h2 id="Greedy-decoding"><a href="#Greedy-decoding" class="headerlink" title="Greedy decoding"></a>Greedy decoding</h2><p>Greedy decoding 是我们在训练期间不使用 <code>teacher forcing</code> 时使用的解码方法。换句话说，对于每个时间步，我们只需从具有最高 softmax 值的 decoder_output 中选择单词。该解码方法在单个时间步长上是最优选择。</p>
+<p>为了方便 Greedy decoding 的解码操作，我们定义了一个 GreedySearchDecoder 类。 当运行时，该类的一个对象接受shape为 <code>(input_seq length，1)</code>的输入序列，一个<code>input_length</code>的标量输入和一个约束相应句子长度的 <code>max_length</code> 。</p>
+<p><strong>计算图：</strong></p>
+<ol>
+<li>通过编码器模型前向传播输入。</li>
+<li>将编码器的最后时间步的隐藏层状态作为解码器的第一个隐藏层输入。</li>
+<li>将解码器的第一个输入初始化为 <code>SOS_token</code>。</li>
+<li>初始化要append的张量。</li>
+<li>一次迭代解码一个单词：<ol>
+<li>正向通过解码器。</li>
+<li>获得最可能的单词标记及其softmax分数。</li>
+<li>记录单词标记和分数。</li>
+<li>准备当前单词标记作为下一次解码器输入。</li>
+<li>返回单词标记和分数的集合。</li>
+</ol>
+</li>
+</ol>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">GreedySearchDecoder</span><span class="params">(nn.Module)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, encoder, decoder)</span>:</span></span><br><span class="line">        super(GreedySearchDecoder, self).__init__()</span><br><span class="line">        self.encoder = encoder</span><br><span class="line">        self.decoder = decoder</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">forward</span><span class="params">(self, input_seq, input_length, max_length)</span>:</span></span><br><span class="line">        <span class="comment"># Forward input through encoder model</span></span><br><span class="line">        encoder_outputs, encoder_hidden = self.encoder(input_seq, input_length)</span><br><span class="line">        <span class="comment"># Prepare encoder's final hidden layer to be first hidden input to the decoder</span></span><br><span class="line">        decoder_hidden = encoder_hidden[:decoder.n_layers]</span><br><span class="line">        <span class="comment"># Initialize decoder input with SOS_token</span></span><br><span class="line">        decoder_input = torch.ones(<span class="number">1</span>, <span class="number">1</span>, device=device, dtype=torch.long) * SOS_token</span><br><span class="line">        <span class="comment"># Initialize tensors to append decoded words to</span></span><br><span class="line">        all_tokens = torch.zeros([<span class="number">0</span>], device=device, dtype=torch.long)</span><br><span class="line">        all_scores = torch.zeros([<span class="number">0</span>], device=device)</span><br><span class="line">        <span class="comment"># Iteratively decode one word token at a time</span></span><br><span class="line">        <span class="keyword">for</span> _ <span class="keyword">in</span> range(max_length):</span><br><span class="line">            <span class="comment"># Forward pass through decoder</span></span><br><span class="line">            decoder_output, decoder_hidden = self.decoder(decoder_input, decoder_hidden, encoder_outputs)</span><br><span class="line">            <span class="comment"># Obtain most likely word token and its softmax score</span></span><br><span class="line">            decoder_scores, decoder_input = torch.max(decoder_output, dim=<span class="number">1</span>)</span><br><span class="line">            <span class="comment"># Record token and score</span></span><br><span class="line">            all_tokens = torch.cat((all_tokens, decoder_input), dim=<span class="number">0</span>)</span><br><span class="line">            all_scores = torch.cat((all_scores, decoder_scores), dim=<span class="number">0</span>)</span><br><span class="line">            <span class="comment"># Prepare current token to be next decoder input (add a dimension)</span></span><br><span class="line">            decoder_input = torch.unsqueeze(decoder_input, <span class="number">0</span>)</span><br><span class="line">        <span class="comment"># Return collections of word tokens and scores</span></span><br><span class="line">        <span class="keyword">return</span> all_tokens, all_scores</span><br></pre></td></tr></table></figure>
+<h2 id="用自己的输入评估"><a href="#用自己的输入评估" class="headerlink" title="用自己的输入评估"></a>用自己的输入评估</h2><p>现在我们已经定义了解码方法，我们可以编写用于评估字符串输入句子的函数。 <code>evaluate</code> 函数管理处理输入句子的低级过程。我们首先使用 <code>batch_size == 1</code> 将句子格式化为输入批量的单词索引。 我们将句子的单词转换为相应的索引，并转换维度来为我们的模型准备张量输入。 我们还创建了一个长度张量，其中包含输入句子的长度。在这种情况下，长度是标量，因为我们一次只评估一个句子<code>（batch_size == 1）</code>。 接下来，我们使用我们的 <code>GreedySearchDecoder</code> 对象获得 decoder 的响应句子张量。最后，我们将响应的索引转换为单词并返回已解码单词的列表。</p>
+<p><code>evaluateInput</code> 充当聊天机器人的用户界面。 调用时，将生成一个输入文本字段，我们可以在其中输入询问语句。 在输入我们的输入句子并按 Enter 后，文本以与训练数据相同的方式标准化，并最终被输入到评估函数以获得 decoder 的输出句子。 我们循环这个过程，直到我们输入“q”或“quit”。</p>
+<p>最后，如果输入的句子包含不在词汇表中的单词，我们会通过打印错误消息并提示用户输入另一个句子来优雅地处理此问题。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">evaluate</span><span class="params">(encoder, decoder, searcher, voc, sentence, max_length=MAX_LENGTH)</span>:</span></span><br><span class="line">    <span class="comment">### Format input sentence as a batch</span></span><br><span class="line">    <span class="comment"># words -&gt; indexes</span></span><br><span class="line">    indexes_batch = [indexesFromSentence(voc, sentence)]</span><br><span class="line">    <span class="comment"># Create lengths tensor</span></span><br><span class="line">    lengths = torch.tensor([len(indexes) <span class="keyword">for</span> indexes <span class="keyword">in</span> indexes_batch])</span><br><span class="line">    <span class="comment"># Transpose dimensions of batch to match models' expectations</span></span><br><span class="line">    input_batch = torch.LongTensor(indexes_batch).transpose(<span class="number">0</span>, <span class="number">1</span>)</span><br><span class="line">    <span class="comment"># Use appropriate device</span></span><br><span class="line">    input_batch = input_batch.to(device)</span><br><span class="line">    lengths = lengths.to(device)</span><br><span class="line">    <span class="comment"># Decode sentence with searcher</span></span><br><span class="line">    tokens, scores = searcher(input_batch, lengths, max_length)</span><br><span class="line">    <span class="comment"># indexes -&gt; words</span></span><br><span class="line">    decoded_words = [voc.index2word[token.item()] <span class="keyword">for</span> token <span class="keyword">in</span> tokens]</span><br><span class="line">    <span class="keyword">return</span> decoded_words</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">evaluateInput</span><span class="params">(encoder, decoder, searcher, voc)</span>:</span></span><br><span class="line">    input_sentence = <span class="string">''</span></span><br><span class="line">    <span class="keyword">while</span>(<span class="number">1</span>):</span><br><span class="line">        <span class="keyword">try</span>:</span><br><span class="line">            <span class="comment"># Get input sentence</span></span><br><span class="line">            input_sentence = input(<span class="string">'&gt; '</span>)</span><br><span class="line">            <span class="comment"># Check if it is quit case</span></span><br><span class="line">            <span class="keyword">if</span> input_sentence == <span class="string">'q'</span> <span class="keyword">or</span> input_sentence == <span class="string">'quit'</span>: <span class="keyword">break</span></span><br><span class="line">            <span class="comment"># Normalize sentence</span></span><br><span class="line">            input_sentence = normalizeString(input_sentence)</span><br><span class="line">            <span class="comment"># Evaluate sentence</span></span><br><span class="line">            output_words = evaluate(encoder, decoder, searcher, voc, input_sentence)</span><br><span class="line">            <span class="comment"># Format and print response sentence</span></span><br><span class="line">            output_words[:] = [x <span class="keyword">for</span> x <span class="keyword">in</span> output_words <span class="keyword">if</span> <span class="keyword">not</span> (x == <span class="string">'EOS'</span> <span class="keyword">or</span> x == <span class="string">'PAD'</span>)]</span><br><span class="line">            print(<span class="string">'Bot:'</span>, <span class="string">' '</span>.join(output_words))</span><br><span class="line"></span><br><span class="line">        <span class="keyword">except</span> KeyError:</span><br><span class="line">            print(<span class="string">"Error: Encountered unknown word."</span>)</span><br></pre></td></tr></table></figure>
+<h1 id="运行模型"><a href="#运行模型" class="headerlink" title="运行模型"></a>运行模型</h1><p>无论我们是训练还是测试聊天机器人模型，我们都必须初始化各个编码器和解码器模型。 在下面的块中，我们设置了所需的配置，选择从头开始训练活着从 checkpoint 中加载，以及构建和初始化模型。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Configure models</span></span><br><span class="line">model_name = <span class="string">'cb_model'</span></span><br><span class="line">attn_model = <span class="string">'dot'</span></span><br><span class="line"><span class="comment">#attn_model = 'general'</span></span><br><span class="line"><span class="comment">#attn_model = 'concat'</span></span><br><span class="line">hidden_size = <span class="number">500</span></span><br><span class="line">encoder_n_layers = <span class="number">2</span></span><br><span class="line">decoder_n_layers = <span class="number">2</span></span><br><span class="line">dropout = <span class="number">0.1</span></span><br><span class="line">batch_size = <span class="number">64</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Set checkpoint to load from; set to None if starting from scratch</span></span><br><span class="line">loadFilename = <span class="keyword">None</span></span><br><span class="line">checkpoint_iter = <span class="number">4000</span></span><br><span class="line"><span class="comment">#loadFilename = os.path.join(save_dir, model_name, corpus_name,</span></span><br><span class="line"><span class="comment">#                            '&#123;&#125;-&#123;&#125;_&#123;&#125;'.format(encoder_n_layers, decoder_n_layers, hidden_size),</span></span><br><span class="line"><span class="comment">#                            '&#123;&#125;_checkpoint.tar'.format(checkpoint_iter))</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># Load model if a loadFilename is provided</span></span><br><span class="line"><span class="keyword">if</span> loadFilename:</span><br><span class="line">    <span class="comment"># If loading on same machine the model was trained on</span></span><br><span class="line">    checkpoint = torch.load(loadFilename)</span><br><span class="line">    <span class="comment"># If loading a model trained on GPU to CPU</span></span><br><span class="line">    <span class="comment">#checkpoint = torch.load(loadFilename, map_location=torch.device('cpu'))</span></span><br><span class="line">    encoder_sd = checkpoint[<span class="string">'en'</span>]</span><br><span class="line">    decoder_sd = checkpoint[<span class="string">'de'</span>]</span><br><span class="line">    encoder_optimizer_sd = checkpoint[<span class="string">'en_opt'</span>]</span><br><span class="line">    decoder_optimizer_sd = checkpoint[<span class="string">'de_opt'</span>]</span><br><span class="line">    embedding_sd = checkpoint[<span class="string">'embedding'</span>]</span><br><span class="line">    voc.__dict__ = checkpoint[<span class="string">'voc_dict'</span>]</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">print(<span class="string">'Building encoder and decoder ...'</span>)</span><br><span class="line"><span class="comment"># Initialize word embeddings</span></span><br><span class="line">embedding = nn.Embedding(voc.num_words, hidden_size)</span><br><span class="line"><span class="keyword">if</span> loadFilename:</span><br><span class="line">    embedding.load_state_dict(embedding_sd)</span><br><span class="line"><span class="comment"># Initialize encoder &amp; decoder models</span></span><br><span class="line">encoder = EncoderRNN(hidden_size, embedding, encoder_n_layers, dropout)</span><br><span class="line">decoder = LuongAttnDecoderRNN(attn_model, embedding, hidden_size, voc.num_words, decoder_n_layers, dropout)</span><br><span class="line"><span class="keyword">if</span> loadFilename:</span><br><span class="line">    encoder.load_state_dict(encoder_sd)</span><br><span class="line">    decoder.load_state_dict(decoder_sd)</span><br><span class="line"><span class="comment"># Use appropriate device</span></span><br><span class="line">encoder = encoder.to(device)</span><br><span class="line">decoder = decoder.to(device)</span><br><span class="line">print(<span class="string">'Models built and ready to go!'</span>)</span><br></pre></td></tr></table></figure>
+<pre><code>Building encoder and decoder ...
+Models built and ready to go!
+</code></pre><h1 id="训练"><a href="#训练" class="headerlink" title="训练"></a>训练</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Configure training/optimization</span></span><br><span class="line">clip = <span class="number">50.0</span></span><br><span class="line">teacher_forcing_ratio = <span class="number">1.0</span></span><br><span class="line">learning_rate = <span class="number">0.0001</span></span><br><span class="line">decoder_learning_ratio = <span class="number">5.0</span></span><br><span class="line">n_iteration = <span class="number">4000</span></span><br><span class="line">print_every = <span class="number">200</span></span><br><span class="line">save_every = <span class="number">500</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Ensure dropout layers are in train mode</span></span><br><span class="line">encoder.train()</span><br><span class="line">decoder.train()</span><br><span class="line"></span><br><span class="line"><span class="comment"># Initialize optimizers</span></span><br><span class="line">print(<span class="string">'Building optimizers ...'</span>)</span><br><span class="line">encoder_optimizer = optim.Adam(encoder.parameters(), lr=learning_rate)</span><br><span class="line">decoder_optimizer = optim.Adam(decoder.parameters(), lr=learning_rate * decoder_learning_ratio)</span><br><span class="line"><span class="keyword">if</span> loadFilename:</span><br><span class="line">    encoder_optimizer.load_state_dict(encoder_optimizer_sd)</span><br><span class="line">    decoder_optimizer.load_state_dict(decoder_optimizer_sd)</span><br><span class="line"></span><br><span class="line"><span class="comment"># Run training iterations</span></span><br><span class="line">print(<span class="string">"Starting Training!"</span>)</span><br><span class="line">trainIters(model_name, voc, pairs, encoder, decoder, encoder_optimizer, decoder_optimizer,</span><br><span class="line">           embedding, encoder_n_layers, decoder_n_layers, save_dir, n_iteration, batch_size,</span><br><span class="line">           print_every, save_every, clip, corpus_name, loadFilename)</span><br></pre></td></tr></table></figure>
+<pre><code>Building optimizers ...
+Starting Training!
+Initializing ...
+Training...
+Iteration: 200; Percent complete: 5.0%; Average loss: 4.0215
+Iteration: 400; Percent complete: 10.0%; Average loss: 3.3358
+Iteration: 600; Percent complete: 15.0%; Average loss: 3.1570
+Iteration: 800; Percent complete: 20.0%; Average loss: 3.0571
+Iteration: 1000; Percent complete: 25.0%; Average loss: 2.9542
+Iteration: 1200; Percent complete: 30.0%; Average loss: 2.9113
+Iteration: 1400; Percent complete: 35.0%; Average loss: 2.8514
+Iteration: 1600; Percent complete: 40.0%; Average loss: 2.7897
+Iteration: 1800; Percent complete: 45.0%; Average loss: 2.7300
+Iteration: 2000; Percent complete: 50.0%; Average loss: 2.6705
+Iteration: 2200; Percent complete: 55.0%; Average loss: 2.6352
+Iteration: 2400; Percent complete: 60.0%; Average loss: 2.5717
+Iteration: 2600; Percent complete: 65.0%; Average loss: 2.5346
+Iteration: 2800; Percent complete: 70.0%; Average loss: 2.4772
+Iteration: 3000; Percent complete: 75.0%; Average loss: 2.4238
+Iteration: 3200; Percent complete: 80.0%; Average loss: 2.3706
+Iteration: 3400; Percent complete: 85.0%; Average loss: 2.3249
+Iteration: 3600; Percent complete: 90.0%; Average loss: 2.2789
+Iteration: 3800; Percent complete: 95.0%; Average loss: 2.2169
+Iteration: 4000; Percent complete: 100.0%; Average loss: 2.1741
+</code></pre><h1 id="评估"><a href="#评估" class="headerlink" title="评估"></a>评估</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Set dropout layers to eval mode</span></span><br><span class="line">encoder.eval()</span><br><span class="line">decoder.eval()</span><br><span class="line"></span><br><span class="line"><span class="comment"># Initialize search module</span></span><br><span class="line">searcher = GreedySearchDecoder(encoder, decoder)</span><br><span class="line"></span><br><span class="line"><span class="comment"># Begin chatting (uncomment and run the following line to begin)</span></span><br><span class="line"><span class="comment"># evaluateInput(encoder, decoder, searcher, voc)</span></span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>持续技术分享，您的支持将鼓励我继续创作！</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.jpg" alt="乡间小路 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/07/05/Heuristic_Algorithm/" rel="next" title="启发式算法【转】">
+                <i class="fa fa-chevron-left"></i> 启发式算法【转】
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/07/17/最大熵模型/" rel="prev" title="最大熵模型【转】">
+                最大熵模型【转】 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zNjg4MS8xMzQxNw=="></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.jpg"
+                alt="乡间小路" />
+            
+              <p class="site-author-name" itemprop="name">乡间小路</p>
+              <p class="site-description motion-element" itemprop="description">把知道的东西讲清楚</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">91</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">13</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">90</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-globe"></i>
+                推荐博客
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://www.flickering.cn/" title="火光摇曳" target="_blank">火光摇曳</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://www.wulc.me/" title="吴良超的学习笔记" target="_blank">吴良超的学习笔记</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://www.cnblogs.com/pinard/" title="刘建平Pinard" target="_blank">刘建平Pinard</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://mlnote.com/" title="水滴石穿" target="_blank">水滴石穿</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://www.cnblogs.com/makefile/" title="明也无涯" target="_blank">明也无涯</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://noahsnail.com/" title="SnailTyan" target="_blank">SnailTyan</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://lanbing510.info/" title="求知若饥，知行合一" target="_blank">求知若饥，知行合一</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://saicoco.github.io/" title="Fix you" target="_blank">Fix you</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://qiankun214.github.io/" title="月见樽" target="_blank">月见樽</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://jacobkong.github.io/" title="Jacob Kong" target="_blank">Jacob Kong</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://www.cnblogs.com/xuanyuyt/" title="xuanyuyt" target="_blank">xuanyuyt</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://blog.csdn.net/sinat_26917383" title="悟乙己" target="_blank">悟乙己</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://blog.csdn.net/julialove102123" title="女王的宫殿" target="_blank">女王的宫殿</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://frankchen.xyz/" title="不正经数据科学家" target="_blank">不正经数据科学家</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://blog.csdn.net/victoriaw" title="CodeTutor" target="_blank">CodeTutor</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://deepsystems.ai/" title="Deep Systems" target="_blank">Deep Systems</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://medium.com/@jonathan_hui" title="Jonathan Hui" target="_blank">Jonathan Hui</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://www.cnblogs.com/zhangchaoyang/" title="Orisun" target="_blank">Orisun</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://www.jianshu.com/u/511ba5d71aef" title="milter" target="_blank">milter</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://blog.csdn.net/mrlevo520" title="MrLevo520的博客" target="_blank">MrLevo520的博客</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://speech.ee.ntu.edu.tw/~tlkagk/talk.html" title="李宏毅主页" target="_blank">李宏毅主页</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://blog.csdn.net/qq_37059483" title="qingyun_wudaoletu的博客" target="_blank">qingyun_wudaoletu的博客</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://liam0205.me/" title="始终" target="_blank">始终</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://www.cnblogs.com/grandyang/" title="Grandyang" target="_blank">Grandyang</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://littlehaes.com/" title="Hae's Blog" target="_blank">Hae's Blog</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://www.jianshu.com/u/ed6d4d31c5b0" title="月牙眼的楼下小黑" target="_blank">月牙眼的楼下小黑</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://www.hanlongfei.com/" title="Longfei Han" target="_blank">Longfei Han</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://blog.csdn.net/bitcarmanlee" title="bitcarmanlee的博客" target="_blank">bitcarmanlee的博客</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://blog.csdn.net/lanchunhui" title="Zhang's Wikipedia" target="_blank">Zhang's Wikipedia</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://samaelchen.github.io/" title="碎碎念" target="_blank">碎碎念</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://blog.csdn.net/jiange_zh" title="jiange_zh" target="_blank">jiange_zh</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://blog.csdn.net/bitcs_zt" title="ZSYGOOOD" target="_blank">ZSYGOOOD</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://buptwc.github.io/" title="演员的自我修养" target="_blank">演员的自我修养</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://freemind.pluskid.org/" title="Free Mind" target="_blank">Free Mind</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://me.csdn.net/icefire_tyh" title="四去六进一" target="_blank">四去六进一</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://www.cnblogs.com/guoyaohua/" title="郭耀华's Blog" target="_blank">郭耀华's Blog</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://blog.csdn.net/young_gy" title="Young_Gy" target="_blank">Young_Gy</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://cuijiahua.com/" title="Jack Cui" target="_blank">Jack Cui</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://blog.csdn.net/loseinvain" title="FesianXu" target="_blank">FesianXu</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://me.csdn.net/u012436149" title="ke1th" target="_blank">ke1th</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://blog.csdn.net/u010099080" title="secondsilverman" target="_blank">secondsilverman</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#需要掌握的pytorch用法"><span class="nav-number">1.</span> <span class="nav-text">需要掌握的pytorch用法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#载入并处理数据"><span class="nav-number">2.</span> <span class="nav-text">载入并处理数据</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#创建格式化的数据文件"><span class="nav-number">2.1.</span> <span class="nav-text">创建格式化的数据文件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#加载并裁剪数据"><span class="nav-number">2.2.</span> <span class="nav-text">加载并裁剪数据</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#为模型准备数据"><span class="nav-number">3.</span> <span class="nav-text">为模型准备数据</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#定义模型"><span class="nav-number">4.</span> <span class="nav-text">定义模型</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#编码器"><span class="nav-number">4.1.</span> <span class="nav-text">编码器</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#解码器"><span class="nav-number">5.</span> <span class="nav-text">解码器</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#定义训练步骤"><span class="nav-number">6.</span> <span class="nav-text">定义训练步骤</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#损失计算"><span class="nav-number">6.1.</span> <span class="nav-text">损失计算</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#单批次训练"><span class="nav-number">6.2.</span> <span class="nav-text">单批次训练</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#迭代训练"><span class="nav-number">6.3.</span> <span class="nav-text">迭代训练</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#定义评估方法"><span class="nav-number">7.</span> <span class="nav-text">定义评估方法</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Greedy-decoding"><span class="nav-number">7.1.</span> <span class="nav-text">Greedy decoding</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#用自己的输入评估"><span class="nav-number">7.2.</span> <span class="nav-text">用自己的输入评估</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#运行模型"><span class="nav-number">8.</span> <span class="nav-text">运行模型</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#训练"><span class="nav-number">9.</span> <span class="nav-text">训练</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#评估"><span class="nav-number">10.</span> <span class="nav-text">评估</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">乡间小路</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+
+  
+
+  
+
+</body>
+</html>

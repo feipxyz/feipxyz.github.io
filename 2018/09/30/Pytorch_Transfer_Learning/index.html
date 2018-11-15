@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="loss," />
+  <meta name="keywords" content="Hexo, NexT" />
 
 
 
@@ -79,22 +79,21 @@
 
 
 
-<meta name="description" content="本文介绍深度学习中常用的损失函数。会不断更新。">
-<meta name="keywords" content="loss">
+<meta name="description" content="本文将使用迁移学习训练一个分类网络。参考自pytorch tutorial。 迁移学习主要有两种方案：  Finetuning the convent使用一个预训练的网络进行初始化（以前是随机初始化），如在imagenet上预训练的网络。  ConvNet as fixed feature extractor将所有的卷积层参数固定，只训练后面的全连接层。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="深度学习常用的LossFunction小结">
-<meta property="og:url" content="flyrie.top/2018/06/23/常用的LossFunction总结/index.html">
+<meta property="og:title" content="Pytorch入门实战：迁移学习">
+<meta property="og:url" content="flyrie.top/2018/09/30/Pytorch_Transfer_Learning/index.html">
 <meta property="og:site_name" content="乡间小路">
-<meta property="og:description" content="本文介绍深度学习中常用的损失函数。会不断更新。">
+<meta property="og:description" content="本文将使用迁移学习训练一个分类网络。参考自pytorch tutorial。 迁移学习主要有两种方案：  Finetuning the convent使用一个预训练的网络进行初始化（以前是随机初始化），如在imagenet上预训练的网络。  ConvNet as fixed feature extractor将所有的卷积层参数固定，只训练后面的全连接层。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="/images/常用的LossFunction_2.png">
-<meta property="og:image" content="/images/常用的LossFunction_1.png">
-<meta property="og:image" content="/images/常用的LossFunction_3.png">
-<meta property="og:updated_time" content="2018-07-10T14:38:10.438Z">
+<meta property="og:image" content="/images/ptl1.png">
+<meta property="og:image" content="/images/ptl2.png">
+<meta property="og:image" content="/images/ptl3.png">
+<meta property="og:updated_time" content="2018-09-29T17:46:14.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="深度学习常用的LossFunction小结">
-<meta name="twitter:description" content="本文介绍深度学习中常用的损失函数。会不断更新。">
-<meta name="twitter:image" content="/images/常用的LossFunction_2.png">
+<meta name="twitter:title" content="Pytorch入门实战：迁移学习">
+<meta name="twitter:description" content="本文将使用迁移学习训练一个分类网络。参考自pytorch tutorial。 迁移学习主要有两种方案：  Finetuning the convent使用一个预训练的网络进行初始化（以前是随机初始化），如在imagenet上预训练的网络。  ConvNet as fixed feature extractor将所有的卷积层参数固定，只训练后面的全连接层。">
+<meta name="twitter:image" content="/images/ptl1.png">
 
 
 
@@ -124,13 +123,13 @@
 
 
 
-  <link rel="canonical" href="flyrie.top/2018/06/23/常用的LossFunction总结/"/>
+  <link rel="canonical" href="flyrie.top/2018/09/30/Pytorch_Transfer_Learning/"/>
 
 
 
 
 
-  <title>深度学习常用的LossFunction小结 | 乡间小路</title>
+  <title>Pytorch入门实战：迁移学习 | 乡间小路</title>
   
 
 
@@ -311,7 +310,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="flyrie.top/2018/06/23/常用的LossFunction总结/">
+    <link itemprop="mainEntityOfPage" href="flyrie.top/2018/09/30/Pytorch_Transfer_Learning/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="乡间小路">
@@ -328,7 +327,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">深度学习常用的LossFunction小结</h1>
+          <h1 class="post-title" itemprop="name headline">Pytorch入门实战：迁移学习</h1>
         
 
         <div class="post-meta">
@@ -340,8 +339,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-06-23T01:46:14+08:00">
-                2018-06-23
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-09-30T01:46:14+08:00">
+                2018-09-30
               </time>
             
 
@@ -356,8 +355,8 @@
               
                 <span class="post-meta-item-text">更新于&#58;</span>
               
-              <time title="更新于" itemprop="dateModified" datetime="2018-07-10T22:38:10+08:00">
-                2018-07-10
+              <time title="更新于" itemprop="dateModified" datetime="2018-09-30T01:46:14+08:00">
+                2018-09-30
               </time>
             
           </span>
@@ -377,6 +376,17 @@
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
                   <a href="/categories/深度学习/" itemprop="url" rel="index">
                     <span itemprop="name">深度学习</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/深度学习/Pytorch与Mxnet/" itemprop="url" rel="index">
+                    <span itemprop="name">Pytorch与Mxnet</span>
                   </a>
                 </span>
 
@@ -412,71 +422,210 @@
       
 
       
-        <p>本文介绍深度学习中常用的损失函数。会不断更新。<a id="more"></a></p>
-<h1 id="均方误差的问题"><a href="#均方误差的问题" class="headerlink" title="均方误差的问题"></a>均方误差的问题</h1><p>理想情况下，我们希望神经网络能够快速地从错误中学习，并且错误越大，下降速度越快。但有时候采用均方误差时loss很大，下降速率却很慢。戳此演示 <a href="http://neuralnetworksanddeeplearning.com/chap3.html#the_cross-entropy_cost_function" target="_blank" rel="noopener">演示</a>  </p>
-<p>考虑神经元的学习方式：假设Loss是 $C$ ，通过计算代价函数的偏导 $\partial C/\partial w$ 和 $\partial C / \partial b$ 来改变权重和偏置。那么「学习速度很慢」其实上是在说偏导很小。那么问题就是为何偏导很小。为了解释这个问题，我们先来计算一下偏导。使用了均方代价函数，即：</p>
-<script type="math/tex; mode=display">
-\begin{eqnarray}
-C = \frac{(y-a)^2}{2}
-\end{eqnarray}</script><p>这里 $a$ 是输入 $x=1$ 时神经元的输出，$y=0$ 是期望输出。下面我们用权重和偏置来重写这个式子。$a = \sigma(z)$，$z = wx+b$。运用链式法则得到：</p>
-<script type="math/tex; mode=display">
-\begin{eqnarray} 
-\frac{\partial C}{\partial w} & = & (a-y)\sigma'(z) x = a \sigma'(z) \\ 
-\frac{\partial C}{\partial b} & = & (a-y)\sigma'(z) = a \sigma'(z)
-\end{eqnarray}</script><p>为了理解这些表达式的行为，我们画出 $\sigma$ 函数的图像如下。</p>
-<p><img src="/images/常用的LossFunction_2.png" alt="图片"></p>
-<p>从图像看出当神经元输出接近1时，曲线变得非常平坦，因此 $\sigma’(z)$ 就会变得非常小。$\partial C / \partial w$ 和 $\partial C / \partial b$ 会变得很小。这就是学习速度变慢的根源。</p>
-<h1 id="交叉熵损失"><a href="#交叉熵损失" class="headerlink" title="交叉熵损失"></a>交叉熵损失</h1><p>那么如何来避免这种减速？事实证明我们可以用不同的代价函数比如交叉熵（cross-entropy）代价函数来替代平方代价函数。为了理解交叉熵，我们假设要训练一个拥有多个输入变量的神经元：输入 $x_1, x_2, \ldots$，权重 $w_1, w_2, \ldots$，偏置 $b$：</p>
-<p><img src="/images/常用的LossFunction_1.png" alt="图片"></p>
-<p>神经元的输出为 $a = \sigma(z)$，这里 $z = \sum_j w_j x_j+b$。我们定义这个神经元的交叉熵代价函数为：</p>
-<script type="math/tex; mode=display">
-\begin{eqnarray} 
-C = -\frac{1}{n} \sum_x \left[y \ln a + (1-y ) \ln (1-a) \right] \tag{1}
-\end{eqnarray}</script><p>这里 $n$ 是训练数据的个数，这个加和覆盖了所有的训练输入 $x$，$y$ 是期望输出。</p>
-<p>交叉熵有两个特性能够合理地解释为何它能作为代价函数。</p>
-<p>首先，它是非负的，也就是说，$C&gt;0$。需要注意到：1. 等式 $(1)$加和里的每一项都是负的，因为这些数是0到1，它们的对数是负的；2. 整个式子的前面有一个负号。</p>
-<p>其次，如果对于所有的训练输入 $x$，如果这个神经元的实际输出值都能很接近期望输出，那么交叉熵将会非常接近0。为了说明这个，假设有一些输入样例 $x$ 得到的输出是 $y = 0$，$a \approx 0$。这些都是一些比较好的输出。我们会发现等式 $(1)$ 的第一项将会消掉，与此同时，第二项 $-\ln (1-a) \approx 0$。同理，当 $y=1$ 或 $a \approx 1$ 时也如此分析。那么如果实际输出接近期望输出，代价函数的分布就会很低。</p>
-<p>总结一下，交叉熵是正的，并且当所有输入 $x$ 的输出都能接近期望输出 $y$ 的话，交叉熵的值将会接近0。这两个特征在直觉上我们都会觉得它适合做代价函数。事实上，均方代价函数也同时满足这两个特征。</p>
-<p>而且交叉熵有另一个均方代价函数不具备的特征，它能够避免学习速率降低的情况。为了理解这个，我们计算一下交叉熵关于权重的偏导。用$a = \sigma(z)$代替等式（1），并且运用链式法则，得到：</p>
-<script type="math/tex; mode=display">
-\begin{eqnarray} 
-\frac{\partial C}{\partial w_j} & = & -\frac{1}{n} \sum_x \left( \frac{y }{\sigma(z)} -\frac{(1-y)}{1-\sigma(z)} \right) \frac{\partial \sigma}{\partial w_j} \\ 
-& = & -\frac{1}{n} \sum_x \left( \frac{y}{\sigma(z)} -\frac{(1-y)}{1-\sigma(z)} \right)\sigma'(z) x_j
-\end{eqnarray}</script><p>通分化简之后得到：</p>
-<script type="math/tex; mode=display">
-\begin{eqnarray} 
-\frac{\partial C}{\partial w_j} & = & \frac{1}{n} \sum_x \frac{\sigma'(z) x_j}{\sigma(z) (1-\sigma(z))} (\sigma(z)-y) 
-\end{eqnarray}</script><p>利用sigmoid函数的定义，$\sigma(z) = 1/(1+e^{-z})$，得到 $\sigma’(z) = \sigma(z)(1-\sigma(z))$。可以看到 $\sigma’(z)$和$\sigma(z)(1-\sigma(z))$ 这一项在上式中消除了，它被简化成：</p>
-<script type="math/tex; mode=display">
-\begin{eqnarray} 
-\frac{\partial C}{\partial w_j} = \frac{1}{n} \sum_x x_j(\sigma(z)-y) 
-\end{eqnarray}</script><p>这是一个非常优美的表达式。它告诉我们权重的学习速率可以被 $\sigma(z)-y$ 控制，也就是被输出结果的误差所控制。误差越大我们的神经元学习速率越大。这正是我们直觉上所期待的那样。另外它能避免学习减速，这是 $\sigma’(z)$ 一项导致的。当我们使用交叉熵时，$\sigma’(z)$ 这一项会被抵消掉，因此我们不必担心它会变小。</p>
-<p>同样，我们能够计算偏置的偏导：</p>
-<script type="math/tex; mode=display">
-\begin{eqnarray} 
-\frac{\partial C}{\partial b} = \frac{1}{n} \sum_x (\sigma(z)-y)
-\end{eqnarray}</script><p>同理，它也能够避免 $\sigma’(z)$ 这一项带来的学习减速。</p>
-<h1 id="mxnet中的损失函数"><a href="#mxnet中的损失函数" class="headerlink" title="mxnet中的损失函数"></a>mxnet中的损失函数</h1><p>下面介绍mxnet中常用的损失函数。</p>
-<h2 id="SigmoidBinaryCrossEntropyLoss"><a href="#SigmoidBinaryCrossEntropyLoss" class="headerlink" title="SigmoidBinaryCrossEntropyLoss"></a>SigmoidBinaryCrossEntropyLoss</h2><p>If from_sigmoid is False (default), this loss computes:</p>
-<script type="math/tex; mode=display">
-prob = \frac{1}{1 + \exp(-{pred})} \\
-L = - \sum_i {label}_i * \log({prob}_i) +(1 - {label}_i) * \log(1 - {prob}_i)</script><p>If from_sigmoid is True, this loss computes:</p>
-<script type="math/tex; mode=display">
-L = - \sum_i {label}_i * \log({prob}_i) +(1 - {label}_i) * \log(1 - {prob}_i)</script><h2 id="HuberLoss"><a href="#HuberLoss" class="headerlink" title="HuberLoss"></a>HuberLoss</h2><p>Huber loss是为了增强平方误差损失函数（squared loss function）对噪声（或叫离群点，outliers）的鲁棒性提出的。定义如下：</p>
-<script type="math/tex; mode=display">
-f(x) =
-    \begin{cases}
-    (\sigma x)^2/2,& \text{if }x < 1/\sigma^2\\
-    |x|-0.5/\sigma^2,& \text{otherwise}
-    \end{cases}</script><p>图像如下：</p>
-<p><img src="/images/常用的LossFunction_3.png" alt="图片"></p>
-<h2 id="SoftmaxCrossEntropyLoss"><a href="#SoftmaxCrossEntropyLoss" class="headerlink" title="SoftmaxCrossEntropyLoss"></a>SoftmaxCrossEntropyLoss</h2><p>If sparse_label is True (default), label should contain integer category indicators:</p>
-<script type="math/tex; mode=display">
-\DeclareMathOperator{softmax}{softmax} \\
-p = \softmax({pred})\\L = -\sum_i \log p_{i,{label}_i}</script><p>If sparse_label is False, label should contain probability distribution and label‘s shape should be the same with pred:</p>
-<script type="math/tex; mode=display">
-p = \softmax({pred}) \\
-L = -\sum_i \sum_j {label}_j \log p_{ij}</script><h1 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h1><p>[1]. <a href="http://neuralnetworksanddeeplearning.com/chap3.html#the_cross-entropy_cost_function" target="_blank" rel="noopener">Neural Networks and Deep Learning</a><br>[2]. <a href="https://hit-scir.gitbooks.io/neural-networks-and-deep-learning-zh_cn/content/chap3/c3s1.html" target="_blank" rel="noopener">交叉熵代价函数</a><br>[3]. <a href="http://zh.gluon.ai/index.html" target="_blank" rel="noopener">动手学深度学习</a>   </p>
+        <p>本文将使用迁移学习训练一个分类网络。参考自pytorch tutorial。</p>
+<p>迁移学习主要有两种方案：</p>
+<ol>
+<li><p>Finetuning the convent<br>使用一个预训练的网络进行初始化（以前是随机初始化），如在imagenet上预训练的网络。</p>
+</li>
+<li><p>ConvNet as fixed feature extractor<br>将所有的卷积层参数固定，只训练后面的全连接层。</p>
+<a id="more"></a>
+</li>
+</ol>
+<h2 id="本文需要掌握的用法如下："><a href="#本文需要掌握的用法如下：" class="headerlink" title="本文需要掌握的用法如下："></a>本文需要掌握的用法如下：</h2><ol>
+<li><p>获取样本名称 <code>dataset.classes</code></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">class_names = image_datasets[<span class="string">'train'</span>].classes</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><code>torch.tensor.numpy()</code><br>Returns self tensor as a NumPy ndarray. This tensor and the returned ndarray share the same underlying storage. Changes to self tensor will be reflected in the ndarray and vice versa.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">a = torch.tensor([<span class="number">1</span>, <span class="number">2</span>])</span><br><span class="line">b = a.numpy()</span><br><span class="line">a[<span class="number">0</span>] = <span class="number">2</span></span><br><span class="line">b                 <span class="comment"># [2, 2]</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p><code>img = np.clip(img, 0, 1)</code> 将数据钳位</p>
+</li>
+<li><p><code>tensor.double, tensor.float, tensor.int</code> 返回转化到对应类型的tensor</p>
+</li>
+<li><p><code>model.state_dict()</code><br>Returns a dictionary containing a whole state of the module.<br>Both parameters and persistent buffers (e.g. running averages) are<br>included. Keys are corresponding parameter and buffer names.</p>
+</li>
+<li><p><code>torch.optim.lr_scheduler</code><br>提供了几种方法来根据epoches的数量调整学习率。包括<code>LambdaLR</code>，<code>StepLR</code>，<code>MultiStepLR</code>，<code>ExponentialLR</code>，<code>ReduceLROnPlateau</code></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">scheduler = StepLR(optimizer, step_size=<span class="number">30</span>, gamma=<span class="number">0.1</span>)</span><br><span class="line"><span class="keyword">for</span> epoch <span class="keyword">in</span> range(<span class="number">100</span>):</span><br><span class="line">    scheduler.step()</span><br><span class="line">    train(...)</span><br><span class="line">    validate(...)</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"><span class="keyword">import</span> torchvision</span><br><span class="line"><span class="keyword">import</span> torchvision.transforms <span class="keyword">as</span> transforms</span><br><span class="line"><span class="keyword">import</span> torchvision.models <span class="keyword">as</span> models</span><br><span class="line"><span class="keyword">import</span> torch.optim <span class="keyword">as</span> optim</span><br><span class="line"><span class="keyword">import</span> torch.nn <span class="keyword">as</span> nn</span><br><span class="line"><span class="keyword">import</span> torchvision.datasets <span class="keyword">as</span> datasets</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">import</span> torch.utils.data.dataloader <span class="keyword">as</span> dataloader</span><br><span class="line"><span class="keyword">import</span> copy</span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line">%matplotlib inline</span><br><span class="line"></span><br><span class="line">plt.ion()</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">phases = (<span class="string">'train'</span>, <span class="string">'val'</span>)</span><br><span class="line"></span><br><span class="line">data_transforms = &#123;</span><br><span class="line">    <span class="string">'train'</span>: transforms.Compose([</span><br><span class="line">        transforms.RandomResizedCrop(<span class="number">224</span>),</span><br><span class="line">        transforms.RandomHorizontalFlip(),</span><br><span class="line">        transforms.ToTensor(),</span><br><span class="line">        transforms.Normalize([<span class="number">0.485</span>, <span class="number">0.456</span>, <span class="number">0.406</span>], [<span class="number">0.229</span>, <span class="number">0.224</span>, <span class="number">0.225</span>])</span><br><span class="line">    ]),</span><br><span class="line">    <span class="string">'val'</span>: transforms.Compose([</span><br><span class="line">        transforms.Resize(<span class="number">256</span>),</span><br><span class="line">        transforms.CenterCrop(<span class="number">224</span>),</span><br><span class="line">        transforms.ToTensor(),</span><br><span class="line">        transforms.Normalize([<span class="number">0.485</span>, <span class="number">0.456</span>, <span class="number">0.406</span>], [<span class="number">0.229</span>, <span class="number">0.224</span>, <span class="number">0.225</span>])</span><br><span class="line">    ]),</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">data_dir = <span class="string">'/home/pengfei/sdb/Data/hymenoptera_data'</span></span><br><span class="line">image_datasets = &#123;x: datasets.ImageFolder(os.path.join(data_dir, x),</span><br><span class="line">                                          data_transforms[x])</span><br><span class="line">                  <span class="keyword">for</span> x <span class="keyword">in</span> phases&#125;</span><br><span class="line">image_loader = &#123;x: torch.utils.data.DataLoader(image_datasets[x], batch_size=<span class="number">4</span>,</span><br><span class="line">                                             shuffle=<span class="keyword">True</span>, num_workers=<span class="number">4</span>)</span><br><span class="line">              <span class="keyword">for</span> x <span class="keyword">in</span> phases&#125;</span><br><span class="line">dataset_sizes = &#123;x: len(image_datasets[x]) <span class="keyword">for</span> x <span class="keyword">in</span> phases&#125;</span><br><span class="line">class_names = image_datasets[<span class="string">'train'</span>].classes</span><br><span class="line"></span><br><span class="line">device = torch.device(<span class="string">"cuda:0"</span> <span class="keyword">if</span> torch.cuda.is_available() <span class="keyword">else</span> <span class="string">"cpu"</span>)</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">imshow</span><span class="params">(img, title=None)</span>:</span></span><br><span class="line">    img = img.numpy().transpose((<span class="number">1</span>, <span class="number">2</span>, <span class="number">0</span>))</span><br><span class="line">    mean = np.array([<span class="number">0.485</span>, <span class="number">0.456</span>, <span class="number">0.406</span>])</span><br><span class="line">    std = np.array([<span class="number">0.229</span>, <span class="number">0.224</span>, <span class="number">0.225</span>])</span><br><span class="line">    img = std * img + mean</span><br><span class="line">    img = np.clip(img, <span class="number">0</span>, <span class="number">1</span>)</span><br><span class="line">    plt.imshow(img)</span><br><span class="line">    <span class="keyword">if</span> title <span class="keyword">is</span> <span class="keyword">not</span> <span class="keyword">None</span>:</span><br><span class="line">        plt.title(title)</span><br><span class="line">    plt.pause(<span class="number">0.001</span>)</span><br><span class="line"></span><br><span class="line">inputs, classes = next(iter(image_loader[<span class="string">'train'</span>]))</span><br><span class="line">out = torchvision.utils.make_grid(inputs)</span><br><span class="line">imshow(out, title=[class_names[x] <span class="keyword">for</span> x <span class="keyword">in</span> classes])</span><br></pre></td></tr></table></figure>
+<p><img src="/images/ptl1.png" alt="图片"></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">train</span><span class="params">(model, optimizer, criterion, scheduler, epoch_num=<span class="number">20</span>)</span>:</span></span><br><span class="line">    start_time = time.time()</span><br><span class="line">    best_moudle_param = copy.deepcopy(model.state_dict())</span><br><span class="line">    best_acc = <span class="number">0.0</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">for</span> epoch <span class="keyword">in</span> range(epoch_num):</span><br><span class="line">        print(<span class="string">'Epoch &#123;&#125;/&#123;&#125;'</span>.format(epoch, epoch_num<span class="number">-1</span>))</span><br><span class="line">        print(<span class="string">'-'</span> * <span class="number">10</span>)</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">for</span> phase <span class="keyword">in</span> phases:</span><br><span class="line">            <span class="keyword">if</span> phase == <span class="string">'train'</span>:</span><br><span class="line">                scheduler.step()</span><br><span class="line">                model.train()</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                model.eval()</span><br><span class="line">                </span><br><span class="line">            running_loss = <span class="number">0.0</span></span><br><span class="line">            running_correct = <span class="number">0</span></span><br><span class="line">                </span><br><span class="line">            <span class="keyword">for</span> inputs, targets <span class="keyword">in</span> image_loader[phase]:</span><br><span class="line">                inputs, targets = inputs.to(device), targets.to(device)</span><br><span class="line">                </span><br><span class="line">                optimizer.zero_grad()</span><br><span class="line">                <span class="keyword">with</span> torch.set_grad_enabled(phase == <span class="string">'train'</span>):</span><br><span class="line">                    outputs = model(inputs)</span><br><span class="line">                    loss = criterion(outputs, targets)    </span><br><span class="line">                    _, predicted = torch.max(outputs, <span class="number">1</span>)</span><br><span class="line">                    </span><br><span class="line">                    <span class="keyword">if</span> phase == <span class="string">'train'</span>:</span><br><span class="line">                        loss.backward()</span><br><span class="line">                        optimizer.step()</span><br><span class="line">                </span><br><span class="line">                running_loss += loss.item() * inputs.shape[<span class="number">0</span>]</span><br><span class="line">                running_correct += (predicted == targets).sum()</span><br><span class="line">            </span><br><span class="line">            epoch_loss = running_loss / dataset_sizes[phase]</span><br><span class="line">            epoch_acc = running_correct.double() / dataset_sizes[phase]</span><br><span class="line">            </span><br><span class="line">            print(<span class="string">'&#123;&#125; Loss: &#123;:.4f&#125;, Acc: &#123;:.4f&#125;'</span>.format(phase, epoch_loss, epoch_acc))</span><br><span class="line">            </span><br><span class="line">            <span class="keyword">if</span> phase == <span class="string">'val'</span> <span class="keyword">and</span> epoch_acc &gt; best_acc:</span><br><span class="line">                best_acc = epoch_acc</span><br><span class="line">                best_moudle_param = copy.deepcopy(model.state_dict())</span><br><span class="line">    </span><br><span class="line">    time_cost = time.time() - start_time</span><br><span class="line">    print(<span class="string">'Traing complete in &#123;:.0f&#125;m &#123;:.0f&#125;s'</span>.format(</span><br><span class="line">        time_cost // <span class="number">60</span>, time_cost % <span class="number">60</span></span><br><span class="line">    ))</span><br><span class="line">    print(<span class="string">'Best val Acc: &#123;:.4f&#125;'</span>.format(best_acc))</span><br><span class="line">    </span><br><span class="line">    model.load_state_dict(best_moudle_param)</span><br><span class="line">    <span class="keyword">return</span> model</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">visualize_predict</span><span class="params">(model, num_images=<span class="number">6</span>)</span>:</span></span><br><span class="line">    was_training = model.training</span><br><span class="line">    model.eval()</span><br><span class="line">    images_so_far = <span class="number">0</span></span><br><span class="line">    fig = plt.figure()</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">with</span> torch.no_grad():</span><br><span class="line">        <span class="keyword">for</span> i, (inputs, labels) <span class="keyword">in</span> enumerate(image_loader[<span class="string">'val'</span>]):</span><br><span class="line">            inputs = inputs.to(device)</span><br><span class="line">            labels = labels.to(device)</span><br><span class="line">            </span><br><span class="line">            outputs = model(inputs)</span><br><span class="line">            _, predicted = torch.max(outputs, <span class="number">1</span>)</span><br><span class="line">            </span><br><span class="line">            <span class="keyword">for</span> j <span class="keyword">in</span> range(inputs.size()[<span class="number">0</span>]):</span><br><span class="line">                images_so_far += <span class="number">1</span></span><br><span class="line">                ax = plt.subplot(num_images // <span class="number">2</span>, <span class="number">2</span>, images_so_far)</span><br><span class="line">                ax.axis(<span class="string">'off'</span>)</span><br><span class="line">                ax.set_title(<span class="string">'predicted: &#123;&#125;'</span>.format(class_names[predicted[j]]))</span><br><span class="line">                imshow(inputs.cpu().data[j])</span><br><span class="line">                </span><br><span class="line">                <span class="keyword">if</span> images_so_far == num_images:</span><br><span class="line">                    model.train(mode=was_training)</span><br><span class="line">                    <span class="keyword">return</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">model_ft = models.resnet18(pretrained=<span class="keyword">True</span>)</span><br><span class="line">model_ft.fc = nn.Linear(model_ft.fc.in_features, <span class="number">2</span>)</span><br><span class="line">model_ft = model_ft.to(device)</span><br><span class="line">criterion = nn.CrossEntropyLoss()</span><br><span class="line">optimizer_ft = optim.SGD(model_ft.parameters(), lr=<span class="number">0.001</span>, momentum=<span class="number">0.9</span>)</span><br><span class="line">exp_lr_scheduler = optim.lr_scheduler.StepLR(optimizer_ft, step_size=<span class="number">7</span>, gamma=<span class="number">0.1</span>)</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">model_ft = train(model_ft, optimizer_ft, criterion, exp_lr_scheduler)</span><br></pre></td></tr></table></figure>
+<pre><code>Epoch 0/19
+----------
+train Loss: 0.6718, Acc: 0.6762
+val Loss: 0.2909, Acc: 0.8758
+Epoch 1/19
+----------
+train Loss: 0.4903, Acc: 0.7664
+val Loss: 0.2409, Acc: 0.8824
+Epoch 2/19
+----------
+train Loss: 0.4883, Acc: 0.8074
+val Loss: 0.4210, Acc: 0.8301
+Epoch 3/19
+----------
+train Loss: 0.6792, Acc: 0.7008
+val Loss: 0.3024, Acc: 0.8758
+Epoch 4/19
+----------
+train Loss: 0.4854, Acc: 0.7951
+val Loss: 0.5967, Acc: 0.8105
+Epoch 5/19
+----------
+train Loss: 0.6275, Acc: 0.7951
+val Loss: 0.2365, Acc: 0.9150
+Epoch 6/19
+----------
+train Loss: 0.7099, Acc: 0.7582
+val Loss: 0.4348, Acc: 0.8758
+Epoch 7/19
+----------
+train Loss: 0.3858, Acc: 0.8730
+val Loss: 0.2605, Acc: 0.9216
+Epoch 8/19
+----------
+train Loss: 0.3358, Acc: 0.8607
+val Loss: 0.2593, Acc: 0.9281
+Epoch 9/19
+----------
+train Loss: 0.3761, Acc: 0.8361
+val Loss: 0.2400, Acc: 0.9150
+Epoch 10/19
+----------
+train Loss: 0.3718, Acc: 0.8525
+val Loss: 0.2041, Acc: 0.9346
+Epoch 11/19
+----------
+train Loss: 0.3000, Acc: 0.8811
+val Loss: 0.1988, Acc: 0.9346
+Epoch 12/19
+----------
+train Loss: 0.4123, Acc: 0.8484
+val Loss: 0.2236, Acc: 0.9150
+Epoch 13/19
+----------
+train Loss: 0.2699, Acc: 0.9057
+val Loss: 0.1881, Acc: 0.9477
+Epoch 14/19
+----------
+train Loss: 0.3591, Acc: 0.8648
+val Loss: 0.1844, Acc: 0.9412
+Epoch 15/19
+----------
+train Loss: 0.2312, Acc: 0.9180
+val Loss: 0.2003, Acc: 0.9281
+Epoch 16/19
+----------
+train Loss: 0.2395, Acc: 0.8852
+val Loss: 0.3438, Acc: 0.8824
+Epoch 17/19
+----------
+train Loss: 0.2238, Acc: 0.9139
+val Loss: 0.2004, Acc: 0.9216
+Epoch 18/19
+----------
+train Loss: 0.2948, Acc: 0.8730
+val Loss: 0.1862, Acc: 0.9346
+Epoch 19/19
+----------
+train Loss: 0.2991, Acc: 0.8648
+val Loss: 0.2627, Acc: 0.9216
+Traing complete in 0m 32s
+Best val Acc: 0.9477
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">visualize_predict(model_ft)</span><br></pre></td></tr></table></figure>
+<p><img src="/images/ptl2.png" alt="图片"></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">model_conv = torchvision.models.resnet18(pretrained=<span class="keyword">True</span>)</span><br><span class="line"><span class="keyword">for</span> param <span class="keyword">in</span> model_conv.parameters():</span><br><span class="line">    param.requires_grad = <span class="keyword">False</span></span><br><span class="line"></span><br><span class="line">model_conv.fc = nn.Linear(model_conv.fc.in_features, <span class="number">2</span>)</span><br><span class="line">model_conv = model_conv.to(device)</span><br><span class="line">criterion = nn.CrossEntropyLoss()</span><br><span class="line">optimizer_conv = optim.SGD(model_conv.fc.parameters(), lr=<span class="number">0.001</span>, momentum=<span class="number">0.9</span>)</span><br><span class="line">exp_lr_scheduler = optim.lr_scheduler.StepLR(optimizer_conv, step_size=<span class="number">7</span>, gamma=<span class="number">0.1</span>)</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">model_conv = train(model_conv, optimizer_conv, criterion, exp_lr_scheduler)</span><br></pre></td></tr></table></figure>
+<pre><code>Epoch 0/19
+----------
+train Loss: 0.7631, Acc: 0.5615
+val Loss: 0.2695, Acc: 0.9020
+Epoch 1/19
+----------
+train Loss: 0.7224, Acc: 0.7254
+val Loss: 0.3596, Acc: 0.8758
+Epoch 2/19
+----------
+train Loss: 0.3871, Acc: 0.8361
+val Loss: 0.1821, Acc: 0.9346
+Epoch 3/19
+----------
+train Loss: 0.3875, Acc: 0.8115
+val Loss: 0.1709, Acc: 0.9542
+Epoch 4/19
+----------
+train Loss: 0.4280, Acc: 0.7787
+val Loss: 0.2612, Acc: 0.8954
+Epoch 5/19
+----------
+train Loss: 0.3769, Acc: 0.8525
+val Loss: 0.1932, Acc: 0.9477
+Epoch 6/19
+----------
+train Loss: 0.5753, Acc: 0.7705
+val Loss: 0.3275, Acc: 0.8889
+Epoch 7/19
+----------
+train Loss: 0.3103, Acc: 0.8730
+val Loss: 0.1959, Acc: 0.9346
+Epoch 8/19
+----------
+train Loss: 0.3225, Acc: 0.8566
+val Loss: 0.1967, Acc: 0.9477
+Epoch 9/19
+----------
+train Loss: 0.4565, Acc: 0.7992
+val Loss: 0.2357, Acc: 0.9216
+Epoch 10/19
+----------
+train Loss: 0.3099, Acc: 0.8648
+val Loss: 0.1959, Acc: 0.9477
+Epoch 11/19
+----------
+train Loss: 0.3562, Acc: 0.8443
+val Loss: 0.2094, Acc: 0.9216
+Epoch 12/19
+----------
+train Loss: 0.3817, Acc: 0.8320
+val Loss: 0.2029, Acc: 0.9216
+Epoch 13/19
+----------
+train Loss: 0.2989, Acc: 0.8689
+val Loss: 0.2207, Acc: 0.9216
+Epoch 14/19
+----------
+train Loss: 0.3139, Acc: 0.8770
+val Loss: 0.2097, Acc: 0.9412
+Epoch 15/19
+----------
+train Loss: 0.3140, Acc: 0.8566
+val Loss: 0.2014, Acc: 0.9281
+Epoch 16/19
+----------
+train Loss: 0.3595, Acc: 0.8238
+val Loss: 0.1981, Acc: 0.9346
+Epoch 17/19
+----------
+train Loss: 0.3495, Acc: 0.8484
+val Loss: 0.2064, Acc: 0.9150
+Epoch 18/19
+----------
+train Loss: 0.3043, Acc: 0.8525
+val Loss: 0.2191, Acc: 0.9216
+Epoch 19/19
+----------
+train Loss: 0.3634, Acc: 0.8402
+val Loss: 0.1821, Acc: 0.9477
+Traing complete in 0m 22s
+Best val Acc: 0.9542
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">visualize_predict(model_conv)</span><br><span class="line">plt.ioff()</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<p><img src="/images/ptl3.png" alt="图片"></p>
 
       
     </div>
@@ -516,12 +665,6 @@ L = -\sum_i \sum_j {label}_j \log p_{ij}</script><h1 id="参考文献"><a href="
 
     <footer class="post-footer">
       
-        <div class="post-tags">
-          
-            <a href="/tags/loss/" rel="tag"># loss</a>
-          
-        </div>
-      
 
       
       
@@ -531,8 +674,8 @@ L = -\sum_i \sum_j {label}_j \log p_{ij}</script><h1 id="参考文献"><a href="
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/06/22/全卷积网络（FCN）/" rel="next" title="全卷积网络(FCN)">
-                <i class="fa fa-chevron-left"></i> 全卷积网络(FCN)
+              <a href="/2018/09/29/Python_Decorator_Closure/" rel="next" title="Python闭包与装饰器">
+                <i class="fa fa-chevron-left"></i> Python闭包与装饰器
               </a>
             
           </div>
@@ -541,8 +684,8 @@ L = -\sum_i \sum_j {label}_j \log p_{ij}</script><h1 id="参考文献"><a href="
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2018/06/23/循环神经网络(RNN)/" rel="prev" title="【转】循环神经网络(RNN)、GRU、LSTM">
-                【转】循环神经网络(RNN)、GRU、LSTM <i class="fa fa-chevron-right"></i>
+              <a href="/2018/10/02/Batch_Normalization/" rel="prev" title="【转】Batch Normalization">
+                【转】Batch Normalization <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -629,7 +772,7 @@ L = -\sum_i \sum_j {label}_j \log p_{ij}</script><h1 id="参考文献"><a href="
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">88</span>
+                  <span class="site-state-item-count">91</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -651,7 +794,7 @@ L = -\sum_i \sum_j {label}_j \log p_{ij}</script><h1 id="参考文献"><a href="
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">92</span>
+                  <span class="site-state-item-count">90</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -858,7 +1001,7 @@ L = -\sum_i \sum_j {label}_j \log p_{ij}</script><h1 id="参考文献"><a href="
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#均方误差的问题"><span class="nav-number">1.</span> <span class="nav-text">均方误差的问题</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#交叉熵损失"><span class="nav-number">2.</span> <span class="nav-text">交叉熵损失</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#mxnet中的损失函数"><span class="nav-number">3.</span> <span class="nav-text">mxnet中的损失函数</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#SigmoidBinaryCrossEntropyLoss"><span class="nav-number">3.1.</span> <span class="nav-text">SigmoidBinaryCrossEntropyLoss</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#HuberLoss"><span class="nav-number">3.2.</span> <span class="nav-text">HuberLoss</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SoftmaxCrossEntropyLoss"><span class="nav-number">3.3.</span> <span class="nav-text">SoftmaxCrossEntropyLoss</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考文献"><span class="nav-number">4.</span> <span class="nav-text">参考文献</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#本文需要掌握的用法如下："><span class="nav-number">1.</span> <span class="nav-text">本文需要掌握的用法如下：</span></a></li></ol></div>
             
 
           </div>

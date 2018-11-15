@@ -88,7 +88,9 @@
 <meta property="og:description" content="在很多应用中，输入和输出都可以是不定长序列。以机器翻译为例，输入可以是一段不定长的英语文本序列，输出可以是一段不定长的法语文本序列，例如 英语输入：“They”、“are”、“watching”、“.” 法语输出：“Ils”、“regardent”、“.”">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="/images/seq2seq_1.svg">
-<meta property="og:updated_time" content="2018-08-04T13:00:29.894Z">
+<meta property="og:image" content="/images/seq2seq1.png">
+<meta property="og:image" content="/images/seq2seq2.png">
+<meta property="og:updated_time" content="2018-07-27T17:46:15.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="【转】seq2seq">
 <meta name="twitter:description" content="在很多应用中，输入和输出都可以是不定长序列。以机器翻译为例，输入可以是一段不定长的英语文本序列，输出可以是一段不定长的法语文本序列，例如 英语输入：“They”、“are”、“watching”、“.” 法语输出：“Ils”、“regardent”、“.”">
@@ -354,8 +356,8 @@
               
                 <span class="post-meta-item-text">更新于&#58;</span>
               
-              <time title="更新于" itemprop="dateModified" datetime="2018-08-04T21:00:29+08:00">
-                2018-08-04
+              <time title="更新于" itemprop="dateModified" datetime="2018-07-28T01:46:15+08:00">
+                2018-07-28
               </time>
             
           </span>
@@ -441,6 +443,8 @@
 <p>为此，我们可以使用另一个循环神经网络作为解码器。 在输出序列的时间步 $t^\prime$，解码器将上一时间步的输出 $y_{t^\prime-1}$ 以及背景变量 $\boldsymbol{c}$ 作为输入，并将它们与上一时间步的隐藏状态 $\boldsymbol{s}_{t^\prime-1}$ 变换为当前时间步的隐藏状态 $\boldsymbol{s}_{t^\prime}$。因此，我们可以用函数 $g$ 表达解码器隐藏层的变换：</p>
 <script type="math/tex; mode=display">
 \boldsymbol{s}_{t^\prime} = g(y_{t^\prime-1}, \boldsymbol{c}, \boldsymbol{s}_{t^\prime-1})</script><p>有了解码器的隐藏状态后，我们可以使用自定义的输出层和 softmax 运算来计算 $\mathbb{P}(y_{t^\prime} \mid y_1, \ldots, y_{t^\prime-1}, \boldsymbol{c})$，例如基于当前时间步的解码器隐藏状态 $\boldsymbol{s}_{t^\prime}$、上一时间步的输出 $y_{t^\prime-1}$ 以及背景变量 $\boldsymbol{c}$ 来计算当前时间步输出 $y_{t^\prime}$ 的概率分布。</p>
+<p>其实对于seq2seq的decoder，它在训练阶段和预测阶段对rnn的输出的处理可能是不一样的，比如在训练阶段可能对rnn的输出不处理，直接用target的序列作为下时刻的输入。而预测阶段会将rnn的输出当成是下一时刻的输入，因为此时已经没有target序列可以作为输入了。</p>
+<p><img src="/images/seq2seq1.png" alt="image"><br><img src="/images/seq2seq2.png" alt="image">  </p>
 <h1 id="模型训练"><a href="#模型训练" class="headerlink" title="模型训练"></a>模型训练</h1><p>根据最大似然估计，我们可以最大化输出序列基于输入序列的条件概率</p>
 <script type="math/tex; mode=display">
 \begin{split}\begin{aligned}
@@ -515,7 +519,7 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2018/07/29/注意力机制/" rel="prev" title="【转】注意力机制">
+              <a href="/2018/07/29/Attention/" rel="prev" title="【转】注意力机制">
                 【转】注意力机制 <i class="fa fa-chevron-right"></i>
               </a>
             
@@ -603,7 +607,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">88</span>
+                  <span class="site-state-item-count">91</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -625,7 +629,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">92</span>
+                  <span class="site-state-item-count">90</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>

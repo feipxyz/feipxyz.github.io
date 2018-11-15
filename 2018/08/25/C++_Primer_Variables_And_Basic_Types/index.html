@@ -465,10 +465,8 @@
 </li>
 <li><p>一般来说，指针的类型要和它指向的对象严格匹配。</p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">double</span> dval;</span><br><span class="line"><span class="keyword">double</span> *pd = &amp;dval;</span><br><span class="line"><span class="keyword">double</span> *pd2 = pd;</span><br><span class="line"><span class="keyword">int</span> *pi = pd;  <span class="comment">//错误，类型不匹配</span></span><br><span class="line">pi = &amp;dval;    <span class="comment">//错误，类型不匹配</span></span><br></pre></td></tr></table></figure>
-</li>
-</ol>
 <p>例外情况有两种，其中之一是：允许一个指向常量的指针指向一个非常量对象。</p>
-<ol>
+</li>
 <li><p>空指针不指向任何对象，在试图使用一个指针之前代码可以首先检查它是否为空。得到空指针最直接的办法是用字面值nullptr来初始化指针，也可以通过将指针初始化为字面值0来生成空指针。过去的指针会用到一个名为NULL的预处理变量来给指针赋值，这个变量在头文件cstdlib中定义，它的值就是0。定义空指针：</p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> *p1=<span class="literal">nullptr</span>;    <span class="comment">//等价于int *p1=0;</span></span><br><span class="line"><span class="keyword">int</span> *p2=<span class="number">0</span>;          <span class="comment">//直接将p2初始化为字母常量0</span></span><br><span class="line"><span class="comment">/* 要包含#include&lt;cstdlib&gt; */</span></span><br><span class="line"><span class="keyword">int</span> *p3=<span class="literal">NULL</span>;       <span class="comment">//等价于int *p3=0;</span></span><br></pre></td></tr></table></figure>
 </li>
@@ -501,17 +499,17 @@
 </li>
 <li><p>执行拷贝操作时，顶层const对于拷贝操作无影响</p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="keyword">int</span> i = <span class="number">1</span>;</span><br><span class="line"><span class="keyword">int</span> m = i;          <span class="comment">//i具有顶层const对于拷贝操作无影响。</span></span><br></pre></td></tr></table></figure>
+<p>但是底层const不可忽略。执行拷贝操作时，拷入与拷出对象必须具有相同的底层const，或者两对象的数据类型必须能够转换。一般来说，非常量可以转换成常量，反之不行。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">int i = 1;</span><br><span class="line">const int *p = &amp;i;  //正确，非常量转换为常量</span><br><span class="line">int *q = p;         //错误，常量不可转换为非常量</span><br><span class="line">const int *r = p;   //正确，等号两边都具有底层const</span><br></pre></td></tr></table></figure>
 </li>
-</ol>
-<p>但是底层const不可忽略。执行拷贝操作时，拷入与拷出对象必须具有相同的底层const，或者两对象的数据类型必须能够转换。一般来说，非常量可以转换成常量，反之不行。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">int i = 1;</span><br><span class="line">const int *p = &amp;i;  //正确，非常量转换为常量</span><br><span class="line">int *q = p;         //错误，常量不可转换为非常量</span><br><span class="line">const int *r = p;   //正确，等号两边都具有底层const</span><br></pre></td></tr></table></figure></p>
-<ol>
-<li>constexpr变量<br>常量表达式（const expression）是指值不会改变并且在编译过程中就能得到计算结果的表达式。一个对象（或表达式）是不是常量表达式由它的数据类型和初始值共同决定，例如：<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="keyword">int</span> max=<span class="number">20</span>;   <span class="comment">//max是常量表达式</span></span><br><span class="line"><span class="keyword">const</span> <span class="keyword">int</span> li=max+<span class="number">1</span>; <span class="comment">//li是常量表达式</span></span><br><span class="line"><span class="keyword">int</span> sta=<span class="number">27</span>;         <span class="comment">//sta不是常量表达式</span></span><br><span class="line"><span class="keyword">const</span> <span class="keyword">int</span> sz=get(); <span class="comment">//sz不是常量表达式</span></span><br></pre></td></tr></table></figure>
-</li>
-</ol>
-<p>在一个复杂系统中很难分辨一个初始值到底是不是常量表达式。虽然可以用const来定义，但在使用时尽管要求如此但依然会发生初始值不是常量表达式的情况。可以说，在这种情况下，对象的定义和使用是两回事。<br>C++11规定，允许将变量声明为constexpr类型，以便由编译器来验证变量的值是否是一个常量表达式。声明为constexpr的变量一定是一个常量，而且必须用常量表达式初始化：<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">constexpr</span> <span class="keyword">int</span> mf = <span class="number">20</span>; 		<span class="comment">// 20是常量表达式</span></span><br><span class="line"><span class="keyword">constexpr</span> <span class="keyword">int</span> limit = mf + <span class="number">1</span>;	<span class="comment">// mf+1是常量表达式</span></span><br><span class="line"><span class="keyword">constexpr</span> <span class="keyword">int</span> sz = size(); 	<span class="comment">// 只有当size是一个constexpr函数时才是一条正确的声明语句</span></span><br></pre></td></tr></table></figure></p>
+<li><p>constexpr变量<br>常量表达式（const expression）是指值不会改变并且在编译过程中就能得到计算结果的表达式。一个对象（或表达式）是不是常量表达式由它的数据类型和初始值共同决定，例如：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="keyword">int</span> max=<span class="number">20</span>;   <span class="comment">//max是常量表达式</span></span><br><span class="line"><span class="keyword">const</span> <span class="keyword">int</span> li=max+<span class="number">1</span>; <span class="comment">//li是常量表达式</span></span><br><span class="line"><span class="keyword">int</span> sta=<span class="number">27</span>;         <span class="comment">//sta不是常量表达式</span></span><br><span class="line"><span class="keyword">const</span> <span class="keyword">int</span> sz=get(); <span class="comment">//sz不是常量表达式</span></span><br></pre></td></tr></table></figure>
+<p>在一个复杂系统中很难分辨一个初始值到底是不是常量表达式。虽然可以用const来定义，但在使用时尽管要求如此但依然会发生初始值不是常量表达式的情况。可以说，在这种情况下，对象的定义和使用是两回事。<br>C++11规定，允许将变量声明为constexpr类型，以便由编译器来验证变量的值是否是一个常量表达式。声明为constexpr的变量一定是一个常量，而且必须用常量表达式初始化：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">constexpr</span> <span class="keyword">int</span> mf = <span class="number">20</span>; 		<span class="comment">// 20是常量表达式</span></span><br><span class="line"><span class="keyword">constexpr</span> <span class="keyword">int</span> limit = mf + <span class="number">1</span>;	<span class="comment">// mf+1是常量表达式</span></span><br><span class="line"><span class="keyword">constexpr</span> <span class="keyword">int</span> sz = size(); 	<span class="comment">// 只有当size是一个constexpr函数时才是一条正确的声明语句</span></span><br></pre></td></tr></table></figure>
 <p>一般来说，如果你认为变量是一个常量表达式，那就把它声明为<code>constexpr</code>。</p>
-<ol>
-<li>字面值类型<br>常量表达式的值需要在编译时就得到计算，因此对声明constexp时用到的类型必须有所限制。因为这些类型一般比较简单，容易得到，就把它们称为字面值类型。算术类型、引用和指针都属于字面值类型。自定义的类、IO库、string则不属于字面值类型，也就不能被定义成constexpr。<br>尽管指针和引用都能定义成constexpr，但它们的初始值却受到严格限制，一个constexpr指针的初始值必须是nullprt或者0，或者是某个存储在某个固定地址中的对象。定义在函数体之外的对象其地址固定不变。</li>
+</li>
+<li><p>字面值类型<br>常量表达式的值需要在编译时就得到计算，因此对声明constexp时用到的类型必须有所限制。因为这些类型一般比较简单，容易得到，就把它们称为字面值类型。算术类型、引用和指针都属于字面值类型。自定义的类、IO库、string则不属于字面值类型，也就不能被定义成constexpr。<br>尽管指针和引用都能定义成constexpr，但它们的初始值却受到严格限制，一个constexpr指针的初始值必须是nullprt或者0，或者是某个存储在某个固定地址中的对象。定义在函数体之外的对象其地址固定不变。</p>
+</li>
 </ol>
 <h1 id="处理类型"><a href="#处理类型" class="headerlink" title="处理类型"></a>处理类型</h1><ol>
 <li><p>类型别名  </p>
@@ -519,10 +517,8 @@
 </li>
 <li><p>指针、常量和类型别名  </p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="keyword">char</span> *pstring</span><br><span class="line"><span class="keyword">const</span> pstring cstr = <span class="number">0</span>;  <span class="comment">//cstr是指向char的常量指针</span></span><br><span class="line"><span class="keyword">const</span> pstring *ps;       <span class="comment">//ps是一个指针，它的对象是指向char的常量指针</span></span><br></pre></td></tr></table></figure>
-</li>
-</ol>
 <p>const是对给定类型的修饰，pstring实际上是指向char的指针，因此const pstring就是指向char的常量指针，而非指向常量的指针。需要强调的是，声明语句中用到pstring时，其基本数据类型是指针。</p>
-<ol>
+</li>
 <li><p>auto类型说明符<br>编程时常常需要把表达式的值赋给变量，这就要求在声明变量的时候清楚知道表达式的类型。然而要做到这一点并非那么容易，有时候甚至根本做不到。为了解决这个问题，C++11标准引入了auto类型说明符，用它就能让编译器替我们去分析表达式所属的类型。与原来那些只对应一种特定类型的说明符不同，auto让编译器通过初值来推算变量类型。显然，auto定义的变量必须要有初始值。<br>使用auto能在一条语句中声明多个变量。但是一条声明语句只能有一个基本数据类型，所以该语句中所有变量的初始基本数据类型都必须一致：</p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">auto</span> sz = <span class="number">0</span>, pi = <span class="number">3.14</span>  <span class="comment">//错误</span></span><br></pre></td></tr></table></figure>
 <ul>
@@ -598,8 +594,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2018/08/25/C++ STL学习笔记/" rel="prev" title="C++ STL学习笔记">
-                C++ STL学习笔记 <i class="fa fa-chevron-right"></i>
+              <a href="/2018/09/01/C++_Complie_And_Link/" rel="prev" title="【转】C++编译与链接">
+                【转】C++编译与链接 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -686,7 +682,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">88</span>
+                  <span class="site-state-item-count">91</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -708,7 +704,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">92</span>
+                  <span class="site-state-item-count">90</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
