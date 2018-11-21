@@ -79,16 +79,20 @@
 
 
 
-<meta name="description" content="把知道的东西讲清楚">
-<meta property="og:type" content="website">
-<meta property="og:title" content="乡间小路">
-<meta property="og:url" content="flyrie.top/archives/2018/02/index.html">
+<meta name="description" content="Ridge Regression其实就是带了L2正则化的线性回归。Lasso Regression其实就是带了L1正则项的线性回归。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="岭回归、Lasso回归与稀疏性">
+<meta property="og:url" content="flyrie.top/2018/10/22/Lasso_Regression/index.html">
 <meta property="og:site_name" content="乡间小路">
-<meta property="og:description" content="把知道的东西讲清楚">
+<meta property="og:description" content="Ridge Regression其实就是带了L2正则化的线性回归。Lasso Regression其实就是带了L1正则项的线性回归。">
 <meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="/images/l1-ball.svg">
+<meta property="og:image" content="/images/l2-ball.svg">
+<meta property="og:updated_time" content="2018-10-21T17:46:14.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="乡间小路">
-<meta name="twitter:description" content="把知道的东西讲清楚">
+<meta name="twitter:title" content="岭回归、Lasso回归与稀疏性">
+<meta name="twitter:description" content="Ridge Regression其实就是带了L2正则化的线性回归。Lasso Regression其实就是带了L1正则项的线性回归。">
+<meta name="twitter:image" content="/images/l1-ball.svg">
 
 
 
@@ -118,13 +122,13 @@
 
 
 
-  <link rel="canonical" href="flyrie.top/archives/2018/02/"/>
+  <link rel="canonical" href="flyrie.top/2018/10/22/Lasso_Regression/"/>
 
 
 
 
 
-  <title>归档 | 乡间小路</title>
+  <title>岭回归、Lasso回归与稀疏性 | 乡间小路</title>
   
 
 
@@ -153,7 +157,7 @@
     
   
 
-  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-archive">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -291,73 +295,306 @@
           <div id="content" class="content">
             
 
+  <div id="posts" class="posts-expand">
+    
+
+  
+
   
   
   
-  <div class="post-block archive">
-    <div id="posts" class="posts-collapse">
-      <span class="archive-move-on"></span>
-
-      <span class="archive-page-counter">
-        
-        
-         
-          
-        很好! 目前共计 91 篇日志。 继续努力。
-      </span>
-
-      
-
-        
-        
-        
-
-        
-          
-          <div class="collection-title">
-            <h1 class="archive-year" id="archive-year-2018">2018</h1>
-          </div>
-        
-        
-
-        
 
   <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="flyrie.top/2018/10/22/Lasso_Regression/">
 
-      <h2 class="post-title">
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="乡间小路">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="乡间小路">
+    </span>
+
+    
+      <header class="post-header">
+
         
-            <a class="post-title-link" href="/2018/02/02/Lasso_Regression/" itemprop="url">
-              
-                <span itemprop="name">岭回归、Lasso回归与稀疏性</span>
-              
-            </a>
         
-      </h2>
+          <h1 class="post-title" itemprop="name headline">岭回归、Lasso回归与稀疏性</h1>
+        
 
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2018-02-02T01:46:14+08:00"
-              content="2018-02-02" >
-          02-02
-        </time>
-      </div>
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-10-22T01:46:14+08:00">
+                2018-10-22
+              </time>
+            
 
-    </header>
-  </article>
+            
+              <span class="post-meta-divider">|</span>
+            
 
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">更新于&#58;</span>
+              
+              <time title="更新于" itemprop="dateModified" datetime="2018-10-22T01:46:14+08:00">
+                2018-10-22
+              </time>
+            
+          </span>
 
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/机器学习/" itemprop="url" rel="index">
+                    <span itemprop="name">机器学习</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
 
       
+      
 
+      
+        <p>Ridge Regression其实就是带了L2正则化的线性回归。Lasso Regression其实就是带了L1正则项的线性回归。<br><a id="more"></a></p>
+<h1 id="线性回归"><a href="#线性回归" class="headerlink" title="线性回归"></a>线性回归</h1><p>给定数据集$D=(\boldsymbol x_1, y_1), (\boldsymbol x_2, y_2) \cdots (\boldsymbol x_m, y_m)$，其中 $\boldsymbol x_i=[x_i^{(1)}, x_i^{(2)} \cdots x_i^{(d)}]^T$ 表示一条样本数据有 $d$ 个属性，我们的目标是寻找 $d$ 维列向量 $\boldsymbol w$ 和常数 $b$，使得模型</p>
+<script type="math/tex; mode=display">
+f(\boldsymbol x_i)=\boldsymbol w^T\boldsymbol x_i+b \tag 1</script><p>所得的预测值与真实值 $y_i$ 尽可能接近。</p>
+<p>我们统一用矩阵和向量表示，把常数 $b$ 放入权值向量 $\boldsymbol w$ 得到一个 $d+1$ 维的权值向量 $\boldsymbol{\hat w}=(\boldsymbol w; b)$，同时在每个样本实例中添加第 $d+1$ 个属性，置为 $1$，$\boldsymbol{\hat {x_i}}=(\boldsymbol x_i;1)$。将样本所有属性排列为矩阵可以得到： </p>
+<script type="math/tex; mode=display">
+\boldsymbol X=
+\left [
+\begin{matrix}
+  \boldsymbol{\hat {x_1}} \\
+  \boldsymbol{\hat {x_2}} \\
+  \vdots \\
+  \boldsymbol{\hat {x_m}} \\
+\end{matrix}
+\right]</script><p>令 $\boldsymbol y=(y_1, y_2\cdots y_m)^T$ ，我们最小化 </p>
+<script type="math/tex; mode=display">
+||\boldsymbol y-\boldsymbol X\boldsymbol{\hat {w}}||^2</script><p>即</p>
+<script type="math/tex; mode=display">
+\boldsymbol w^*=\arg_\boldsymbol{\hat w}\min (\boldsymbol y-\boldsymbol X\boldsymbol{\hat {w}})^T(\boldsymbol y-\boldsymbol X\boldsymbol{\hat {w}})</script><p>令 $h(\boldsymbol{\hat w})=(\boldsymbol y-\boldsymbol X\boldsymbol{\hat {w}})^T(\boldsymbol y-\boldsymbol X\boldsymbol{\hat {w}})$，求它的最小值只需其对 $\boldsymbol{\hat w}$ 求导，导数值为 $0$ 时 $\boldsymbol{\hat w}$ 的取值即为所求。 </p>
+<script type="math/tex; mode=display">
+\begin{align*}
+\frac{\partial h(\boldsymbol{\hat w})}{\partial \boldsymbol{\hat w}} 
+&= \frac{\partial [(\boldsymbol y-\boldsymbol X\boldsymbol{\hat {w}})^T(\boldsymbol y-\boldsymbol X\boldsymbol{\hat {w}})]}{\partial \boldsymbol{\hat w}}\\
+&= 2\frac{\partial (\boldsymbol y-\boldsymbol X\boldsymbol{\hat {w}})^T}{\partial \boldsymbol{\hat w}}(\boldsymbol y-\boldsymbol X\boldsymbol{\hat {w}})\tag 2\\
+&= 2\frac{\partial \boldsymbol y^T}{\partial \boldsymbol{\hat w}}(\boldsymbol y-\boldsymbol X\boldsymbol{\hat {w}})-2\frac{\partial (\boldsymbol X\boldsymbol{\hat {w}})^T}{\partial \boldsymbol{\hat w}}(\boldsymbol y-\boldsymbol X\boldsymbol{\hat {w}}) \tag 3\\
+&= 0-2\boldsymbol X^T(\boldsymbol y-\boldsymbol X\boldsymbol{\hat {w}})\tag 4\\
+&= 2\boldsymbol X^T(\boldsymbol X\boldsymbol{\hat {w}}-\boldsymbol y)\tag 5\\
+\end{align*}</script><p>最后我们令式(5)为0，此时的 $\boldsymbol{\hat {w}}$ 即为所求 $\boldsymbol w^*$</p>
+<script type="math/tex; mode=display">
+2 \boldsymbol X^T(\boldsymbol X\boldsymbol{\hat {w}}-\boldsymbol y)=2\boldsymbol X^T\boldsymbol X\boldsymbol{\hat {w}}-2\boldsymbol X^T\boldsymbol y=0 \\
+\boldsymbol X^T\boldsymbol X\boldsymbol{\hat {w}}=\boldsymbol X^T\boldsymbol y \\
+\boldsymbol{\hat {w}}=(\boldsymbol X^T\boldsymbol X)^{-1}\boldsymbol X^T\boldsymbol y \\
+\boldsymbol w^*=(\boldsymbol X^T\boldsymbol X)^{-1}\boldsymbol X^T\boldsymbol y</script><p>然而，如果$d&gt;m$，即特征大于样本的话，矩阵$\boldsymbol X^T\boldsymbol X$将会不是满秩的，而这个解也没法算出来。或者更确切地说，将会有无穷多个解。也就是说，我们的数据不足以确定一个解，如果我们从所有可行解里随机选一个的话，很可能并不是真正好的解，总而言之，我们 overfitting 了</p>
+<p>解决 overfitting 的常用方法是 regularization。</p>
+<h1 id="Ridge-Regression"><a href="#Ridge-Regression" class="headerlink" title="Ridge Regression"></a>Ridge Regression</h1><p>ridge regression就是在原始线性回归基础上，使用$L_{2}$范数正则化，具体为 </p>
+<script type="math/tex; mode=display">
+min_{w} \sum_{i=1}^{m}(y_{i}-w^{T}x_{i})^{2}+\lambda ||w||_{2}^{2}</script><p>解得：</p>
+<script type="math/tex; mode=display">
+\boldsymbol w^*=(\boldsymbol X^T\boldsymbol X + \lambda I)^{-1}\boldsymbol X^T\boldsymbol y</script><p>直观地来看，添加这个 regularizer 会使得模型的解偏向于 norm 较小的 $w$ 。从凸优化的角度来说， 等价于如下问题：</p>
+<script type="math/tex; mode=display">
+min_{w} \frac {1}{n} ||y - Xw||^2, \quad s.t.\  ||w||_2 \leq C</script><p>其中 $C$ 是和 $\lambda$ 一一对应的是个常数。也就是说，我们通过限制 $w$ 的 norm 的大小实现了对模型空间的限制，从而在一定程度上（取决于$\lambda$ 的大小）避免了 overfitting 。不过 ridge regression 并不具有产生稀疏解的能力，得到的系数 $w$ 仍然需要数据中的所有特征才能计算预测结果，从计算量上来说并没有得到改观。</p>
+<p>可以看到岭回归得到的估计只多了一个正则项$\lambda I$.这一项的存在使得$(X^T X+\lambda I)^{-1}$在数值计算上表现更加稳定。尤其是当多重共线性(Multicollinearity)情况发生，$X^T X$接近奇异时，岭回归还是能得到稳定的结果。另外，在岭回归中还可以通过观察岭迹来剔除多重共线性的变量。</p>
+<p><strong>岭回归中的“岭”是什么？</strong> </p>
+<blockquote>
+<p>岭回归使用了单位矩阵乘以常量$\lambda$，我们观察其中的单位矩阵$I$，可以看到值I贯穿整个对角线，其余元素全是0，形象地，在0构成的平面上有一条1组成的“岭”，这就是岭回归中的“岭”的由来。</p>
+</blockquote>
+<p>不过，特别是在像生物或者医学等通常需要和人交互的领域，稀疏的解除了计算量上的好处之外，更重要的是更具有“可解释性”。比如说，一个病如果依赖于 5 个变量的话，将会更易于医生理解、描述和总结规律，但是如果依赖于 5000 个变量的话，基本上就超出人肉可处理的范围了。</p>
+<p>在这里引入稀疏性的方法是用 $L_1$ regularization 代替 $L_2$ regularization。</p>
+<h2 id="Lasso-Regression"><a href="#Lasso-Regression" class="headerlink" title="Lasso Regression"></a>Lasso Regression</h2><p>在原始的线性回归上加一个$L_1$正则化，就变成了Lasso回归，具体是：</p>
+<script type="math/tex; mode=display">
+min_{w} \sum_{i=1}^{m}(y_{i}-w^{T}x_{i})^{2}+\lambda ||w||_{1}</script><p>LASSO 仍然是一个 convex optimization 问题，不过不再具有解析解。它的优良性质是能产生稀疏性，导致 $w$ 中许多项变成零。</p>
+<p>为什么它能产生稀疏性呢？下面我们就先来看一个直观上的理解。</p>
+<p>首先，和 ridge regression 类似，上面形式的 LASSO 问题也等价于如下形式：</p>
+<script type="math/tex; mode=display">
+min_{w} \frac {1}{n} ||y - Xw||^2, \quad s.t.\  ||w||_1 \leq C</script><p>也就是说，我们将模型空间限制在 $w$ 的一个$l_1 -ball$ 中。为了便于可视化，我们考虑2维的情况，在 $(w^1, w^2)$ 平面上可以画出目标函数的等高线，而约束条件则成为平面上半径为 $C$ 的一个 norm ball 。等高线与 norm ball 首次相交的地方就是最优解。如图所示：</p>
+<table>
+    <tr>
+        <td><center><img src="/images/l1-ball.svg"></center></td>
+        <td><center><img src="/images/l2-ball.svg"></center></td>
+    </tr>
+</table>
+
+<p>可以看到，$l_1-ball$ 与 $l2-ball$ 的不同就在于它与等高线相交的地方大部分时候实在坐标轴上，而相交点就有 $w^1 = 0$  ，而更高维的时候除了坐标轴以外，还有很多边的轮廓也是既有很大的概率成为第一次相交的地方，又会产生稀疏性。</p>
+<p>相比之下，$l_2-ball$ 就没有这样的性质，因为没有角，所以第一次相交的地方出现在具有稀疏性的位置的概率就变得非常小了。这就从直观上来解释了为什么 $l_1$ regularization 能产生稀疏性，而 $l_2$ regularization 不行的原因了。</p>
+<p>更进一步了解稀疏性来源可移步参考文献1。</p>
+<h1 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h1><p>[1]. <a href="http://freemind.pluskid.org/machine-learning/sparsity-and-some-basics-of-l1-regularization/#0207509841e77ec485b05a8ad73ee5e41f200b57" target="_blank" rel="noopener">Sparsity and Some Basics of L1 Regularization</a></p>
+
+      
     </div>
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>持续技术分享，您的支持将鼓励我继续创作！</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.jpg" alt="乡间小路 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/10/20/Pip_No_Attribute_Main/" rel="next" title="Pip错误：module 'pip' has no attribute 'main'">
+                <i class="fa fa-chevron-left"></i> Pip错误：module 'pip' has no attribute 'main'
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/10/26/Algorithms_With_Adaptive_Learning_Rates/" rel="prev" title="【转】自适应学习率算法">
+                【转】自适应学习率算法 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
   </div>
   
   
   
+  </article>
 
-  
 
+
+    <div class="post-spread">
+      
+        
+  <div class="bdsharebuttonbox">
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+    <a href="#" class="bds_douban" data-cmd="douban" title="分享到豆瓣网"></a>
+    <a href="#" class="bds_sqq" data-cmd="sqq" title="分享到QQ好友"></a>
+    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间"></a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信"></a>
+    <a href="#" class="bds_tieba" data-cmd="tieba" title="分享到百度贴吧"></a>
+    <a href="#" class="bds_twi" data-cmd="twi" title="分享到Twitter"></a>
+    <a href="#" class="bds_fbook" data-cmd="fbook" title="分享到Facebook"></a>
+    <a href="#" class="bds_more" data-cmd="more"></a>
+    <a class="bds_count" data-cmd="count"></a>
+  </div>
+  <script>
+    window._bd_share_config = {
+      "common": {
+        "bdText": "",
+        "bdMini": "2",
+        "bdMiniList": false,
+        "bdPic": ""
+      },
+      "share": {
+        "bdSize": "16",
+        "bdStyle": "0"
+      },
+      "image": {
+        "viewList": ["tsina", "douban", "sqq", "qzone", "weixin", "twi", "fbook"],
+        "viewText": "分享到：",
+        "viewSize": "16"
+      }
+    }
+  </script>
+
+<script>
+  with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='//bdimg.share.baidu.com/static/api/js/share.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+
+      
+    </div>
+  </div>
 
 
           </div>
@@ -365,6 +602,15 @@
 
 
           
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zNjg4MS8xMzQxNw=="></div>
+    </div>
+
+  
+
+
 
         </div>
         
@@ -385,8 +631,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -405,7 +660,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">91</span>
+                  <span class="site-state-item-count">93</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -625,6 +880,22 @@
       </section>
 
       
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#线性回归"><span class="nav-number">1.</span> <span class="nav-text">线性回归</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Ridge-Regression"><span class="nav-number">2.</span> <span class="nav-text">Ridge Regression</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Lasso-Regression"><span class="nav-number">2.1.</span> <span class="nav-text">Lasso Regression</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考文献"><span class="nav-number">3.</span> <span class="nav-text">参考文献</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
 
       
 
@@ -757,6 +1028,10 @@
   
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
 
   
 
@@ -785,6 +1060,17 @@
 
 
 
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
   
 
 

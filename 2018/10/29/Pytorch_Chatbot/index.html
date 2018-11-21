@@ -82,12 +82,12 @@
 <meta name="description" content="本文参考 pytorch 官方 tutorial CHATBOT TUTORIAL。 需要掌握的pytorch用法 torch.Tensor 是默认的 tensor 类型 torch.FlaotTensor 的简称。32-bit floating point。  torch.cat((x, x, x), dim=1)在给定维度上对输入的张量序列进行连接操作。例如 x shape = (2, 3),">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Pytorch入门实战：训练一个聊天机器人">
-<meta property="og:url" content="flyrie.top/2018/07/06/Pytorch_Chatbot/index.html">
+<meta property="og:url" content="flyrie.top/2018/10/29/Pytorch_Chatbot/index.html">
 <meta property="og:site_name" content="乡间小路">
 <meta property="og:description" content="本文参考 pytorch 官方 tutorial CHATBOT TUTORIAL。 需要掌握的pytorch用法 torch.Tensor 是默认的 tensor 类型 torch.FlaotTensor 的简称。32-bit floating point。  torch.cat((x, x, x), dim=1)在给定维度上对输入的张量序列进行连接操作。例如 x shape = (2, 3),">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="/images/ChatRobot_Seq2Seq.svg">
-<meta property="og:updated_time" content="2018-10-31T17:46:14.000Z">
+<meta property="og:updated_time" content="2018-10-28T17:46:14.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Pytorch入门实战：训练一个聊天机器人">
 <meta name="twitter:description" content="本文参考 pytorch 官方 tutorial CHATBOT TUTORIAL。 需要掌握的pytorch用法 torch.Tensor 是默认的 tensor 类型 torch.FlaotTensor 的简称。32-bit floating point。  torch.cat((x, x, x), dim=1)在给定维度上对输入的张量序列进行连接操作。例如 x shape = (2, 3),">
@@ -121,7 +121,7 @@
 
 
 
-  <link rel="canonical" href="flyrie.top/2018/07/06/Pytorch_Chatbot/"/>
+  <link rel="canonical" href="flyrie.top/2018/10/29/Pytorch_Chatbot/"/>
 
 
 
@@ -308,7 +308,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="flyrie.top/2018/07/06/Pytorch_Chatbot/">
+    <link itemprop="mainEntityOfPage" href="flyrie.top/2018/10/29/Pytorch_Chatbot/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="乡间小路">
@@ -337,8 +337,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-07-06T01:46:14+08:00">
-                2018-07-06
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-10-29T01:46:14+08:00">
+                2018-10-29
               </time>
             
 
@@ -353,8 +353,8 @@
               
                 <span class="post-meta-item-text">更新于&#58;</span>
               
-              <time title="更新于" itemprop="dateModified" datetime="2018-11-01T01:46:14+08:00">
-                2018-11-01
+              <time title="更新于" itemprop="dateModified" datetime="2018-10-29T01:46:14+08:00">
+                2018-10-29
               </time>
             
           </span>
@@ -581,8 +581,9 @@ max_target_len: 9
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">EncoderRNN</span><span class="params">(nn.Module)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, hidden_size, embedding, n_layers=<span class="number">1</span>, dropout=<span class="number">0</span>)</span>:</span></span><br><span class="line">        super(EncoderRNN, self).__init__()</span><br><span class="line">        self.n_layers = n_layers</span><br><span class="line">        self.hidden_size = hidden_size</span><br><span class="line">        self.embedding = embedding</span><br><span class="line"></span><br><span class="line">        <span class="comment"># Initialize GRU; the input_size and hidden_size params are both set to 'hidden_size'</span></span><br><span class="line">        <span class="comment">#   because our input size is a word embedding with number of features == hidden_size</span></span><br><span class="line">        self.gru = nn.GRU(hidden_size, hidden_size, n_layers,</span><br><span class="line">                          dropout=(<span class="number">0</span> <span class="keyword">if</span> n_layers == <span class="number">1</span> <span class="keyword">else</span> dropout), bidirectional=<span class="keyword">True</span>)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">forward</span><span class="params">(self, input_seq, input_lengths, hidden=None)</span>:</span></span><br><span class="line">        <span class="comment"># Convert word indexes to embeddings</span></span><br><span class="line">        embedded = self.embedding(input_seq)</span><br><span class="line">        <span class="comment"># Pack padded batch of sequences for RNN module</span></span><br><span class="line">        packed = torch.nn.utils.rnn.pack_padded_sequence(embedded, input_lengths)</span><br><span class="line">        <span class="comment"># Forward pass through GRU</span></span><br><span class="line">        outputs, hidden = self.gru(packed, hidden)</span><br><span class="line">        <span class="comment"># Unpack padding</span></span><br><span class="line">        outputs, _ = torch.nn.utils.rnn.pad_packed_sequence(outputs)</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># Sum bidirectional GRU outputs</span></span><br><span class="line">        outputs = outputs[:, :, :self.hidden_size] + outputs[:, : ,self.hidden_size:]</span><br><span class="line">        <span class="comment"># Return output and final hidden state</span></span><br><span class="line">        <span class="keyword">return</span> outputs, hidden</span><br></pre></td></tr></table></figure>
 <h1 id="解码器"><a href="#解码器" class="headerlink" title="解码器"></a>解码器</h1><p>编码器的输出的张量中包含了输入句子的信息，我们使用解码器中的隐藏状态和编码器的输出共同产生序列中的下一个词，直到输出一个 <code>EOS_token</code>。一般的 seq2seq 解码器的一个常见问题是，如果我们依赖于上下文向量(就是解码器的输出)来编码整个输入序列的含义，那么我们很可能会丢失信息。在处理长输入序列时尤为明显，这极大地限制了的解码器的能力。</p>
 <p>一个解决方案是使用注意力机制。详细的注意力机制模型解释请移步<a href="http://zh.gluon.ai/chapter_natural-language-processing/attention.html#" target="_blank" rel="noopener">注意力机制</a></p>
-<p>我们实现三种计算注意力机制中 score 的方法：<br>$<br>\operatorname { score } \left( \boldsymbol { h } _ { t } , \overline { \boldsymbol { h } } _ { s } \right) = \left\{ \begin{array} { l l } { \boldsymbol { h } _ { t } ^ { \top } \overline { \boldsymbol { h } } _ { s } } &amp; { \text {dot} } \ { \boldsymbol { h } _ { t } ^ { \top } \boldsymbol { W } _ { \boldsymbol { a } } \overline { \boldsymbol { h } } _ { s } } &amp; { \text { general } } \ { \boldsymbol { v } _ { a } ^ { \top } \tanh \left( \boldsymbol { W } _ { \boldsymbol { a } } \left[ \boldsymbol { h } _ { t } ; \overline { \boldsymbol { h } } _ { s } \right] \right) } &amp; { \text { concat } } \end{array} \right.<br>$</p>
-<p>下面是注意力机制的实现。</p>
+<p>我们实现三种计算注意力机制中 score 的方法：</p>
+<script type="math/tex; mode=display">
+\operatorname { score } \left( \boldsymbol { h } _ { t } , \overline { \boldsymbol { h } } _ { s } \right) = \left\{ \begin{array} { l l } { \boldsymbol { h } _ { t } ^ { \top } \overline { \boldsymbol { h } } _ { s } } & { \text {dot} } \\ { \boldsymbol { h } _ { t } ^ { \top } \boldsymbol { W } _ { a } \overline { \boldsymbol { h } } _ { s } } & { \text { general } } \\ { \boldsymbol { v } _ { a } ^ { \top } \tanh \left( \boldsymbol { W } _ { a } \left[ \boldsymbol { h } _ { t } ; \overline { \boldsymbol { h } } _ { s } \right] \right) } & { \text { concat } } \end{array} \right.</script><p>下面是注意力机制的实现。</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Luong attention layer</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Attn</span><span class="params">(torch.nn.Module)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, method, hidden_size)</span>:</span></span><br><span class="line">        super(Attn, self).__init__()</span><br><span class="line">        self.method = method</span><br><span class="line">        <span class="keyword">if</span> self.method <span class="keyword">not</span> <span class="keyword">in</span> [<span class="string">'dot'</span>, <span class="string">'general'</span>, <span class="string">'concat'</span>]:</span><br><span class="line">            <span class="keyword">raise</span> ValueError(self.method, <span class="string">"is not an appropriate attention method."</span>)</span><br><span class="line">        self.hidden_size = hidden_size</span><br><span class="line">        <span class="keyword">if</span> self.method == <span class="string">'general'</span>:</span><br><span class="line">            self.attn = torch.nn.Linear(self.hidden_size, hidden_size)</span><br><span class="line">        <span class="keyword">elif</span> self.method == <span class="string">'concat'</span>:</span><br><span class="line">            self.attn = torch.nn.Linear(self.hidden_size * <span class="number">2</span>, hidden_size)</span><br><span class="line">            self.v = torch.nn.Parameter(torch.FloatTensor(hidden_size))</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">dot_score</span><span class="params">(self, hidden, encoder_output)</span>:</span></span><br><span class="line">        <span class="keyword">return</span> torch.sum(hidden * encoder_output, dim=<span class="number">2</span>)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">general_score</span><span class="params">(self, hidden, encoder_output)</span>:</span></span><br><span class="line">        energy = self.attn(encoder_output)</span><br><span class="line">        <span class="keyword">return</span> torch.sum(hidden * energy, dim=<span class="number">2</span>)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">concat_score</span><span class="params">(self, hidden, encoder_output)</span>:</span></span><br><span class="line">        energy = self.attn(torch.cat((hidden.expand(encoder_output.size(<span class="number">0</span>), <span class="number">-1</span>, <span class="number">-1</span>), encoder_output), <span class="number">2</span>)).tanh()</span><br><span class="line">        <span class="keyword">return</span> torch.sum(self.v * energy, dim=<span class="number">2</span>)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">forward</span><span class="params">(self, hidden, encoder_outputs)</span>:</span></span><br><span class="line">        <span class="comment"># Calculate the attention weights (energies) based on the given method</span></span><br><span class="line">        <span class="keyword">if</span> self.method == <span class="string">'general'</span>:</span><br><span class="line">            attn_energies = self.general_score(hidden, encoder_outputs)</span><br><span class="line">        <span class="keyword">elif</span> self.method == <span class="string">'concat'</span>:</span><br><span class="line">            attn_energies = self.concat_score(hidden, encoder_outputs)</span><br><span class="line">        <span class="keyword">elif</span> self.method == <span class="string">'dot'</span>:</span><br><span class="line">            attn_energies = self.dot_score(hidden, encoder_outputs)</span><br><span class="line"></span><br><span class="line">        <span class="comment"># Transpose max_length and batch_size dimensions</span></span><br><span class="line">        attn_energies = attn_energies.t()</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># attn_energies shape: batch_size × time_step</span></span><br><span class="line">        <span class="comment"># 例如 5 × 10，表示 encoder 的 10 个 time step 对每个 batch 的 energy</span></span><br><span class="line">        <span class="comment"># 接下来做一个 softamx，注意是在 dim=1 的维度上做，然后再加一个维度 返回的 shape: batch_size × 1 × time_step</span></span><br><span class="line">        <span class="keyword">return</span> F.softmax(attn_energies, dim=<span class="number">1</span>).unsqueeze(<span class="number">1</span>)</span><br></pre></td></tr></table></figure>
 <p>下面我们实现解码器模型。 对于解码器，我们每次提供一个batch的数据。 这意味着我们的词嵌入张量和GRU输出都具有形状<code>（1，batch_size，hidden_size）</code>。</p>
 <p><strong>计算图：</strong></p>
@@ -733,8 +734,8 @@ Iteration: 4000; Percent complete: 100.0%; Average loss: 2.1741
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/07/05/Heuristic_Algorithm/" rel="next" title="启发式算法【转】">
-                <i class="fa fa-chevron-left"></i> 启发式算法【转】
+              <a href="/2018/10/26/Algorithms_With_Adaptive_Learning_Rates/" rel="next" title="【转】自适应学习率算法">
+                <i class="fa fa-chevron-left"></i> 【转】自适应学习率算法
               </a>
             
           </div>
@@ -743,8 +744,8 @@ Iteration: 4000; Percent complete: 100.0%; Average loss: 2.1741
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2018/07/17/最大熵模型/" rel="prev" title="最大熵模型【转】">
-                最大熵模型【转】 <i class="fa fa-chevron-right"></i>
+              <a href="/2018/10/30/SVD/" rel="prev" title="SVD分解及应用">
+                SVD分解及应用 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -763,6 +764,44 @@ Iteration: 4000; Percent complete: 100.0%; Average loss: 2.1741
 
 
     <div class="post-spread">
+      
+        
+  <div class="bdsharebuttonbox">
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+    <a href="#" class="bds_douban" data-cmd="douban" title="分享到豆瓣网"></a>
+    <a href="#" class="bds_sqq" data-cmd="sqq" title="分享到QQ好友"></a>
+    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间"></a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信"></a>
+    <a href="#" class="bds_tieba" data-cmd="tieba" title="分享到百度贴吧"></a>
+    <a href="#" class="bds_twi" data-cmd="twi" title="分享到Twitter"></a>
+    <a href="#" class="bds_fbook" data-cmd="fbook" title="分享到Facebook"></a>
+    <a href="#" class="bds_more" data-cmd="more"></a>
+    <a class="bds_count" data-cmd="count"></a>
+  </div>
+  <script>
+    window._bd_share_config = {
+      "common": {
+        "bdText": "",
+        "bdMini": "2",
+        "bdMiniList": false,
+        "bdPic": ""
+      },
+      "share": {
+        "bdSize": "16",
+        "bdStyle": "0"
+      },
+      "image": {
+        "viewList": ["tsina", "douban", "sqq", "qzone", "weixin", "twi", "fbook"],
+        "viewText": "分享到：",
+        "viewSize": "16"
+      }
+    }
+  </script>
+
+<script>
+  with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='//bdimg.share.baidu.com/static/api/js/share.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+
       
     </div>
   </div>
@@ -831,7 +870,7 @@ Iteration: 4000; Percent complete: 100.0%; Average loss: 2.1741
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">91</span>
+                  <span class="site-state-item-count">93</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>

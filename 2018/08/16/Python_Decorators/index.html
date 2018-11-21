@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Mxnet,Pytorch," />
+  <meta name="keywords" content="Hexo, NexT" />
 
 
 
@@ -79,18 +79,17 @@
 
 
 
-<meta name="description" content="mxnet的gluon接口是模仿pytorch的接口设计的，所以两者有很多共通之处。总结一下两者接口的对比。">
-<meta name="keywords" content="Mxnet,Pytorch">
+<meta name="description" content="Python的每个类只能有一个构造器，也就是一个__init__方法。 使用@classmethod可以用一种与构造器相仿的方式构造类的对象。  参考链接：https://stackoverflow.com/questions/12179271/meaning-of-classmethod-and-staticmethod-for-beginner例子如下。首先我们有一个处理时间的类：">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Pytorch与Mxnet&#x2F;Gluon炼丹对比">
-<meta property="og:url" content="flyrie.top/2018/10/16/Pytorch_Mxnet/index.html">
+<meta property="og:title" content="classmethod 与 staticmethod">
+<meta property="og:url" content="flyrie.top/2018/08/16/Python_Decorators/index.html">
 <meta property="og:site_name" content="乡间小路">
-<meta property="og:description" content="mxnet的gluon接口是模仿pytorch的接口设计的，所以两者有很多共通之处。总结一下两者接口的对比。">
+<meta property="og:description" content="Python的每个类只能有一个构造器，也就是一个__init__方法。 使用@classmethod可以用一种与构造器相仿的方式构造类的对象。  参考链接：https://stackoverflow.com/questions/12179271/meaning-of-classmethod-and-staticmethod-for-beginner例子如下。首先我们有一个处理时间的类：">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-10-15T17:45:15.000Z">
+<meta property="og:updated_time" content="2018-08-15T17:46:15.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Pytorch与Mxnet&#x2F;Gluon炼丹对比">
-<meta name="twitter:description" content="mxnet的gluon接口是模仿pytorch的接口设计的，所以两者有很多共通之处。总结一下两者接口的对比。">
+<meta name="twitter:title" content="classmethod 与 staticmethod">
+<meta name="twitter:description" content="Python的每个类只能有一个构造器，也就是一个__init__方法。 使用@classmethod可以用一种与构造器相仿的方式构造类的对象。  参考链接：https://stackoverflow.com/questions/12179271/meaning-of-classmethod-and-staticmethod-for-beginner例子如下。首先我们有一个处理时间的类：">
 
 
 
@@ -120,13 +119,13 @@
 
 
 
-  <link rel="canonical" href="flyrie.top/2018/10/16/Pytorch_Mxnet/"/>
+  <link rel="canonical" href="flyrie.top/2018/08/16/Python_Decorators/"/>
 
 
 
 
 
-  <title>Pytorch与Mxnet/Gluon炼丹对比 | 乡间小路</title>
+  <title>classmethod 与 staticmethod | 乡间小路</title>
   
 
 
@@ -307,7 +306,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="flyrie.top/2018/10/16/Pytorch_Mxnet/">
+    <link itemprop="mainEntityOfPage" href="flyrie.top/2018/08/16/Python_Decorators/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="乡间小路">
@@ -324,7 +323,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Pytorch与Mxnet/Gluon炼丹对比</h1>
+          <h1 class="post-title" itemprop="name headline">classmethod 与 staticmethod</h1>
         
 
         <div class="post-meta">
@@ -336,8 +335,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-10-16T01:45:15+08:00">
-                2018-10-16
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-08-16T01:46:15+08:00">
+                2018-08-16
               </time>
             
 
@@ -352,8 +351,8 @@
               
                 <span class="post-meta-item-text">更新于&#58;</span>
               
-              <time title="更新于" itemprop="dateModified" datetime="2018-10-16T01:45:15+08:00">
-                2018-10-16
+              <time title="更新于" itemprop="dateModified" datetime="2018-08-16T01:46:15+08:00">
+                2018-08-16
               </time>
             
           </span>
@@ -371,19 +370,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/深度学习/" itemprop="url" rel="index">
-                    <span itemprop="name">深度学习</span>
-                  </a>
-                </span>
-
-                
-                
-                  ， 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/深度学习/Pytorch与Mxnet/" itemprop="url" rel="index">
-                    <span itemprop="name">Pytorch与Mxnet</span>
+                  <a href="/categories/Python/" itemprop="url" rel="index">
+                    <span itemprop="name">Python</span>
                   </a>
                 </span>
 
@@ -419,26 +407,24 @@
       
 
       
-        <p>mxnet的gluon接口是模仿pytorch的接口设计的，所以两者有很多共通之处。总结一下两者接口的对比。<a id="more"></a></p>
-<h2 id="数据在设备之间的传输"><a href="#数据在设备之间的传输" class="headerlink" title="数据在设备之间的传输"></a>数据在设备之间的传输</h2><ol>
-<li><p>Pytorch中，有<code>torch.cuda.is_available()</code>方法判断是否可用gpu，而mxnet则没有，所以在代码中，我们转么定义了一个<code>try_gpu()</code>函数来判断gpu是否可用。</p>
-</li>
-<li><p>mxnet中使用<code>as_in_context</code> 和 <code>copyto</code>来将数据在cpu、gpu设备之间传递。如果源变量和目标变量的context一致，<code>as_in_context</code>函数使目标变量和源变量共享源变量的内存；而copyto函数总是为目标变量创建新的内存。  </p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">y = x.copyto(mx.gpu())</span><br><span class="line">z = x.as_in_context(mx.gpu())</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>Pytorch中使用<code>.to()</code>来将数据在cpu、gpu设备之间传递，与<code>as_in_context</code>效果一样。除此之外，它还负责Tensor的类型转换。  </p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">tensor = torch.randn(<span class="number">2</span>, <span class="number">2</span>)  </span><br><span class="line">tensor.to(torch.float64)</span><br><span class="line">cuda0 = torch.device(<span class="string">'cuda:0'</span>)  </span><br><span class="line">tensor.to(cuda0)</span><br></pre></td></tr></table></figure>
-</li>
+        <ol>
+<li>Python的每个类只能有一个构造器，也就是一个<code>__init__</code>方法。</li>
+<li>使用<code>@classmethod</code>可以用一种与构造器相仿的方式构造类的对象。</li>
 </ol>
-<h1 id="数据的flatten与reshape"><a href="#数据的flatten与reshape" class="headerlink" title="数据的flatten与reshape"></a>数据的flatten与reshape</h1><p>gluon的nn模块中，如果想把多维的ndarray拉伸为一维，只需添加一个<code>nn.Flatten()</code>就可以了，这在后面接全连接的卷积神经网络的构建中很有用。</p>
-<p>pytorch中没有提供类似的模块，但可以通过<code>view</code>这种reshape的办法来实现。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">x = torch.randn(<span class="number">4</span>, <span class="number">4</span>)</span><br><span class="line">y = x.view(<span class="number">16</span>)</span><br><span class="line">z = x.view(<span class="number">-1</span>, <span class="number">8</span>)</span><br></pre></td></tr></table></figure></p>
-<p>当然了，mxnet中的<code>reshape</code>就是pytorch中的<code>view</code></p>
-<h1 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h1><ol>
-<li><p>返回标量<br>mxnet: <code>nd.ndarray.NDArray.asscalar()</code><br>pytorch: <code>torch.Tensor.item()</code></p>
-</li>
-<li><p>返回某维度上的最大值<br>mxnet: <code>predicted = output.argmax(axis=1)</code><br>pytorch: <code>_, predicted = torch.max(outputs.data, 1)</code></p>
-</li>
+<p>参考链接：<br><a href="https://stackoverflow.com/questions/12179271/meaning-of-classmethod-and-staticmethod-for-beginner" target="_blank" rel="noopener">https://stackoverflow.com/questions/12179271/meaning-of-classmethod-and-staticmethod-for-beginner</a><br>例子如下。首先我们有一个处理时间的类：<br><a id="more"></a></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Date</span><span class="params">(object)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, day=<span class="number">0</span>, month=<span class="number">0</span>, year=<span class="number">0</span>)</span>:</span></span><br><span class="line">        self.day = day</span><br><span class="line">        self.month = month</span><br><span class="line">        self.year = year</span><br></pre></td></tr></table></figure>
+<p>如果我们要通过字符串创建<code>Date</code>实例，此时我们要做如下操作：  </p>
+<ol>
+<li>将<code>str</code>的日期转为<code>int</code>。</li>
+<li>通过<code>int</code>的日期构建<code>Date</code> </li>
 </ol>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">day, month, year = map(int, <span class="string">'11-09-2012'</span>.split(<span class="string">'-'</span>))  </span><br><span class="line">date1 = Date(day, month, year)</span><br></pre></td></tr></table></figure>
+<p>如果我们经常要使用字符串创建<code>Date</code>实例，很显然如果能实现重载就更加方便，<code>C++</code>有重载的方法，但Python没有重载，每个类只有一个构造器，只有一个<code>__init__</code>方法，因此<code>@classmethod</code>方法应运而生。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Date</span><span class="params">(object)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, day=<span class="number">0</span>, month=<span class="number">0</span>, year=<span class="number">0</span>)</span>:</span></span><br><span class="line">        self.day = day</span><br><span class="line">        self.month = month</span><br><span class="line">        self.year = year</span><br><span class="line"></span><br><span class="line"><span class="meta">    @classmethod</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">from_string</span><span class="params">(cls, date_as_string)</span>:</span></span><br><span class="line">        day, month, year = map(int, date_as_string.split(<span class="string">'-'</span>))</span><br><span class="line">        date1 = cls(day, month, year)</span><br><span class="line">        <span class="keyword">return</span> date1</span><br><span class="line"></span><br><span class="line">date2 = Date.from_string(<span class="string">'11-09-2012'</span>)</span><br></pre></td></tr></table></figure>
+<p><code>classmethod</code> 定义类操作，而不是实例操作，因此类方法的第一个参数是类本身，而不是实例。<code>cls</code>表示这个类本身。</p>
+<p><code>@staticmethod</code>与<code>@classmethod</code>的区别是不构建类的实例，也不访问、依赖和改变类，只是一个函数。和普通的非class的method作用是一样的，只不过是命名空间是在类里面。一般使用场景就是和类相关的操作。有时，函数虽然从不处理类，但是函数的功能与类紧密相关，因此想把它放在近处。</p>
+<p>加入我们要验证日期的合法性，我们可以使用<code>@staticmethod</code>，如下。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Date</span><span class="params">(object)</span>:</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, day=<span class="number">0</span>, month=<span class="number">0</span>, year=<span class="number">0</span>)</span>:</span></span><br><span class="line">        self.day = day</span><br><span class="line">        self.month = month</span><br><span class="line">        self.year = year</span><br><span class="line"></span><br><span class="line"><span class="meta">    @classmethod</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">from_string</span><span class="params">(cls, date_as_string)</span>:</span></span><br><span class="line">        day, month, year = map(int, date_as_string.split(<span class="string">'-'</span>))</span><br><span class="line">        date1 = cls(day, month, year)</span><br><span class="line">        <span class="keyword">return</span> date1</span><br><span class="line"></span><br><span class="line"><span class="meta">    @staticmethod</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">is_date_valid</span><span class="params">(date_as_string)</span>:</span></span><br><span class="line">        day, month, year = map(int, date_as_string.split(<span class="string">'-'</span>))</span><br><span class="line">        <span class="keyword">return</span> day &lt;= <span class="number">31</span> <span class="keyword">and</span> month &lt;= <span class="number">12</span> <span class="keyword">and</span> year &lt;= <span class="number">3999</span></span><br><span class="line"></span><br><span class="line">date2 = Date.from_string(<span class="string">'11-09-2012'</span>)</span><br><span class="line">is_date = Date.is_date_valid(<span class="string">'11-09-2012'</span>)</span><br></pre></td></tr></table></figure>
 
       
     </div>
@@ -478,14 +464,6 @@
 
     <footer class="post-footer">
       
-        <div class="post-tags">
-          
-            <a href="/tags/Mxnet/" rel="tag"># Mxnet</a>
-          
-            <a href="/tags/Pytorch/" rel="tag"># Pytorch</a>
-          
-        </div>
-      
 
       
       
@@ -495,8 +473,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/10/02/Batch_Normalization/" rel="next" title="【转】Batch Normalization">
-                <i class="fa fa-chevron-left"></i> 【转】Batch Normalization
+              <a href="/2018/08/15/Dynamic_Programming_Algorithm_Solutions/" rel="next" title="动态规划解题（持续更新）">
+                <i class="fa fa-chevron-left"></i> 动态规划解题（持续更新）
               </a>
             
           </div>
@@ -505,8 +483,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2018/10/18/Pytorch_Imagenet_Train/" rel="prev" title="Pytorch入门实战：训练ImageNet数据集">
-                Pytorch入门实战：训练ImageNet数据集 <i class="fa fa-chevron-right"></i>
+              <a href="/2018/08/19/方差与偏差/" rel="prev" title="方差与偏差">
+                方差与偏差 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -525,6 +503,44 @@
 
 
     <div class="post-spread">
+      
+        
+  <div class="bdsharebuttonbox">
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+    <a href="#" class="bds_douban" data-cmd="douban" title="分享到豆瓣网"></a>
+    <a href="#" class="bds_sqq" data-cmd="sqq" title="分享到QQ好友"></a>
+    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间"></a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信"></a>
+    <a href="#" class="bds_tieba" data-cmd="tieba" title="分享到百度贴吧"></a>
+    <a href="#" class="bds_twi" data-cmd="twi" title="分享到Twitter"></a>
+    <a href="#" class="bds_fbook" data-cmd="fbook" title="分享到Facebook"></a>
+    <a href="#" class="bds_more" data-cmd="more"></a>
+    <a class="bds_count" data-cmd="count"></a>
+  </div>
+  <script>
+    window._bd_share_config = {
+      "common": {
+        "bdText": "",
+        "bdMini": "2",
+        "bdMiniList": false,
+        "bdPic": ""
+      },
+      "share": {
+        "bdSize": "16",
+        "bdStyle": "0"
+      },
+      "image": {
+        "viewList": ["tsina", "douban", "sqq", "qzone", "weixin", "twi", "fbook"],
+        "viewText": "分享到：",
+        "viewSize": "16"
+      }
+    }
+  </script>
+
+<script>
+  with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='//bdimg.share.baidu.com/static/api/js/share.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+
       
     </div>
   </div>
@@ -564,17 +580,8 @@
       
 
       
-        <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
-            文章目录
-          </li>
-          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
-            站点概览
-          </li>
-        </ul>
-      
 
-      <section class="site-overview-wrap sidebar-panel">
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -593,7 +600,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">91</span>
+                  <span class="site-state-item-count">93</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -812,22 +819,6 @@
         </div>
       </section>
 
-      
-      <!--noindex-->
-        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
-          <div class="post-toc">
-
-            
-              
-            
-
-            
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#数据在设备之间的传输"><span class="nav-number">1.</span> <span class="nav-text">数据在设备之间的传输</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#数据的flatten与reshape"><span class="nav-number"></span> <span class="nav-text">数据的flatten与reshape</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#其他"><span class="nav-number"></span> <span class="nav-text">其他</span></a></div>
-            
-
-          </div>
-        </section>
-      <!--/noindex-->
       
 
       
