@@ -435,7 +435,7 @@
 <ol>
 <li><p>不用第 <code>i</code> 种硬币。</p>
 <ul>
-<li>用不了：<code>j &lt; coins[i]</code>; </li>
+<li>用不了：<code>j &lt; coins[i]</code>;</li>
 <li>能用但不用。 两种情况都只用前 <code>i-1</code> 种硬币去组成 <code>j</code>， 此时共有 <code>dp[i-1][j]</code> 种组合；</li>
 </ul>
 </li>
@@ -449,7 +449,7 @@
 <p>leetcode 10<br>给定一个字符串 (s) 和一个字符模式 (p)。实现支持 <code>.</code> 和 <code>*</code> 的正则表达式匹配。<br><code>.</code> 匹配任意单个字符。<br><code>*</code> 匹配零个或多个前面的元素。</p>
 </blockquote>
 <p><strong>解答</strong>：  </p>
-<p><code>dp[i][j]</code>表示s的i长度跟p的j长度是否使用匹配。则有一下情况。</p>
+<p><code>dp[i][j]</code>表示s的i长度跟p的j长度是否使用匹配。则有以下情况。</p>
 <ol>
 <li><p><code>dp[0][0]</code>: 表示当s和p都为空，此时肯定是匹配的，<code>dp[0][0] = 1</code>;</p>
 </li>
@@ -527,7 +527,7 @@
 </blockquote>
 <p><strong>解答：</strong>  </p>
 <p>这道题是之前那道 Paint House I 的拓展，那道题只让用红绿蓝三种颜色来粉刷房子，而这道题让我们用k种颜色，这道题不能用之前那题的解法，会TLE。这题的解法的思路还是用DP，但是在找不同颜色的最小值不是遍历所有不同颜色，而是用<code>min1</code>和<code>min2</code>来记录之前房子的最小和第二小的花费的颜色，如果当前房子颜色和<code>min1</code>相同，那么我们用<code>min2</code>对应的值计算，反之我们用<code>min1</code>对应的值，这种解法实际上也包含了求次小值的方法，感觉也是一种很棒的解题思路。</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">minCostII</span><span class="params">(<span class="built_in">vector</span>&lt;<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt;&gt;&amp; costs)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (costs.empty() || costs[<span class="number">0</span>].empty()) <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        <span class="built_in">vector</span>&lt;<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt;&gt; dp = costs;</span><br><span class="line">        <span class="keyword">int</span> min1 = <span class="number">-1</span>, </span><br><span class="line">        <span class="keyword">int</span> min2 = <span class="number">-1</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; dp.size(); ++i)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">int</span> last1 = min1, </span><br><span class="line">            <span class="keyword">int</span> last2 = min2;</span><br><span class="line">            min1 = <span class="number">-1</span>; </span><br><span class="line">            min2 = <span class="number">-1</span>;</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; dp[i].size(); ++j) </span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">if</span> (j != last1) </span><br><span class="line">                &#123;</span><br><span class="line">                    dp[i][j] += last1 &lt; <span class="number">0</span> ? <span class="number">0</span> : dp[i - <span class="number">1</span>][last1];</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">else</span> </span><br><span class="line">                &#123;</span><br><span class="line">                    dp[i][j] += last2 &lt; <span class="number">0</span> ? <span class="number">0</span> : dp[i - <span class="number">1</span>][last2];</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">if</span> (min1 &lt; <span class="number">0</span> || dp[i][j] &lt; dp[i][min1]) </span><br><span class="line">                &#123;</span><br><span class="line">                    min2 = min1; min1 = j;</span><br><span class="line">                &#125; </span><br><span class="line">                <span class="keyword">else</span> <span class="keyword">if</span> (min2 &lt; <span class="number">0</span> || dp[i][j] &lt; dp[i][min2]) </span><br><span class="line">                &#123;</span><br><span class="line">                    min2 = j;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> dp.back()[min1];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">minCostII</span><span class="params">(<span class="built_in">vector</span>&lt;<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt;&gt;&amp; costs)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (costs.empty() || costs[<span class="number">0</span>].empty()) <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        <span class="built_in">vector</span>&lt;<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt;&gt; dp = costs;</span><br><span class="line">        <span class="keyword">int</span> min1 = <span class="number">-1</span>,</span><br><span class="line">        <span class="keyword">int</span> min2 = <span class="number">-1</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; dp.size(); ++i)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">int</span> last1 = min1,</span><br><span class="line">            <span class="keyword">int</span> last2 = min2;</span><br><span class="line">            min1 = <span class="number">-1</span>;</span><br><span class="line">            min2 = <span class="number">-1</span>;</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; dp[i].size(); ++j)</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">if</span> (j != last1)</span><br><span class="line">                &#123;</span><br><span class="line">                    dp[i][j] += last1 &lt; <span class="number">0</span> ? <span class="number">0</span> : dp[i - <span class="number">1</span>][last1];</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">else</span></span><br><span class="line">                &#123;</span><br><span class="line">                    dp[i][j] += last2 &lt; <span class="number">0</span> ? <span class="number">0</span> : dp[i - <span class="number">1</span>][last2];</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">if</span> (min1 &lt; <span class="number">0</span> || dp[i][j] &lt; dp[i][min1])</span><br><span class="line">                &#123;</span><br><span class="line">                    min2 = min1; min1 = j;</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">else</span> <span class="keyword">if</span> (min2 &lt; <span class="number">0</span> || dp[i][j] &lt; dp[i][min2])</span><br><span class="line">                &#123;</span><br><span class="line">                    min2 = j;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> dp.back()[min1];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
 
       
     </div>
@@ -584,8 +584,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/08/15/Hexo_Note/" rel="next" title="Hexo记录">
-                <i class="fa fa-chevron-left"></i> Hexo记录
+              <a href="/2018/08/08/动态规划总结/" rel="next" title="动态规划总结">
+                <i class="fa fa-chevron-left"></i> 动态规划总结
               </a>
             
           </div>
@@ -594,8 +594,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2018/08/16/Python_Decorators/" rel="prev" title="classmethod 与 staticmethod">
-                classmethod 与 staticmethod <i class="fa fa-chevron-right"></i>
+              <a href="/2018/08/15/Two_Pointers_Algorithm_Solutions/" rel="prev" title="双指针解题（持续更新）">
+                双指针解题（持续更新） <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -720,7 +720,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">93</span>
+                  <span class="site-state-item-count">98</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -742,7 +742,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">90</span>
+                  <span class="site-state-item-count">91</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -969,7 +969,7 @@
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
   <span class="with-love">
     <i class="fa fa-user"></i>
   </span>

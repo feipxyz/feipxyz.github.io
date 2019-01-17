@@ -79,22 +79,22 @@
 
 
 
-<meta name="description" content="一直对词向量不太懂，知道看了word2vec 中的数学原理详解后才恍然大悟，本文就对对其中的Hierarchical Softmax做一个总结。">
+<meta name="description" content="一直对词向量不太懂，直到看了word2vec 中的数学原理详解后才恍然大悟，本文就对对其中的Hierarchical Softmax做一个总结。">
 <meta name="keywords" content="seq2seq">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Hierarchical Softmax详解">
 <meta property="og:url" content="flyrie.top/2018/10/31/Word2vec_Hierarchical_Softmax/index.html">
 <meta property="og:site_name" content="乡间小路">
-<meta property="og:description" content="一直对词向量不太懂，知道看了word2vec 中的数学原理详解后才恍然大悟，本文就对对其中的Hierarchical Softmax做一个总结。">
+<meta property="og:description" content="一直对词向量不太懂，直到看了word2vec 中的数学原理详解后才恍然大悟，本文就对对其中的Hierarchical Softmax做一个总结。">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="/images/word2vec_cbow1.png">
 <meta property="og:image" content="/images/word2vec_cbow2.png">
 <meta property="og:image" content="/images/word2vec3.png">
 <meta property="og:image" content="/images/word2vec_skimgram_1.png">
-<meta property="og:updated_time" content="2018-11-11T15:23:12.258Z">
+<meta property="og:updated_time" content="2018-11-25T17:57:57.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Hierarchical Softmax详解">
-<meta name="twitter:description" content="一直对词向量不太懂，知道看了word2vec 中的数学原理详解后才恍然大悟，本文就对对其中的Hierarchical Softmax做一个总结。">
+<meta name="twitter:description" content="一直对词向量不太懂，直到看了word2vec 中的数学原理详解后才恍然大悟，本文就对对其中的Hierarchical Softmax做一个总结。">
 <meta name="twitter:image" content="/images/word2vec_cbow1.png">
 
 
@@ -357,8 +357,8 @@
               
                 <span class="post-meta-item-text">更新于&#58;</span>
               
-              <time title="更新于" itemprop="dateModified" datetime="2018-11-11T23:23:12+08:00">
-                2018-11-11
+              <time title="更新于" itemprop="dateModified" datetime="2018-11-26T01:57:57+08:00">
+                2018-11-26
               </time>
             
           </span>
@@ -424,11 +424,10 @@
       
 
       
-        <p>一直对词向量不太懂，知道看了<a href="https://blog。csdn。net/itplus/article/details/37969519" target="_blank" rel="noopener">word2vec 中的数学原理详解</a>后才恍然大悟，本文就对对其中的Hierarchical Softmax做一个总结。</p>
-<a id="more"></a>
+        <p>一直对词向量不太懂，直到看了<a href="https://blog。csdn。net/itplus/article/details/37969519" target="_blank" rel="noopener">word2vec 中的数学原理详解</a>后才恍然大悟，本文就对对其中的Hierarchical Softmax做一个总结。<br><a id="more"></a></p>
 <h1 id="Continuous-Bag-of-Words"><a href="#Continuous-Bag-of-Words" class="headerlink" title="Continuous Bag of Words"></a>Continuous Bag of Words</h1><p>连续词袋模型假设基于某中心词在文本序列前后的背景词来生成该中心词。在文本序列“the”、 “man”、“loves”、“his”和“son”里，以“loves”作为中心词，且背景窗口大小为 2 时，连续词袋模型关心的是，给定背景词“the”、“man”、“his”和“son”生成中心词“loves”的条件概率，也就是</p>
 <script type="math/tex; mode=display">
-\mathbb{P}(\textrm{``loves"}\mid\textrm{``the"},\textrm{``man"},\textrm{``his"},\textrm{``son"})</script><h2 id="网络结构"><a href="#网络结构" class="headerlink" title="网络结构"></a>网络结构</h2><p>$\mathcal C$ 表示语料，$\text { Context }$ 表示词 $w$ 的上下文，即 $w$ 周边词的集合。</p>
+\mathbb{P}(\textrm{"loves"}\mid\textrm{"the"},\textrm{"man"},\textrm{"his"},\textrm{"son"})</script><h2 id="网络结构"><a href="#网络结构" class="headerlink" title="网络结构"></a>网络结构</h2><p>$\mathcal C$ 表示语料，$\text { Context }$ 表示词 $w$ 的上下文，即 $w$ 周边词的集合。</p>
 <p><img src="/images/word2vec_cbow1.png" alt="image"></p>
 <p>上图给出了 CBOW 模型的网络结构，它包括三层: 输入层、投影层和输出层。</p>
 <ul>
@@ -471,7 +470,7 @@ P(d_j^w|\mathbf{\mathbf{x}}_w, \theta_{j-1}^w)= \begin{cases}  \sigma(\mathbf{\m
 L= log \prod_{j=2}^{l^w}P(d_j^w|\mathbf{\mathbf{x}}_w, \theta_{j-1}^w) = \sum\limits_{j=2}^{l^w} \Big [(1-d_j^w) log [\sigma(\mathbf{\mathbf{x}}_w^T\theta_{j-1}^w)]  + d_j^w log[1-\sigma(\mathbf{\mathbf{x}}_w^T\theta_{j-1}^w)] \Big]</script><p>要得到模型中 $w$ 词向量和内部节点的模型参数 $\theta_{j-1}^w$, 我们使用梯度上升法即可。我们将中括号中的部分记作 $\mathcal {L}(w,j)$，求模型参数 $\theta_{j-1}^w$ 的梯度：</p>
 <script type="math/tex; mode=display">
 \begin{align*}
-\frac{\partial \mathcal {L}(w,j)}{\partial \theta_{j-1}^{w}} 
+\frac{\partial \mathcal {L}(w,j)}{\partial \theta_{j-1}^{w}}
 &= \frac{\partial}{\partial \theta_{j-1}^{w}}{\{ (1 - d_j^{w}) \cdot log[\sigma(\mathbf{\mathbf{x}}_{w}^T \theta_{j-1}^{w})] + d_j^{w} \cdot log[1 - \sigma(\mathbf{\mathbf{x}}_{w}^T \theta_{j-1}^{w})] \}} \\
 &= (1-d_j^{w}) \cdot [1 - \sigma(\mathbf{\mathbf{x}}_{w}^T \theta_{j-1}^{w})]\mathbf{\mathbf{x}}_{w} - d_j^{w} \cdot \sigma(\mathbf{\mathbf{x}}_{w}^T \theta_{j-1}^{w}) \cdot \mathbf{\mathbf{x}}_{w} \\
 &= \{ (1 - d_j^{w})[1 - \sigma(\mathbf{\mathbf{x}}_{w}^T \theta_{j-1}^{w})] - d_j^{w} \sigma(\mathbf{\mathbf{x}}_{w}^T \theta_{j-1}^{w}) \}\mathbf{\mathbf{x}}_{w} \\
@@ -487,9 +486,9 @@ V(\overline{w}) := V(\overline{w}) + \eta \sum_{j=2}^{l^{w}}{\frac{\partial \mat
 <p><img src="/images/word2vec3.png" alt="image"></p>
 <h1 id="Skip-Gram"><a href="#Skip-Gram" class="headerlink" title="Skip Gram"></a>Skip Gram</h1><p>跳字模型假设基于某个词来生成它在文本序列周围的词。举个例子，假设文本序列是“the”、“man”、“loves”、“his”和“son”。以“loves”作为中心词，设背景窗口大小为 2。跳字模型所关心的是，给定中心词“loves”，生成与它距离不超过 2 个词的背景词“the”、“man”、“his”和“son”的条件概率，即</p>
 <script type="math/tex; mode=display">
-\mathbb{P}(\textrm{``the"},\textrm{``man"},\textrm{``his"},\textrm{``son"}\mid\textrm{``loves"})</script><p>假设给定中心词的情况下，背景词的生成是相互独立的，那么上式可以改写成</p>
+\mathbb{P}(\textrm{"the"},\textrm{"man"},\textrm{"his"},\textrm{"son"}\mid\textrm{"loves"})</script><p>假设给定中心词的情况下，背景词的生成是相互独立的，那么上式可以改写成</p>
 <script type="math/tex; mode=display">
-\mathbb{P}(\textrm{``the"}\mid\textrm{``loves"})\cdot\mathbb{P}(\textrm{``man"}\mid\textrm{``loves"})\cdot\mathbb{P}(\textrm{``his"}\mid\textrm{``loves"})\cdot\mathbb{P}(\textrm{``son"}\mid\textrm{``loves"})</script><h2 id="网络结构-1"><a href="#网络结构-1" class="headerlink" title="网络结构"></a>网络结构</h2><p>skip-gram 模型与 cbow 模型的推导过程大同小异，所以推导过程中的记号保持含义一致。</p>
+\mathbb{P}(\textrm{"the"}\mid\textrm{"loves"})\cdot\mathbb{P}(\textrm{"man"}\mid\textrm{"loves"})\cdot\mathbb{P}(\textrm{"his"}\mid\textrm{"loves"})\cdot\mathbb{P}(\textrm{"son"}\mid\textrm{"loves"})</script><h2 id="网络结构-1"><a href="#网络结构-1" class="headerlink" title="网络结构"></a>网络结构</h2><p>skip-gram 模型与 cbow 模型的推导过程大同小异，所以推导过程中的记号保持含义一致。</p>
 <p><img src="/images/word2vec_skimgram_1.png" alt="image"></p>
 <p>从图中可以看出 skip-gram 中共包含三部分：输入层、映射层、输出层。</p>
 <ul>
@@ -505,7 +504,7 @@ P(u|w) = \prod_{j=2}^{l^{u}} \delta (x_{w}^{T}  \theta _{j-1}^{u}) ^{1-d_{j}^{u}
 P(\text {Context}(w)|w) = \prod_{u\epsilon \text {Context}(w)}  \prod_{j=2}^{l^{u}} \delta (x_{w}^{T}  \theta _{j-1}^{u}) ^{1-d_{j}^{u}} *(1 - \delta (x_{w}^{T}  \theta _{j-1}^{u})）^{d_{j}^{u}}</script><p>根据上式，可得最大似然函数为：</p>
 <script type="math/tex; mode=display">
 \begin{align*}
-\mathcal { L } 
+\mathcal { L }
 &= \sum _ { w \in \mathcal { C } } \log \prod _ { u \in \text { Context } ( w ) } \prod _ { j = 2 } ^ { l ^ { u } } \left\{ \left[ \sigma \left( \mathbf { v } ( w ) ^ { \top } \theta _ { j - 1 } \mathcal { L }^ { u } \right) \right] ^ { 1 - d _ { j } ^ { u } } \cdot \left[ 1 - \sigma \left( \mathbf { v } ( w ) ^ { \top } \theta _ { j - 1 } ^ { u } \right) \right] ^ { d _ { j } ^ { u } } \right\}  \\
 &= \sum _ { w \in \mathcal { C } } \sum _ { u \in \text { Context } ( w ) } \sum _ { j = 2 } ^ { l ^ { u } } \left\{ \left( 1 - d _ { j } ^ { u } \right) \cdot \log \left[ \sigma \left( \mathbf { v } ( w ) ^ { \top } \theta _ { j - 1 } ^ { u } \right) \right] + d _ { j } ^ { u } \cdot \log \left[ 1 - \sigma \left( \mathbf { v } ( w ) ^ { \top } \theta _ { j - 1 } ^ { u } \right) \right] \right\}
 \end{align*}</script><p>同样，为下面梯度锥导方便起见，将三重求和符号下花括号里的内容简记为$\mathcal { L } ( w , u , j )$，即</p>
@@ -514,7 +513,7 @@ P(\text {Context}(w)|w) = \prod_{u\epsilon \text {Context}(w)}  \prod_{j=2}^{l^{
 <p>首先考虑 $\mathcal { L } ( w, u , j )$ 对于 $\theta_{j-1}^u$ 的梯度计算。</p>
 <script type="math/tex; mode=display">
 \begin{align*}
-\frac { \partial \mathcal { L } ( w , u , j ) } { \partial \theta _ { j - 1 } ^ { u } } 
+\frac { \partial \mathcal { L } ( w , u , j ) } { \partial \theta _ { j - 1 } ^ { u } }
 &= \frac { \partial } { \partial \theta _ { j - 1 } ^ { u } } \left\{ \left( 1 - d _ { j } ^ { u } \right) \cdot \log \left[ \sigma \left( \mathbf { v } ( w ) ^ { \top } \theta _ { j - 1 } ^ { u } \right) \right] + d _ { j } ^ { u } \cdot \log \left[ 1 - \sigma \left( \mathbf { v } ( w ) ^ { \top } \theta _ { j - 1 } ^ { u } \right) \right] \right\} \\
 &= \left( 1 - d _ { j } ^ { u } \right) \left[ 1 - \sigma \left( \mathbf { v } ( w ) ^ { \top } \theta _ { j - 1 } ^ { u } \right) \right] \mathbf { v } ( w ) - d _ { j } ^ { u } \sigma \left( \mathbf { v } ( w ) ^ { \top } \theta _ { j - 1 } ^ { u } \right) \mathbf { v } ( w ) \\
 &= \left\{ \left( 1 - d _ { j } ^ { u } \right) \left[ 1 - \sigma \left( \mathbf { v } ( w ) ^ { \top } \mathbf { v } _ { j - 1 } ^ { u } \right) \right] - d _ { j } ^ { u } \sigma \left( \mathbf { v } ( w ) ^ { \top } \theta _ { j - 1 } ^ { u } \right) \right\} \mathbf { v } ( w ) \\
@@ -591,6 +590,10 @@ P(\text {Context}(w)|w) = \prod_{u\epsilon \text {Context}(w)}  \prod_{j=2}^{l^{
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/12/25/Attention_Neural_Machine_Translation_by_Jointly_Learning_to_Align_and_Translate/" rel="prev" title="论文笔记：Neural Machine Translation by Jointly Learning to Align and Translate">
+                论文笔记：Neural Machine Translation by Jointly Learning to Align and Translate <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -714,7 +717,7 @@ P(\text {Context}(w)|w) = \prod_{u\epsilon \text {Context}(w)}  \prod_{j=2}^{l^{
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">93</span>
+                  <span class="site-state-item-count">98</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -736,7 +739,7 @@ P(\text {Context}(w)|w) = \prod_{u\epsilon \text {Context}(w)}  \prod_{j=2}^{l^{
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">90</span>
+                  <span class="site-state-item-count">91</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -963,7 +966,7 @@ P(\text {Context}(w)|w) = \prod_{u\epsilon \text {Context}(w)}  \prod_{j=2}^{l^{
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
   <span class="with-love">
     <i class="fa fa-user"></i>
   </span>

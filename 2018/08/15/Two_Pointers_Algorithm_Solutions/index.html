@@ -409,6 +409,11 @@
 
       
         <p>记录一些双指针题目的解题思路，持续更新。<a id="more"></a></p>
+<h1 id="最长无重复字符子串"><a href="#最长无重复字符子串" class="headerlink" title="最长无重复字符子串"></a>最长无重复字符子串</h1><blockquote>
+<p>leetcode 3<br>给定一个字符串，请你找出其中不含有重复字符的最长子串的长度。<br>示例 :<br>输入: “abcabcbb”<br>输出: 3</p>
+</blockquote>
+<p><strong>解答：</strong>  </p>
+<p>使用一个滑动窗口，窗口内记录不重复子串。用一个map记录各个字符的下标，首先将所有的下表初始化为-1，然后向后遍历的过程中记录当前字符的下标，并将当前字符的下标（右窗口）与上一个相同字符的下标（左窗口）做差值，即可得到它们之间无重复字符的子串。然后用Max记录更新最大子串数，并更新map存储的下标值，即从这个重复值重新开始数字符串的数（最大无重复字符子串必定在两个重复字符之间，或者是整个字符串的长度）</p>
 <h1 id="有效三角形的个数"><a href="#有效三角形的个数" class="headerlink" title="有效三角形的个数"></a>有效三角形的个数</h1><blockquote>
 <p>leetcode 611<br>给定一个包含非负整数的数组，你的任务是统计其中可以组成三角形三条边的三元组个数。<br>输入: [2,2,3,4]<br>输出: 3</p>
 </blockquote>
@@ -473,8 +478,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/08/15/C++_Primer_Overload/" rel="next" title="C++ Primer：重载">
-                <i class="fa fa-chevron-left"></i> C++ Primer：重载
+              <a href="/2018/08/15/Dynamic_Programming_Algorithm_Solutions/" rel="next" title="动态规划解题（持续更新）">
+                <i class="fa fa-chevron-left"></i> 动态规划解题（持续更新）
               </a>
             
           </div>
@@ -483,8 +488,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2018/08/15/Linux_Mac_Lantern/" rel="prev" title="【转】如何让lantern不限流量（改mac地址）">
-                【转】如何让lantern不限流量（改mac地址） <i class="fa fa-chevron-right"></i>
+              <a href="/2018/08/15/Python_Command_Line_Argument/" rel="prev" title="Python命令行参数解析">
+                Python命令行参数解析 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -609,7 +614,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">93</span>
+                  <span class="site-state-item-count">98</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -631,7 +636,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">90</span>
+                  <span class="site-state-item-count">91</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -838,7 +843,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#有效三角形的个数"><span class="nav-number">1.</span> <span class="nav-text">有效三角形的个数</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3Sum"><span class="nav-number">2.</span> <span class="nav-text">3Sum</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#最长无重复字符子串"><span class="nav-number">1.</span> <span class="nav-text">最长无重复字符子串</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#有效三角形的个数"><span class="nav-number">2.</span> <span class="nav-text">有效三角形的个数</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3Sum"><span class="nav-number">3.</span> <span class="nav-text">3Sum</span></a></li></ol></div>
             
 
           </div>
@@ -858,7 +863,7 @@
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
   <span class="with-love">
     <i class="fa fa-user"></i>
   </span>

@@ -79,17 +79,17 @@
 
 
 
-<meta name="description" content="Python的每个类只能有一个构造器，也就是一个__init__方法。 使用@classmethod可以用一种与构造器相仿的方式构造类的对象。  参考链接：https://stackoverflow.com/questions/12179271/meaning-of-classmethod-and-staticmethod-for-beginner例子如下。首先我们有一个处理时间的类：">
+<meta name="description" content="优先队列容器与队列一样，只能从队尾插入，从队首删除。但它在此基础上内部添加了的一个排序，所以出队时，并非按照先进先出的原则进行，而是将当前队列中最大的元素或最小元素出队。 优先队列 与 heap 的区别I have seen lots of solutions confuse priority queue with heap. I find a good link and list the tal">
 <meta property="og:type" content="article">
-<meta property="og:title" content="classmethod 与 staticmethod">
-<meta property="og:url" content="flyrie.top/2018/08/16/Python_Decorators/index.html">
+<meta property="og:title" content="优先队列">
+<meta property="og:url" content="flyrie.top/2018/08/25/C++_Priority_Queue/index.html">
 <meta property="og:site_name" content="乡间小路">
-<meta property="og:description" content="Python的每个类只能有一个构造器，也就是一个__init__方法。 使用@classmethod可以用一种与构造器相仿的方式构造类的对象。  参考链接：https://stackoverflow.com/questions/12179271/meaning-of-classmethod-and-staticmethod-for-beginner例子如下。首先我们有一个处理时间的类：">
+<meta property="og:description" content="优先队列容器与队列一样，只能从队尾插入，从队首删除。但它在此基础上内部添加了的一个排序，所以出队时，并非按照先进先出的原则进行，而是将当前队列中最大的元素或最小元素出队。 优先队列 与 heap 的区别I have seen lots of solutions confuse priority queue with heap. I find a good link and list the tal">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-08-15T17:46:15.000Z">
+<meta property="og:updated_time" content="2018-10-10T17:46:14.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="classmethod 与 staticmethod">
-<meta name="twitter:description" content="Python的每个类只能有一个构造器，也就是一个__init__方法。 使用@classmethod可以用一种与构造器相仿的方式构造类的对象。  参考链接：https://stackoverflow.com/questions/12179271/meaning-of-classmethod-and-staticmethod-for-beginner例子如下。首先我们有一个处理时间的类：">
+<meta name="twitter:title" content="优先队列">
+<meta name="twitter:description" content="优先队列容器与队列一样，只能从队尾插入，从队首删除。但它在此基础上内部添加了的一个排序，所以出队时，并非按照先进先出的原则进行，而是将当前队列中最大的元素或最小元素出队。 优先队列 与 heap 的区别I have seen lots of solutions confuse priority queue with heap. I find a good link and list the tal">
 
 
 
@@ -119,13 +119,13 @@
 
 
 
-  <link rel="canonical" href="flyrie.top/2018/08/16/Python_Decorators/"/>
+  <link rel="canonical" href="flyrie.top/2018/08/25/C++_Priority_Queue/"/>
 
 
 
 
 
-  <title>classmethod 与 staticmethod | 乡间小路</title>
+  <title>优先队列 | 乡间小路</title>
   
 
 
@@ -306,7 +306,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="flyrie.top/2018/08/16/Python_Decorators/">
+    <link itemprop="mainEntityOfPage" href="flyrie.top/2018/08/25/C++_Priority_Queue/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="乡间小路">
@@ -323,7 +323,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">classmethod 与 staticmethod</h1>
+          <h1 class="post-title" itemprop="name headline">优先队列</h1>
         
 
         <div class="post-meta">
@@ -335,8 +335,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-08-16T01:46:15+08:00">
-                2018-08-16
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-08-25T01:46:14+08:00">
+                2018-08-25
               </time>
             
 
@@ -351,8 +351,8 @@
               
                 <span class="post-meta-item-text">更新于&#58;</span>
               
-              <time title="更新于" itemprop="dateModified" datetime="2018-08-16T01:46:15+08:00">
-                2018-08-16
+              <time title="更新于" itemprop="dateModified" datetime="2018-10-11T01:46:14+08:00">
+                2018-10-11
               </time>
             
           </span>
@@ -370,8 +370,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Python/" itemprop="url" rel="index">
-                    <span itemprop="name">Python</span>
+                  <a href="/categories/C/" itemprop="url" rel="index">
+                    <span itemprop="name">C++</span>
                   </a>
                 </span>
 
@@ -407,24 +407,32 @@
       
 
       
-        <ol>
-<li>Python的每个类只能有一个构造器，也就是一个<code>__init__</code>方法。</li>
-<li>使用<code>@classmethod</code>可以用一种与构造器相仿的方式构造类的对象。</li>
-</ol>
-<p>参考链接：<br><a href="https://stackoverflow.com/questions/12179271/meaning-of-classmethod-and-staticmethod-for-beginner" target="_blank" rel="noopener">https://stackoverflow.com/questions/12179271/meaning-of-classmethod-and-staticmethod-for-beginner</a><br>例子如下。首先我们有一个处理时间的类：<br><a id="more"></a></p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Date</span><span class="params">(object)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, day=<span class="number">0</span>, month=<span class="number">0</span>, year=<span class="number">0</span>)</span>:</span></span><br><span class="line">        self.day = day</span><br><span class="line">        self.month = month</span><br><span class="line">        self.year = year</span><br></pre></td></tr></table></figure>
-<p>如果我们要通过字符串创建<code>Date</code>实例，此时我们要做如下操作：  </p>
+        <p>优先队列容器与队列一样，只能从队尾插入，从队首删除。但它在此基础上内部添加了的一个排序，所以出队时，并非按照先进先出的原则进行，而是将当前队列中最大的元素或最小元素出队。</p>
+<h1 id="优先队列-与-heap-的区别"><a href="#优先队列-与-heap-的区别" class="headerlink" title="优先队列 与 heap 的区别"></a>优先队列 与 heap 的区别</h1><p>I have seen lots of solutions confuse priority queue with heap. I find a good link and list the talk below.</p>
+<p>Concept:</p>
 <ol>
-<li>将<code>str</code>的日期转为<code>int</code>。</li>
-<li>通过<code>int</code>的日期构建<code>Date</code> </li>
+<li>Heap is a kind of data structure. It is a name for a particular way of storing data that makes certain operations very efficient. We can use a tree or array to describe it.<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">   18</span><br><span class="line">  /	\</span><br><span class="line"> 10	 16</span><br><span class="line">/ \   / \</span><br><span class="line">9  5  8  12</span><br><span class="line"></span><br><span class="line">18, 10, 16, 9, 5, 8, 12</span><br></pre></td></tr></table></figure>
+</li>
 </ol>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">day, month, year = map(int, <span class="string">'11-09-2012'</span>.split(<span class="string">'-'</span>))  </span><br><span class="line">date1 = Date(day, month, year)</span><br></pre></td></tr></table></figure>
-<p>如果我们经常要使用字符串创建<code>Date</code>实例，很显然如果能实现重载就更加方便，<code>C++</code>有重载的方法，但Python没有重载，每个类只有一个构造器，只有一个<code>__init__</code>方法，因此<code>@classmethod</code>方法应运而生。</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Date</span><span class="params">(object)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, day=<span class="number">0</span>, month=<span class="number">0</span>, year=<span class="number">0</span>)</span>:</span></span><br><span class="line">        self.day = day</span><br><span class="line">        self.month = month</span><br><span class="line">        self.year = year</span><br><span class="line"></span><br><span class="line"><span class="meta">    @classmethod</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">from_string</span><span class="params">(cls, date_as_string)</span>:</span></span><br><span class="line">        day, month, year = map(int, date_as_string.split(<span class="string">'-'</span>))</span><br><span class="line">        date1 = cls(day, month, year)</span><br><span class="line">        <span class="keyword">return</span> date1</span><br><span class="line"></span><br><span class="line">date2 = Date.from_string(<span class="string">'11-09-2012'</span>)</span><br></pre></td></tr></table></figure>
-<p><code>classmethod</code> 定义类操作，而不是实例操作，因此类方法的第一个参数是类本身，而不是实例。<code>cls</code>表示这个类本身。</p>
-<p><code>@staticmethod</code>与<code>@classmethod</code>的区别是不构建类的实例，也不访问、依赖和改变类，只是一个函数。和普通的非class的method作用是一样的，只不过是命名空间是在类里面。一般使用场景就是和类相关的操作。有时，函数虽然从不处理类，但是函数的功能与类紧密相关，因此想把它放在近处。</p>
-<p>加入我们要验证日期的合法性，我们可以使用<code>@staticmethod</code>，如下。</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Date</span><span class="params">(object)</span>:</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, day=<span class="number">0</span>, month=<span class="number">0</span>, year=<span class="number">0</span>)</span>:</span></span><br><span class="line">        self.day = day</span><br><span class="line">        self.month = month</span><br><span class="line">        self.year = year</span><br><span class="line"></span><br><span class="line"><span class="meta">    @classmethod</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">from_string</span><span class="params">(cls, date_as_string)</span>:</span></span><br><span class="line">        day, month, year = map(int, date_as_string.split(<span class="string">'-'</span>))</span><br><span class="line">        date1 = cls(day, month, year)</span><br><span class="line">        <span class="keyword">return</span> date1</span><br><span class="line"></span><br><span class="line"><span class="meta">    @staticmethod</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">is_date_valid</span><span class="params">(date_as_string)</span>:</span></span><br><span class="line">        day, month, year = map(int, date_as_string.split(<span class="string">'-'</span>))</span><br><span class="line">        <span class="keyword">return</span> day &lt;= <span class="number">31</span> <span class="keyword">and</span> month &lt;= <span class="number">12</span> <span class="keyword">and</span> year &lt;= <span class="number">3999</span></span><br><span class="line"></span><br><span class="line">date2 = Date.from_string(<span class="string">'11-09-2012'</span>)</span><br><span class="line">is_date = Date.is_date_valid(<span class="string">'11-09-2012'</span>)</span><br></pre></td></tr></table></figure>
+<a id="more"></a>
+<ol>
+<li>Priority queue is an abstract datatype. It is a shorthand way of describing a particular interface and behavior, and says nothing about the underlying implementation.</li>
+</ol>
+<p>A heap is a very good data structure to implement a priority queue. The operations which are made efficient by the heap data structure are the operations that the priority queue interface needs.</p>
+<h1 id="优先队列用法"><a href="#优先队列用法" class="headerlink" title="优先队列用法"></a>优先队列用法</h1><ol>
+<li>定义<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">priority_queue &lt;<span class="class"><span class="keyword">class</span> <span class="title">T</span>, <span class="title">class</span> <span class="title">Container</span> = <span class="title">vector</span>&lt;T&gt;, <span class="title">class</span> <span class="title">Compare</span> = <span class="title">less</span>&lt;typename Container::value_type&gt; &gt;;</span></span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p><code>T</code> 就是数据类型，<code>Container</code> 就是容器类型（ Container 必须是用数组实现的容器，比如 vector, deque 等等，但不能用 list。STL 里面默认用的是 vector），Compare 就是比较的方式，当需要用自定义的数据类型时才需要传入这三个参数，使用基本数据类型时，只需要传入数据类型，默认是大顶堆。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//升序队列</span></span><br><span class="line">priority_queue &lt;<span class="keyword">int</span>,<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt;,greater&lt;<span class="keyword">int</span>&gt; &gt; q;</span><br><span class="line"><span class="comment">//降序队列</span></span><br><span class="line">priority_queue &lt;<span class="keyword">int</span>,<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt;,less&lt;<span class="keyword">int</span>&gt; &gt;q;</span><br><span class="line"><span class="comment">//greater和less是std实现的两个仿函数（就是使一个类的使用看上去像一个函数。其实现就是类中实现一个operator()，这个类就有了类似函数的行为，就是一个仿函数类了)</span></span><br><span class="line">priority_queue&lt;<span class="keyword">int</span>&gt; a; <span class="comment">//等同于 priority_queue&lt;int, vector&lt;int&gt;, less&lt;int&gt; &gt; a;</span></span><br></pre></td></tr></table></figure>
+<ol>
+<li><p>基本成员函数<br><code>empty() pop() push() size() top()</code></p>
+</li>
+<li><p>自定义优先级</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//构造仿函数：</span></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">cmp</span></span></span><br><span class="line"><span class="class">&#123;</span>     </span><br><span class="line">　　<span class="function"><span class="keyword">bool</span> <span class="title">operator</span><span class="params">()</span> <span class="params">(Cls a, Cls b)</span>     </span></span><br><span class="line"><span class="function">　　</span>&#123;        </span><br><span class="line">　　　　 <span class="keyword">return</span>　a.x &gt; b.x;　　 <span class="comment">// 大顶堆</span></span><br><span class="line">　　&#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">//重载运算符：</span></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">node</span> &#123;</span>     </span><br><span class="line">　　<span class="keyword">int</span> x, y;     </span><br><span class="line">　　<span class="keyword">friend</span> <span class="keyword">bool</span> <span class="keyword">operator</span> &lt; (node a, node b)     </span><br><span class="line">　　&#123;         </span><br><span class="line">　　　　<span class="keyword">return</span> a.x &gt; b.x;    <span class="comment">//结构体中，x小的优先级高     </span></span><br><span class="line">　　&#125;</span><br><span class="line">&#125;;</span><br><span class="line">priority_queue&lt;node&gt;q;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><p><a href="https://leetcode.com/problems/merge-k-sorted-lists/discuss/10527/Difference-between-Priority-Queue-and-Heap-and-C%2B%2B-implementation" target="_blank" rel="noopener">Difference between Priority-Queue and Heap</a></p>
 
       
     </div>
@@ -473,8 +481,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/08/15/Dynamic_Programming_Algorithm_Solutions/" rel="next" title="动态规划解题（持续更新）">
-                <i class="fa fa-chevron-left"></i> 动态规划解题（持续更新）
+              <a href="/2018/08/25/C++_Primer_Variables_And_Basic_Types/" rel="next" title="C++ Primer：变量和基本类型">
+                <i class="fa fa-chevron-left"></i> C++ Primer：变量和基本类型
               </a>
             
           </div>
@@ -483,8 +491,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2018/08/19/方差与偏差/" rel="prev" title="方差与偏差">
-                方差与偏差 <i class="fa fa-chevron-right"></i>
+              <a href="/2018/08/25/C++_Primer_Object_Oriented_Programming/" rel="prev" title="C++ Primer：面向对象">
+                C++ Primer：面向对象 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -580,8 +588,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -600,7 +617,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">93</span>
+                  <span class="site-state-item-count">98</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -622,7 +639,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">90</span>
+                  <span class="site-state-item-count">91</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -820,6 +837,22 @@
       </section>
 
       
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#优先队列-与-heap-的区别"><span class="nav-number">1.</span> <span class="nav-text">优先队列 与 heap 的区别</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#优先队列用法"><span class="nav-number">2.</span> <span class="nav-text">优先队列用法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考"><span class="nav-number">3.</span> <span class="nav-text">参考</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
 
       
 
@@ -833,7 +866,7 @@
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
   <span class="with-love">
     <i class="fa fa-user"></i>
   </span>

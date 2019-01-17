@@ -87,7 +87,7 @@
 <meta property="og:site_name" content="乡间小路">
 <meta property="og:description" content="本文记录C++ STL学习过程中的一些知识。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-10-03T15:54:41.432Z">
+<meta property="og:updated_time" content="2018-11-28T15:15:44.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="C++ STL学习笔记">
 <meta name="twitter:description" content="本文记录C++ STL学习过程中的一些知识。">
@@ -352,8 +352,8 @@
               
                 <span class="post-meta-item-text">更新于&#58;</span>
               
-              <time title="更新于" itemprop="dateModified" datetime="2018-10-03T23:54:41+08:00">
-                2018-10-03
+              <time title="更新于" itemprop="dateModified" datetime="2018-11-28T23:15:44+08:00">
+                2018-11-28
               </time>
             
           </span>
@@ -415,21 +415,10 @@
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">pair&lt;<span class="keyword">int</span>,<span class="keyword">float</span>&gt; p1; <span class="comment">//使用默认构造函数</span></span><br><span class="line">pair&lt;<span class="keyword">double</span>,<span class="keyword">double</span>&gt; p2(<span class="number">1.0</span>, <span class="number">2.4</span>) <span class="comment">//用给定值初始化</span></span><br><span class="line">pair&lt;<span class="keyword">int</span>, <span class="keyword">float</span>&gt; p3(p0) <span class="comment">//使用拷贝构造函数</span></span><br><span class="line">p1.first = <span class="number">1</span>;</span><br><span class="line">p1.second = <span class="number">2</span>;</span><br></pre></td></tr></table></figure>
 </li>
 <li><p>make_pair函数<br>初始化一个 <code>pair</code> 可以使用构造函数，也可以使用 <code>std::make_pair</code> 函数，<code>make_pair</code> 函数的定义如下：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">template</span> pair <span class="title">make_pair</span><span class="params">(T1 a, T2 b)</span> </span></span><br><span class="line"><span class="function"></span>&#123; </span><br><span class="line">    <span class="keyword">return</span> pair(a, b); </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">template</span> pair <span class="title">make_pair</span><span class="params">(T1 a, T2 b)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> pair(a, b);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>一般 <code>make_pair</code>都使用在需要 <code>pair</code> 做参数的位置，可以直接调用 <code>make_pair</code> 生成 <code>pair</code> 对象。 另一个使用的方面就是 <code>pair</code> 可以接受隐式的类型转换，这样可以获得更高的灵活度。但是这样会出现如下问题：例如有如下两个定义：</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">pair&lt;<span class="keyword">int</span>, <span class="keyword">float</span>&gt;(<span class="number">1</span>, <span class="number">1.1</span>);</span><br><span class="line">make_pair(<span class="number">1</span>, <span class="number">1.1</span>);</span><br></pre></td></tr></table></figure>
 <p>其中第一个的 <code>second</code> 变量是 <code>float</code> 类型，而 <code>make_pair</code> 函数会将 <code>second</code> 变量都转换成 <code>double</code> 类型。这个问题在编程是需要引起注意。</p>
-</li>
-</ol>
-<h1 id="priority-queue"><a href="#priority-queue" class="headerlink" title="priority_queue"></a>priority_queue</h1><p>优先队列容器与队列一样，只能从队尾插入，从队首删除。但它在此基础上内部添加了的一个排序，所以出队时，并非按照先进先出的原则进行，而是将当前队列中最大的元素或最小元素出队。</p>
-<ol>
-<li><p>定义<br><code>priority_queue&lt;Type, Container, Functional&gt;</code><br>Type 就是数据类型，Container 就是容器类型（Container必须是用数组实现的容器，比如vector,deque等等，但不能用 list。STL里面默认用的是vector），Functional 就是比较的方式，当需要用自定义的数据类型时才需要传入这三个参数，使用基本数据类型时，只需要传入数据类型，默认是大顶堆 </p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//升序队列</span></span><br><span class="line">priority_queue &lt;<span class="keyword">int</span>,<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt;,greater&lt;<span class="keyword">int</span>&gt; &gt; q;</span><br><span class="line"><span class="comment">//降序队列</span></span><br><span class="line">priority_queue &lt;<span class="keyword">int</span>,<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt;,less&lt;<span class="keyword">int</span>&gt; &gt;q;</span><br><span class="line"><span class="comment">//greater和less是std实现的两个仿函数（就是使一个类的使用看上去像一个函数。其实现就是类中实现一个operator()，这个类就有了类似函数的行为，就是一个仿函数类了)</span></span><br><span class="line">priority_queue&lt;<span class="keyword">int</span>&gt; a; <span class="comment">//等同于 priority_queue&lt;int, vector&lt;int&gt;, less&lt;int&gt; &gt; a;</span></span><br></pre></td></tr></table></figure>
-</li>
-<li><p>基本成员函数<br><code>empty() pop() push() size() top()</code></p>
-</li>
-<li><p>优先级声明方式</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//自定义优先级：</span></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">cmp</span> &#123;</span>     </span><br><span class="line">　　<span class="function"><span class="keyword">operator</span> <span class="title">bool</span> <span class="params">()</span><span class="params">(<span class="keyword">int</span> x, <span class="keyword">int</span> y)</span>     </span></span><br><span class="line"><span class="function">　　</span>&#123;        </span><br><span class="line">　　　　 <span class="keyword">return</span>　x &gt; y;　　 <span class="comment">// x小的优先级高       //也可以写成其他方式，如： return p[x] &gt; p[y];表示p[i]小的优先级高</span></span><br><span class="line">　　&#125;</span><br><span class="line">&#125;;</span><br><span class="line">priority_queue&lt;<span class="keyword">int</span>, <span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt;, cmp&gt; q;    <span class="comment">//定义方法</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//结构体声明方式：</span></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">node</span> &#123;</span>     </span><br><span class="line">　　<span class="keyword">int</span> x, y;     </span><br><span class="line">　　<span class="keyword">friend</span> <span class="keyword">bool</span> <span class="keyword">operator</span> &lt; (node a, node b)     </span><br><span class="line">　　&#123;         </span><br><span class="line">　　　　<span class="keyword">return</span> a.x &gt; b.x;    <span class="comment">//结构体中，x小的优先级高     </span></span><br><span class="line">　　&#125;</span><br><span class="line">&#125;;</span><br><span class="line">priority_queue&lt;node&gt;q;   <span class="comment">//定义方法</span></span><br><span class="line"><span class="comment">//在该结构中，y为值, x为优先级。</span></span><br><span class="line"><span class="comment">//通过自定义operator&lt;操作符来比较元素中的优先级。</span></span><br><span class="line"><span class="comment">//在重载”&lt;”时，最好不要重载”&gt;”，可能会发生编译错误</span></span><br></pre></td></tr></table></figure>
 </li>
 </ol>
 
@@ -488,8 +477,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/08/25/C++_Primer_Variables_And_Basic_Types/" rel="next" title="C++ Primer：变量和基本类型">
-                <i class="fa fa-chevron-left"></i> C++ Primer：变量和基本类型
+              <a href="/2018/08/25/C++_Primer_Object_Oriented_Programming/" rel="next" title="C++ Primer：面向对象">
+                <i class="fa fa-chevron-left"></i> C++ Primer：面向对象
               </a>
             
           </div>
@@ -498,8 +487,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2018/08/25/C++_Primer_Object_Oriented_Programming/" rel="prev" title="C++ Primer：面向对象">
-                C++ Primer：面向对象 <i class="fa fa-chevron-right"></i>
+              <a href="/2018/09/01/C++_Complie_And_Link/" rel="prev" title="【转】C++编译与链接">
+                【转】C++编译与链接 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -624,7 +613,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">93</span>
+                  <span class="site-state-item-count">98</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -646,7 +635,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">90</span>
+                  <span class="site-state-item-count">91</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -853,7 +842,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#std-pair"><span class="nav-number">1.</span> <span class="nav-text">std::pair</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#priority-queue"><span class="nav-number">2.</span> <span class="nav-text">priority_queue</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#std-pair"><span class="nav-number">1.</span> <span class="nav-text">std::pair</span></a></li></ol></div>
             
 
           </div>
@@ -873,7 +862,7 @@
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
   <span class="with-love">
     <i class="fa fa-user"></i>
   </span>
